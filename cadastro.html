@@ -1,0 +1,251 @@
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SorveSys | Monitoramento de Sistemas Rodoviários</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="icon" href="./assets/icon/favicon2.ico">
+    <link rel="stylesheet" href="./css/login-cadastro.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="container">
+            <!-- Logo da empresa -->
+            <div class="logo">
+                <img src="./assets/LOGO SORVESYS.png" alt="SorveSys Logo">
+            </div>
+
+            <!-- Menu de navegação -->
+            <ul class="navbar">
+                <li class="agora"><a href="#">Início</a></li>
+                <li><a href="#sobrenos">Sobre nós</a></li>
+            </ul>
+
+            <!-- Botoes de Ação (Login e Cadastro) -->
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline">Login</a>
+                <a href="cadastro.html" class="btn-primary">Cadastro</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="conteudo-principal">
+        <!-- Lado Esquerdo -->
+
+        <div class="esquerda">
+            <div class="titulo">
+                <h1>Rodovias funcionam melhor com tecnologia que <span class="linha">previne.</span></h1>
+            </div>
+
+            <div class="descricao">
+                <p>O SorveSys monitora a saúde da infraestrutura de TI nas praças de pedágio, garantindo alta
+                    disponibilidade, desempenho e segurança para operações ininterruptas.</p>
+            </div>
+
+            <!-- <p>© 2026 SorveSys · Tecnologia e confiança para manter o Brasil sempre em movimento</p> -->
+        </div>
+
+        <!-- Lado Direito -->
+        <div class="direita">
+
+            <div class="formulario">
+
+                <div class="intro-form">
+                    <h2>Crie sua conta</h2>
+                    <p>Cadastre-se para acessar a plataforma de monitoramento SorveSys.</p>
+                </div>
+
+                <div class="info-form">
+                    <label for="email">Nome completo</label>
+                    <input class="campo" id="ipt_nome" placeholder="Seu nome completo">
+                </div>
+
+                <div class="info-form">
+                    <label for="email">E-mail</label>
+                    <input class="campo" type="email" id="ipt_email" placeholder="nome@email.com.br">
+                </div>
+
+                <div class="info-form">
+                    <label for="cpf">CPF</label>
+                    <input class="campo" id="ipt_cpf" placeholder="000.000.000-00">
+                </div>
+
+                <div class="info-form-senha">
+                    <div class="info-form">
+                        <label for="password">Senha</label>
+                        <input class="campo" type="password" id="ipt_senha" placeholder="••••••••">
+                    </div>
+
+                    <div class="info-form">
+                        <label for="password">Confirmar senha</label>
+                        <input class="campo" type="password" id="ipt_confirmarSenha" placeholder="••••••••">
+                    </div>
+                </div>
+
+                <div class="info-form">
+                    <label for="empresa">Empresa</label>
+                    <input class="campo" id="ipt_empresa" placeholder="Nome da empresa">
+                </div>
+
+                <a class="esqueciSenha" href="#">Esqueci minha senha</a>
+
+                <button onclick="cadastrar()">Criar conta<i class="ph ph-arrow-right"></i></button>
+
+                <div class="cadastre-se">
+                    Já possui uma conta?<a href="login.html"> Entrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container flex-col">
+            <div class="footer-top">
+                <div class="footer-col brand-col">
+                    <p class="brand-slogan">
+                        <span class="brand-name">SorveSys:</span> <span class="highlight">Tecnologia que garante a
+                        </span>
+                        <span class="highlight">disponibilidade da </span>
+                        <span class="highlight">infraestrutura de servidores</span> <span class="highlight">das
+                            rodovias.</span>
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Empresa</h5>
+                    <ul>
+                        <li><a href="#">Código de conduta</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Suporte</h5>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Fale Conosco</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col contact-col">
+                    <h5>Contatos</h5>
+                    <p><span>&#9094;</span> comercial@sorvesys.com.br</p>
+                    <p><span>&#9742;</span> (11) 4070-2374</p>
+                    <p><span>&#9906;</span> São Paulo,Brasil</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 SorveSys. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Política de Privacidade</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+<script>
+    function cadastrar() {
+        var nomeVar = ipt_nome.value.trim();
+        var emailVar = ipt_email.value.trim();
+        var senhaVar = ipt_senha.value.trim();
+        var cpfVar = ipt_cpf.value.trim();
+        var empresaVar = ipt_empresa.value.trim();
+        var confirmacaoSenhaVar = ipt_confirmarSenha.value.trim();
+
+        let temArroba = false;
+        let temMaiusculo = false;
+        let temMinusculo = false;
+        let temEspecial = false;
+        let temNumero = false;
+        let vt_caractereEspec = ['!', '@', '#', '$', '%', '&', '*', '(', ')', '-', '_', '/', '?', '"', '+', '|', '=', ',', '.', ':', ';', '<', '>', '[', ']', '^', '{', '}', '~', '`', '£', '¢', 'ç'];
+        let vt_num = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+
+        for (let i = 0; i < emailVar.length; i++) {
+            if (emailVar[i] == '@') {
+                temArroba = true
+            }
+        }
+
+        for (let i = 0; i < senhaVar.length; i++) {
+            if (senhaVar[i] == (senhaVar[i]).toLowerCase()) {
+                temMinusculo = true
+            }
+            if (senhaVar[i] == (senhaVar[i]).toUpperCase()) {
+                temMaiusculo = true
+            }
+            for (let index = 0; index < vt_caractereEspec.length; index++) {
+                if (senhaVar[i] == vt_caractereEspec[index]) {
+                    temEspecial = true
+                    break
+                }
+            }
+            for (let index = 0; index < vt_num.length; index++) {
+                if (senhaVar[i] == vt_num[index]) {
+                    temNumero = true
+                    break
+                }
+            }
+
+        }
+
+        if (nomeVar == "" || emailVar == "" || senhaVar == "" || cpfVar == "" || confirmacaoSenhaVar == "" || empresaVar == "") {
+            alert("Preencha todos os campos para realizar o cadastro");
+            return false;
+        }
+
+        if (nomeVar.length < 3) {
+            alert("Nome curto demais, insira um nome com pelo menos 3 caracteres");
+            return false;
+        }
+
+        if (!temArroba) {
+            alert("E-mail inválido, todo e-mail tem um @");
+            return false;
+        }
+        if (emailVar.length < 8) {
+            alert("E-mail inválido, o e-mail é muito curto");
+            return false;
+        }
+        if (cpfVar.length != 11) {
+            alert("CPF inválido, insira o cpf sem os pontos e sem o hífen. Exemplo (11122233344)");
+            return false;
+        }
+        if (!temMaiusculo) {
+            alert("Senha inválida, é necessário que tenha ao menos uma letra maiúscula");
+            return false;
+        }
+        if (!temMinusculo) {
+            alert("Senha inválida, é necessário que tenha ao menos uma letra minúscula");
+            return false;
+        }
+        if (!temEspecial) {
+            alert("Senha inválida, é necessário que tenha ao menos um caractere especial");
+            return false;
+        }
+        if (senhaVar.length < 8) {
+            alert("Senha inválida, é necessário conter ao menos 8 caracteres");
+            return false;
+        }
+        if (senhaVar != confirmacaoSenhaVar) {
+            alert("As senhas não coincidem, tente novamente");
+            return false;
+        }
+    }
+</script>

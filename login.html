@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SorveSys | Monitoramento de Sistemas Rodoviários</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="icon" href="./assets/icon/favicon2.ico">
+    <link rel="stylesheet" href="./css/login-cadastro.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+</head>
+
+<body>
+
+    <div class="header">
+        <div class="container">
+            <!-- Logo da empresa -->
+            <div class="logo">
+                <img src="./assets/LOGO SORVESYS.png" alt="SorveSys Logo">
+            </div>
+
+            <!-- Menu de navegação -->
+            <ul class="navbar">
+                <li class="agora"><a href="#">Início</a></li>
+                <li><a href="#sobrenos">Sobre nós</a></li>
+            </ul>
+
+            <!-- Botoes de Ação (Login e Cadastro) -->
+            <div class="header-actions">
+                <a href="login.html" class="btn-outline">Login</a>
+                <a href="cadastro.html" class="btn-primary">Cadastro</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="conteudo-principal">
+        <!-- Lado Esquerdo -->
+
+        <div class="esquerda">
+            
+            <div class="titulo">
+                <h1>Rodovias funcionam melhor com tecnologia que <span class="linha">previne.</span></h1>
+            </div>
+
+            <div class="descricao">
+                <p>O SorveSys monitora a saúde da infraestrutura de TI nas praças de pedágio, garantindo alta
+                    disponibilidade, desempenho e segurança para operações ininterruptas.</p>
+            </div>
+
+            <!-- <p>© 2026 SorveSys · Tecnologia e confiança para manter o Brasil sempre em movimento</p> -->
+        </div>
+
+        <!-- Lado Direito -->
+        <div class="direita">
+
+            <div class="formulario">
+
+                <div class="intro-form">
+                    <h2>Bem-vindo à SorveSys</h2>
+                    <p>Acesse sua conta para acompanhar o monitoramento da infraestrutura.</p>
+                </div>
+
+                <div class="info-form">
+                    <label for="email">E-mail</label>
+                    <input class="campo" type="email" id="ipt_email" placeholder="nome@email.com.br">
+                </div>
+
+                <div class="info-form">
+                    <label for="password">Senha</label>
+                    <input class="campo" type="password" id="ipt_senha" placeholder="••••••••">
+                </div>
+
+                <a class="esqueciSenha" href="#">Esqueci minha senha</a>
+
+                <button onclick="entrar()">Entrar <i class="ph ph-arrow-right"></i></button>
+
+                <div class="cadastre-se">
+                    Ainda não possui uma conta?<a href="cadastro.html"> Cadastre-se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container flex-col">
+            <div class="footer-top">
+                <div class="footer-col brand-col">
+                    <p class="brand-slogan">
+                  <span class="brand-name">SorveSys:</span>  <span class="highlight">Tecnologia que garante a </span> 
+                  <span class="highlight">disponibilidade  da </span> 
+                  <span class="highlight">infraestrutura de servidores</span>  <span class="highlight">das rodovias.</span>
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Empresa</h5>
+                    <ul>
+                        <li><a href="#">Código de conduta</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Suporte</h5>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Fale Conosco</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col contact-col">
+                    <h5>Contatos</h5>
+                    <p><span>&#9094;</span> comercial@sorvesys.com.br</p>
+                    <p><span>&#9742;</span> (11) 4070-2374</p>
+                    <p><span>&#9906;</span> São Paulo,Brasil</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 SorveSys. Todos os direitos reservados.</p>
+                <div class="footer-links">
+                    <a href="#">Política de Privacidade</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+
+    function entrar() {
+
+        var emailVar = ipt_email.value;
+        var senhaVar = ipt_senha.value;
+
+        if (emailVar == "" || senhaVar == "") {
+            alert("Complete todos os campos")
+        }
+
+    }
+
+</script>
