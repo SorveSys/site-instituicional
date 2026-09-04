@@ -42,12 +42,12 @@ body {
 }
 
 .header {
-    height: var(--tamanho-header);
-    background-color: var(--bg-white);
-    border-bottom: 1px solid #e2e8f0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+  height: var(--tamanho-header);
+  background-color: var(--bg-white);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .header .container {
@@ -66,9 +66,12 @@ body {
 }
 
 .header .logo img {
-    height: 200px;
-    width: auto;
+    display: flex;
+    align-items: center;
+  height: 200px;  
+    width: auto;   
     object-fit: contain;
+    margin-left: -60px;
 }
 
 .navbar {
@@ -94,32 +97,43 @@ body {
 }
 
 .header-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+        justify-content: center;
+        display: flex;
+        gap: 10px;
+}
+
+.btn-theme {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
 }
 
 .btn-outline {
     text-decoration: none;
-    color: #fff;
-    background-color: var(--primary-blue);
-    border: 1px solid var(--primary-blue);
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
+  color: #fff;
+  background-color: var(--primary-blue);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .btn-primary {
     text-decoration: none;
-    background-color: var(--primary-blue);
-    border: 1px solid var(--primary-blue);
-    color: #fff;
-    padding: 9px 18px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
+  background-color: var(--primary-blue);
+border: 1px solid var(--border-color);
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
 }
+
 
 .conteudo-principal {
     display: flex;
@@ -160,11 +174,7 @@ body {
     margin-top: 100px;
 }
 
-/* .esquerda p {
-    font-size: 16px;
-    color:#b9becf;
-    margin-bottom: 90px;
-} */
+
 
 
 .direita {

@@ -55,6 +55,7 @@ body {
   height: 100%;
 }
 
+
 .header .logo img {
     display: flex;
     align-items: center;
@@ -534,7 +535,10 @@ section {
 }
 
 
-/* responsividade ai */
+
+
+
+/* responsividade ae 
 
 @media (max-width: 1024px) {
     .container {
@@ -558,7 +562,7 @@ section {
     }
 }
 
- 
+
 @media (max-width: 768px) {
     
     .header {
@@ -666,7 +670,7 @@ section {
         max-width: 100%;
     }
 
-    /* FOOTER */
+    /* FOOTER  
     .footer-top {
         flex-direction: column;
         gap: 30px;
@@ -694,3 +698,4 @@ section {
         font-size: 13px;
     }
 }
+*/
