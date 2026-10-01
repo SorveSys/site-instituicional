@@ -3,43 +3,48 @@
   --tamanho-banner: calc(100vh - var(--tamanho-header));
   --tamanho-simulador: calc(100vh - var(--tamanho-header));
   --tamanho-login: calc(100vh - var(--tamanho-header));
-  
-   
+
   --bg-white: #ffffff;
   --bg-card: rgba(15, 23, 42, 0.75);
-  --primary-blue: #0052cc;
-  --accent-blue: #2563eb;
-  --light-blue:  #2767f1;;
+
+  /* PALETA LARANJA */
+  --primary-orange: #FF9716;
+  --accent-orange: #FFAF29;
+  --light-orange: #FFC56C;
+  --secondary-orange: #E89135;
+  --dark-orange: #4F3601;
+
   --text-main: #ffffff;
   --text-muted: #94a3b8;
   --text-dark: #1e293b;
   --border-color: rgba(255, 255, 255, 0.1);
 }
 
-
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
 }
 
 body {
-    background-color: #f5f7fa;
-    min-height: 100vh;
-    margin: 0;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+  margin: 0;
 }
 
 .container {
-    width: 85%;
-    max-width: 1200px;
-    margin: auto;
+  width: 85%;
+  max-width: 1200px;
+  margin: auto;
 }
 
 .container.flex-col {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
+
+
 
 .header {
   height: var(--tamanho-header);
@@ -51,55 +56,55 @@ body {
 }
 
 .header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    width: 85%;
-    max-width: 1200px;
-    margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 85%;
+  max-width: 1200px;
+  margin: auto;
 }
 
 .header .logo {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .header .logo img {
-    display: flex;
-    align-items: center;
-  height: 200px;  
-    width: auto;   
-    object-fit: contain;
-    margin-left: -60px;
+  display: flex;
+  align-items: center;
+  height: 200px;
+  width: auto;
+  object-fit: contain;
+  margin-left: -60px;
 }
 
 .navbar {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .navbar a {
-    text-decoration: none;
-    color: #2563eb;
-    font-size: 14px;
-    font-weight: 500;
+  text-decoration: none;
+  color: var(--primary-orange);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .navbar a:hover,
 .agora a {
-    color: #2563eb;
-    font-weight: 600;
+  color: var(--secondary-orange);
+  font-weight: 600;
 }
 
 .header-actions {
-        justify-content: center;
-        display: flex;
-        gap: 10px;
+  justify-content: center;
+  display: flex;
+  gap: 10px;
 }
 
 .btn-theme {
@@ -113,9 +118,9 @@ body {
 }
 
 .btn-outline {
-    text-decoration: none;
+  text-decoration: none;
   color: #fff;
-  background-color: var(--primary-blue);
+  background-color: var(--primary-orange);
   border: 1px solid var(--border-color);
   padding: 8px 16px;
   border-radius: 6px;
@@ -124,9 +129,9 @@ body {
 }
 
 .btn-primary {
-    text-decoration: none;
-  background-color: var(--primary-blue);
-border: 1px solid var(--border-color);
+  text-decoration: none;
+  background-color: var(--primary-orange);
+  border: 1px solid var(--border-color);
   color: #fff;
   padding: 9px 18px;
   border-radius: 6px;
@@ -136,28 +141,34 @@ border: 1px solid var(--border-color);
 
 
 .conteudo-principal {
-    display: flex;
-    width: 100%;
-    min-height: calc(100vh - var(--tamanho-header));
+  display: flex;
+  width: 100%;
+  min-height: calc(100vh - var(--tamanho-header));
 }
 
 .esquerda {
-    width: 45%;
-    height: 100vh;
-    background-color: #072c64;
-    background-image: 
-        linear-gradient(#ffffff0d 1px, transparent 1px),
-        linear-gradient(90deg, #ffffff0d 1px, transparent 1px);
-    background-size: 60px 60px;
-    color: #ffffff;
-    padding: 40px 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  width: 45%;
+  height: 100vh;
+
+  /* MARROM ESCURO DA PALETA */
+  background-color: var(--dark-orange);
+
+  background-image:
+    linear-gradient(#ffffff0d 1px, transparent 1px),
+    linear-gradient(90deg, #ffffff0d 1px, transparent 1px);
+
+  background-size: 60px 60px;
+
+  color: #ffffff;
+  padding: 40px 60px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .descricao {
-  color: #c2d6f4;
+  color: var(--light-orange);
   margin-bottom: 270px;
 }
 
@@ -167,123 +178,129 @@ border: 1px solid var(--border-color);
 }
 
 .esquerda h1 {
-    font-size:40px;
-    line-height:1.2;
-    color:#c7d0ea;
-    max-width:520px;
-    margin-top: 100px;
+  font-size: 40px;
+  line-height: 1.2;
+  color: #FFE0B0;
+  max-width: 520px;
+  margin-top: 100px;
 }
-
 
 
 
 .direita {
-    width: 55%;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 60px;
+  width: 55%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 60px;
 }
 
+
 .formulario {
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 40px 30px;
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    width: 80%;
-    max-width: 450px;
-    gap: 10px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 450px;
+  gap: 10px;
 }
 
 .intro-form h2 {
-    font-size: 26px;
-    color: #072c64;
-    margin-bottom: 6px;
+  font-size: 26px;
+  color: var(--dark-orange);
+  margin-bottom: 6px;
 }
 
 .intro-form p {
-    font-size: 14px;
-    color: #858995;
+  font-size: 14px;
+  color: #858995;
 }
 
 .info-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .info-form-senha {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .info-form input {
-    width: 100%;
-    padding: 8px 12px;
-    border: 2px solid #e2e8f0;
-    border-radius: 10px;
-    font-size: 15px;
-    outline: none;
-    transition: all 0.2s ease;
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
 .info-form input:focus {
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px #667eea33;
+  border-color: var(--primary-orange);
+  box-shadow: 0 0 0 3px rgba(255, 151, 22, 0.2);
 }
 
+
 .formulario button {
-    background-color: #4f6be4;
-    color: #ffffff;
-    font-weight: bold;
-    font-size: 14px;
-    border: none;
-    width: 100%;
-    padding: 10px 5px;
-    border-radius: 8px;
+  background-color: var(--primary-orange);
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 14px;
+  border: none;
+  width: 100%;
+  padding: 10px 5px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .formulario button:hover {
-    transform: scale(1.02);
+  transform: scale(1.02);
+  background-color: var(--secondary-orange);
 }
 
+
+
 .esqueciSenha {
-    text-decoration: none;
-    color: #4f6be4;
-    font-weight: bold;
-    font-size: 14px;
-    align-self: flex-start;
-    margin-top: -6px;
-    margin-bottom: 4px;
+  text-decoration: none;
+  color: var(--primary-orange);
+  font-weight: bold;
+  font-size: 14px;
+  align-self: flex-start;
+  margin-top: -6px;
+  margin-bottom: 4px;
 }
 
 .cadastre-se {
-    font-size: 14px;
-    color: #333;
-    margin-top: 8px;
+  font-size: 14px;
+  color: #333;
+  margin-top: 8px;
 }
 
 .formulario a {
-    text-decoration: none;
-    color: #4f6be4;
-    font-weight: 600;
+  text-decoration: none;
+  color: var(--primary-orange);
+  font-weight: 600;
 }
 
 .formulario a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 
 .footer {
-  background-color: #030712;
+  background-color: #333;
   border-top: 1px solid var(--border-color);
   padding: 60px 0 30px 0;
   font-size: 14px;
@@ -298,34 +315,37 @@ border: 1px solid var(--border-color);
 }
 
 .brand-col img {
-  
-    height: 36px;
+  height: 36px;
   margin-bottom: 16px;
 }
- 
+
 .brand-slogan {
-    font-size: 15px;             
-    line-height: 1.6;           
-    color: #e2e8f0;              
-    font-weight: 400;
-    max-width: 300px;            
+  font-size: 15px;
+  line-height: 1.6;
+  color: #e2e8f0;
+  font-weight: 400;
+  max-width: 300px;
 }
 
- 
 .brand-slogan .brand-name {
-    font-weight: 800;
-    font-size: 18px;
-    background: linear-gradient(90deg, #ffffff 0%, #38bdf8 100%);
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: block;
-    margin-bottom: 6px;
+  font-weight: 800;
+  font-size: 18px;
+
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #FFAF29 100%
+  );
+
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  margin-bottom: 6px;
 }
 
- 
 .brand-slogan .highlight {
-    color: #e2e8f0;             
-    font-weight: 600;
+  color: #e2e8f0;
+  font-weight: 600;
 }
 
 .brand-col p {
