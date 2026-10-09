@@ -1,178 +1,246 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SorveSys | Monitoramento de Servidores de Pedágio</title>
+<meta name="description" content="Telemetria em tempo real, alertas preditivos e 99,5% de SLA para os servidores críticos da sua praça de pedágio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/index.css">
 
-    <title>SorveSys | Monitoramento de Sistemas Rodoviários</title>
-
-    <script src="./js/sessao.js"></script>
-
-    <link rel="stylesheet" href="./css/index.css">
-    <link rel="icon" href="assets/LOGO SORVESYS.png">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
-     
-    <div class="header">
-        <div class="container">
-            <div class="logo">
-                <img src="./assets/LOGO SORVESYS.png" alt="SorveSys Logo">
-            </div>
-            
-            <ul class="navbar">
-                <li class="agora"><a href="#">Início</a></li>
-                <li><a href="#sobrenos">Sobre nós</a></li>
-                 
-            </ul>
 
-            <div class="header-actions">
-                <a href="login.html" class="btn-outline">Login</a>
-                <a href="cadastro.html" class="btn-primary">Cadastro</a>
-                 
-            </div>
+<header class="header">
+  <div class="container">
+    <a href="#inicio" class="logo">
+      <img src="/assets/icons/LOGO.svg"  alt="SorveSys – Monitoramento de Sistemas Rodoviários">
+    </a>
+
+    <nav class="nav">
+      <a href="#inicio" class="active">Início</a>
+      <a href="#servidores">Servidores Monitorados</a>
+      <a href="#beneficios">Benefícios</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="login.html" class="btn btn-outline btn-sm">Login</a>
+      <a href="cadastro.html" class="btn btn-primary btn-sm">Cadastro</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero -->
+<main id="inicio">
+<div class="hero">
+  <div class="container">
+    <div>
+      <span class="pill"><i></i>Telemetria de servidores de praça de pedágio</span>
+      <h1>Monitoramento em Tempo Real para os <span>Servidores Críticos de Pedágio</span></h1>
+      <p class="lead">Precisão de hardware, alertas preditivos e a garantia de armazenamento seguro de dados para a sua infraestrutura de pedágio.</p>
+      <div class="hero-cta">
+        <a href="#contato" class="btn btn-primary">Acessar Dashboard
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="#" class="btn btn-white">Ver Documentação</a>
+      </div>
+      <div class="hero-checks">
+        <span>99,5% SLA Operacional</span>
+        <span>Resposta &lt; 10ms</span>
+        <span>Armazenamento Seguro</span>
+      </div>
+    </div>  
+
+    <aside class="telemetry" aria-label="Painel de telemetria em tempo real">
+      <div class="tele-head">
+        <div class="dots"><b></b><b></b><b></b><em>Telemetria em tempo real</em></div>
+        <span class="badge live">Online</span>
+      </div>
+
+      <div class="srv-row">
+        <div class="srv-name">Servidor 01: Captura &amp; OCR</div>
+        <div class="srv-meta"><span class="badge">Online</span><small>Latência: &lt; 3ms</small></div>
+      </div>
+      <div class="srv-row">
+        <div class="srv-name">Servidor 02: Gateway de Pagamentos</div>
+        <div class="srv-meta"><span class="badge">99,98%</span><small>CPU 28% • RAM 4.2GB</small></div>
+      </div>
+      <div class="srv-row">
+        <div class="srv-name">Servidor 03: Storage &amp; Auditoria</div>
+        <div class="srv-meta"><span class="badge">Sincronizado</span><small class="o">Trilha ANTT Imutável</small></div>
+      </div>
+
+      <div class="alert">
+        <div class="ic"><img src="/assets/icons/SVG-ALERTA.svg" alt=""></div>
+        <div>
+          <div class="alert-top"><span>Alerta preditivo SorveSys</span><span>SMART Check</span></div>
+          <p>Unidade NVMe 02 com oscilação térmica dissipada. Ventilação e carga rebalanceadas sem perda de pacotes.</p>
         </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Servidores -->
+<section id="servidores">
+  <div class="container">
+    <div class="section-head">
+      <span class="pill">Infraestrutura dedicada</span>
+      <h2>Os 3 Servidores Essenciais da Praça de Pedágio</h2>
+      <p>Arquitetura de alta disponibilidade segmentada para mitigar pontos únicos de falha e garantir a fluidez ininterrupta nas cabines e pistas automáticas.</p>
     </div>
 
-   
-    <div class="banner">
-        <div class="container">
-            <div class="hero-content">
-                 
-                <h1>Tecnologia e confiabilidade para manter rodovias <span>sempre em movimento.</span></h1>
-                <p>O SorveSys monitora continuamente a infraestrutura dos servidores de T.I das praças de pedágio, garantindo desempenho, disponibilidade e segurança para operações ininterruptas.</p>
-                
-                <div class="hero-buttons">
-                    <a href="#solucoes" class="btn-primary-large">Conheça a Solução &rsaquo;</a>
-                     
-                </div>
-            </div>
-
-            
+    <div class="grid-3">
+      <article class="card server">
+        <div class="server-top"><span class="tag">Servidor 01</span><div class="icon-box"><img src="/assets/icons/SVG-CAMERA.svg" alt=""></div></div>
+        <h3>Captura &amp; Leitura de Tags/Placas</h3>
+        <p>Monitoramento de hardware para garantir a captura e identificação instantânea de veículos na pista sem gerar filas.</p>
+        <div class="specs">
+          <div><span>Sensores Indutivos:</span><b>0.4ms resposta</b></div>
+          <div><span>Antenas RFID (Tag):</span><b class="o">99.9% precisão</b></div>
+          <div><span>Câmeras OCR/LPR:</span><b>Tempo real ativo</b></div>
         </div>
+      </article>
+
+      <article class="card server">
+        <div class="server-top"><span class="tag">Servidor 02</span><div class="icon-box"><img src="/assets/icons/SVG-CARTAO.svg" alt=""></div></div>
+        <h3>Processamento de Pagamentos</h3>
+        <p>Acompanhamento de CPU e memória para evitar indisponibilidade e garantir a validação e cobrança das transações de pedágio.</p>
+        <div class="specs">
+          <div><span>Terminal TEF / POS:</span><b class="n">Conexão redundante</b></div>
+          <div><span>Integradores de Pista:</span><b class="o">Sem Parar / ConectCar</b></div>
+          <div><span>Gateways Bancários:</span><b>TLS 1.3 Criptografado</b></div>
+        </div>
+      </article>
+
+      <article class="card server">
+        <div class="server-top"><span class="tag">Servidor 03</span><div class="icon-box"><img src="/assets/icons/SVG-DATABASE.svg" alt=""></div></div>
+        <h3>Armazenamento &amp; Auditoria de Imagens</h3>
+        <p>Monitoramento de disco e gravação para assegurar a retenção e o armazenamento seguro do histórico de imagens para auditorias futuras.</p>
+        <div class="specs">
+          <div><span>Retenção Legal:</span><b class="o">Conformidade ANTT</b></div>
+          <div><span>Integridade de Gravação:</span><b class="n">NVMe RAID 10 OK</b></div>
+          <div><span>Trilha de Auditoria:</span><b>Logs Imutáveis WORM</b></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Benefícios -->
+<section id="beneficios" class="alt">
+  <div class="container">
+    <div class="section-head">
+      <span class="pill">Desempenho operacional</span>
+      <h2>Benefícios Comprovados na Operação Rodoviária</h2>
+      <p>Reduza prejuízos decorrentes de indisponibilidade e mantenha a conformidade com as agências reguladoras.</p>
     </div>
 
-    <section class="solucao" id="solucoes">
-    <div class="social">
-        <div class="container flex-col">
-            <div class="section-header">
-                <span class="section-tag">GESTÃO PARA SEUS SERVIDORES</span>
-                <h2>Soluções completas para o monitoramento da sua infraestrutura</h2>
-            </div>
+    <div class="grid-4">
+      <article class="card benefit">
+        <div class="icon-box"><img src="/assets/icons/SVG-RELOGIO.svg" alt=""></div>
+        <div class="big">99,5%</div>
+        <h4>Uptime Garantido</h4>
+        <p>Disponibilidade operacional garantida da tripla de servidores mesmo em períodos de tráfego intenso.</p>
+        <div class="foot">SLA Contratual Estrito</div>
+      </article>
 
-            <div class="boxes">
-                <div class="box">
-                    <div class="box-icon">
-                        <img src="assets/icons/servidores.png" alt="Monitoramento">
-                    </div>
-                    <h4>Monitoramento Contínuo</h4>
-                    <p>Acompanhe em tempo real o desempenho e a saúde de cada componente do seu servidor.</p>
-                </div>
+      <article class="card benefit">
+        <div class="icon-box"><img src="/assets/icons/SVG-RAIO.svg" alt=""></div>
+        <div class="big">Zero Filas</div>
+        <h4>Redução de Paralisações</h4>
+        <p>Eliminação de paradas abruptas e retenções por travamentos de software ou falha de componentes de hardware.</p>
+        <div class="foot o">Fluxo Contínuo em Cabines</div>
+      </article>
 
-                <div class="box">
-                    <div class="box-icon">
-                        <img src="assets/icons/alerta.png   " alt="Alertas">
-                    </div>
-                    <h4>Alertas Inteligentes</h4>
-                    <p>Detecção automática de anomalias e abertura de chamados conforme boas práticas ITIL.</p>
-                </div>
+      <article class="card benefit">
+        <div class="icon-box"><img src="/assets/icons/SVG-ENGRENAGEM.svg" alt=""></div>
+        <div class="big">IA Preditiva</div>
+        <h4>Manutenção Preditiva</h4>
+        <p>Previsão do fim da vida útil das peças antes de ocorrer downtime: SMART disk alerts, temperatura e fontes redundantes.</p>
+        <div class="foot">Substituição sem Paradas</div>
+      </article>
 
-                <div class="box">
-                    <div class="box-icon">
-                        <img src="assets/icons/relatorio.png" alt="Relatórios">
-                    </div>
-                    <h4>Gestão e Relatórios</h4>
-                    <p>Relatórios detalhados, histórico de monitoramentos e indicadores da saúde de seus servidores.</p>
-                </div>
-
-                <div class="box">
-                    <div class="box-icon">
-                        <img src="assets/icons/segurança.png" alt="Segurança">
-                    </div>
-                    <h4>Segurança e Controle</h4>
-                    <p>Acesso seguro com proteção de dados em conformidade.</p>
-                </div>
-            </div>
-        </div>
+      <article class="card benefit">
+        <div class="icon-box"><img src="/assets/icons/SVG-LATENCIA.svg" alt=""></div>
+        <div class="big o">&lt; 10ms</div>
+        <h4>Latência de Telemetria</h4>
+        <p>Comunicação ultrarrápida entre os servidores de pista e o Centro de Controle Operacional (CCO central).</p>
+        <div class="foot m">Sincronização Contínua</div>
+      </article>
     </div>
-    </section>
+  </div>
+</section>
 
-    <section class="sobre" id="sobrenos">
-    <div class="container sobre-container">
-        <div class="sobre-content">
-            <span class="sobre-tag">SOBRE NÓS</span>
-            <h2>A SorveSys é a solução em tecnologia para o monitoramento inteligente das infraestruturas dos servidores rodoviários.</h2>
-            <p><span class="marca-texto">A SorveSys nasceu com um propósito claro e direcionado:</span> proteger a saúde dos servidores das praças de pedágio, sabemos que esses servidores contém informações essenciais e 
-                muito valiosas para a garantia da integridade da concessionária rodoviária, além, de garantir a segurança em rodovias tudo faz parte de um processo benéfico a todos, 
-                e nós estamos auxiliando e envolvidos nesse objetivo.  </p>
-                <p>Porém, entendemos  que a nossa atuação vai muito além do ambiente digital.
-                Cada segundo de instabilidade em um sistema de TI pode gerar filas, atrasos e riscos operacionais.
-                 Por isso, atuamos em conjunto com as concessionárias para garantir a alta disponibilidade da infraestrutura 
-                e, acima de tudo, contribuir para uma mobilidade rodoviária mais segura, fluida e eficiente para milhares de motoristas todos os dias. </p>
-            <div class="sobre-stats">
-                <div class="stat-item">
-                    <h3>Monitoramento a todo momento!</h3>
-                    <p>Fazendo o monitoramento ativo do seu servidor 24 horas por dia e 7 dias por semana.</p>
-                </div>
-                
-            </div>
-        </div>
-
-        <div class="sobre-media">
-            <img src="assets/servidor-sobrenos.jpg=n-w2560-h1707-fcrop64=1,00000000ffffffff-rw" alt="servidor" class="sobre-img">
-        </div>
+<!-- CTA -->
+<section id="contato" class="cta-wrap">
+  <div class="container">
+    <div class="cta">
+      <span class="pill">NOC &amp; Operações Rodoviárias</span>
+      <h2>Garanta 100% de disponibilidade nos seus servidores de pedágio.</h2>
+      <p>Convide sua equipe de engenheiros de NOC, TI e operações rodoviárias a implementarem o monitoramento ativo e preditivo da infraestrutura das suas praças.</p>
+      <a href="#" class="btn btn-white">Acessar Dashboard de Hardware
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <small>Compatível com servidores Edge Rack, ambientes virtualizados e appliances de pista homologados.</small>
     </div>
-    </section>
+  </div>
+</section>
+</main>
 
-    
-    <div class="footer">
-        <div class="container flex-col">
-            <div class="footer-top">
-                <div class="footer-col brand-col">
-                    <p class="brand-slogan">
-                  <span class="brand-name">SorveSys:</span>  <span class="highlight">Tecnologia que garante a </span> 
-                  <span class="highlight">disponibilidade  da </span> 
-                  <span class="highlight">infraestrutura de servidores</span>  <span class="highlight">das rodovias.</span>
-                    </p>
-                </div>
-
-                <div class="footer-col">
-                    <h5>Empresa</h5>
-                    <ul>
-                        <li><a href="#">Código de conduta</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h5>Suporte</h5>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                         
-                    </ul>
-                </div>
-
-                <div class="footer-col contact-col">
-                    <h5>Contatos</h5>
-                    <p><span>&#9094;</span> comercial@sorvesys.com.br</p>
-                    <p><span>&#9742;</span> (11) 4070-2374</p>
-                    <p><span>&#9906;</span> São Paulo,Brasil</p>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2026 SorveSys. Todos os direitos reservados.</p>
-                <div class="footer-links">
-                    <a href="#">Política de Privacidade</a>
-                </div>
-            </div>
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">Sorve<span>Sys</span></div>
+        <p class="desc">Monitoramento de Sistemas Rodoviários. Solução dedicada para alta disponibilidade, segurança e telemetria preditiva de servidores de praça de pedágio.</p>
+        <div class="social">
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="Redes sociais">▮</a>
         </div>
+      </div>
+      <div>
+        <h5>Módulos</h5>
+        <ul>
+          <li><a href="#">Captura &amp; OCR</a></li>
+          <li><a href="#">Gateway TEF/Tag</a></li>
+          <li><a href="#">Storage &amp; Auditoria</a></li>
+          <li><a href="#">Alertas SMART</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Arquitetura &amp; Suporte</h5>
+        <ul>
+          <li><a href="#">Alta Disponibilidade (SLA)</a></li>
+          <li><a href="#">Integração CCO Central</a></li>
+          <li><a href="#">NOC 24/7 de Missão Crítica</a></li>
+          <li><a href="#">Documentação da API REST</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Conformidade ANTT</h5>
+        <ul class="bul">
+          <li>Resoluções Regulatórias ANTT</li>
+          <li>Trilha de Auditoria Imutável (WORM)</li>
+          <li>Retenção de Imagens e Passagens</li>
+        </ul>
+        <span class="sla-chip">SLA Homologado 99,5%</span>
+      </div>
     </div>
+
+    <div class="foot-bottom">
+      <span>© 2026 SorveSys Tecnologia Rodoviária. Todos os direitos reservados.</span>
+      <div>
+        <a href="#">Política de Privacidade</a>
+        <a href="#">Termos de Uso</a>
+        <a href="#">Segurança da Informação</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
 </body>
-
 </html>
