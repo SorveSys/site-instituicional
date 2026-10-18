@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SorveSys | Cadastro de Empresa</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="icon" href="assets/LOGO SORVESYS.png">
+    <!-- Mesmo CSS da tela de cadastro de servidor (layout compartilhado) -->
+    <link rel="stylesheet" href="/css/cadastro-servidor.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- TOPO (igual ao login) -->
+    <header class="topbar">
+        <a href="index.html" class="topbar-logo">
+            <img src="/assets/icons/login/Logo-SorveSys-Fundo-Escuro.svg" alt="SorveSys Logo">
+        </a>
+
+        <a href="index.html" class="topbar-voltar">
+            <img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Home
+        </a>
+
+        <a href="#" class="topbar-noc">
+            <img src="/assets/icons/login/Icon-fone.svg" alt="" class="ico"> Contate o NOC
+        </a>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+            <source src="/assets/icons/login/pedagio-horizontal-otimizado.mp4" type="video/mp4">
+        </video>
+
+        <div class="hero-conteudo">
+            <span class="hero-tag">Módulo de concessionárias • Gestão de lotes</span>
+            <h1>Cadastro de Empresa</h1>
+            <p>Provisionamento de concessionárias para vincular praças, servidores e telemetria contínua.</p>
+        </div>
+    </section>
+
+    <!-- CONTEÚDO -->
+    <main class="conteudo">
+
+        <!-- FORMULÁRIO -->
+        <section class="card-form">
+            <div class="card-form-topo">
+                <img src="/assets/icons/cadastro-empresa/Icon-predio-mais.svg" alt="" class="ico">
+                <h2>Nova empresa</h2>
+            </div>
+
+            <form class="card-form-corpo" onsubmit="return cadastrar()" novalidate>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="ipt_razao">Razão Social <b>*</b></label>
+                        <code>empresa.razao_social</code>
+                    </div>
+                    <p class="ajuda">Nome jurídico da concessionária conforme o contrato de concessão.</p>
+                    <div class="campo-input">
+                        <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
+                        <input type="text" id="ipt_razao" placeholder="Concessionária Rodovias do Sul S.A." autocomplete="organization">
+                    </div>
+                </div>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="ipt_cnpj">CNPJ <b>*</b></label>
+                        <code>empresa.cnpj</code>
+                    </div>
+                    <p class="ajuda">Documento da concessionária (ex: 12.345.678/0001-90).</p>
+                    <div class="campo-input">
+                        <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg" alt="" class="ico ico-campo">
+                        <input type="text" id="ipt_cnpj" placeholder="00.000.000/0000-00" inputmode="numeric" maxlength="18" oninput="mascararCnpj(this)" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="ipt_email">E-mail corporativo <b>*</b></label>
+                        <code>empresa.email</code>
+                    </div>
+                    <p class="ajuda">Contato do responsável técnico pela operação do lote rodoviário.</p>
+                    <div class="campo-input">
+                        <img src="/assets/icons/cadastro-empresa/Icon-email.svg" alt="" class="ico ico-campo">
+                        <input type="email" id="ipt_email" placeholder="operador@concessionaria.com.br" autocomplete="email">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-cadastrar">
+                    <img src="/assets/icons/cadastro-empresa/Icon-adicionar.svg" alt="" class="ico">
+                    Cadastrar Empresa
+                </button>
+
+                <div id="cardErro" class="card-erro" style="display:none;">
+                    <span id="mensagem_erro"></span>
+                </div>
+            </form>
+        </section>
+
+        <!-- O QUE A EMPRESA RECEBE -->
+        <section class="tipos">
+
+            <article class="tipo-card verde">
+                <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-semaforo.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Escopo: Operação</span>
+                    <h3>Operação • Pistas &amp; Sinalização</h3>
+                    <p>Monitoramento dos controladores de pista, pórticos free-flow e sinalização da praça.</p>
+                </div>
+            </article>
+
+            <article class="tipo-card laranja">
+                <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-pagamento.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Escopo: Arrecadação</span>
+                    <h3>Arrecadação • TEF / TAG / Cabines Manuais</h3>
+                    <p>Visibilidade dos servidores de pagamento e das transações da concessionária.</p>
+                </div>
+            </article>
+
+            <article class="tipo-card azul">
+                <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-escudo-certo.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Escopo: Conformidade</span>
+                    <h3>Conformidade • Auditoria ANTT</h3>
+                    <p>Trilha de auditoria e redundância sincronizada com o datacenter regulador.</p>
+                </div>
+            </article>
+
+        </section>
+    </main>
+
+    <script>
+        function mostrarMensagem(texto, sucesso) {
+            cardErro.className = sucesso ? "card-erro sucesso" : "card-erro";
+            cardErro.style.display = "block";
+            mensagem_erro.innerHTML = texto;
+        }
+
+        // Máscara 00.000.000/0000-00
+        function mascararCnpj(campo) {
+            var d = campo.value.replace(/\D/g, "").slice(0, 14);
+            var r = d;
+            if (d.length > 12) r = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*/, "$1.$2.$3/$4-$5");
+            else if (d.length > 8) r = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, "$1.$2.$3/$4");
+            else if (d.length > 5) r = d.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, "$1.$2.$3");
+            else if (d.length > 2) r = d.replace(/^(\d{2})(\d{0,3}).*/, "$1.$2");
+            campo.value = r;
+        }
+
+        // Validação dos dígitos verificadores do CNPJ
+        function cnpjValido(valor) {
+            var c = valor.replace(/\D/g, "");
+            if (c.length != 14 || /^(\d)\1+$/.test(c)) return false;
+
+            function digito(base) {
+                var pesos = base.length == 12
+                    ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                    : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+                var soma = 0;
+                for (var i = 0; i < base.length; i++) soma += Number(base[i]) * pesos[i];
+                var resto = soma % 11;
+                return resto < 2 ? 0 : 11 - resto;
+            }
+
+            var d1 = digito(c.slice(0, 12));
+            var d2 = digito(c.slice(0, 12) + d1);
+            return c.slice(12) == String(d1) + String(d2);
+        }
+
+        function cadastrar() {
+
+            var razaoVar = ipt_razao.value.trim();
+            var cnpjVar = ipt_cnpj.value.trim();
+            var emailVar = ipt_email.value.trim();
+
+            if (razaoVar == "" || cnpjVar == "") {
+                mostrarMensagem("Preencha todos os campos!", false);
+                return false;
+            }
+
+            if (!cnpjValido(cnpjVar)) {
+                mostrarMensagem("CNPJ inválido!", false);
+                return false;
+            }
+
+            if (emailVar.indexOf("@") < 1 || emailVar.indexOf(".", emailVar.indexOf("@")) < 0) {
+                mostrarMensagem("E-mail inválido!", false);
+                return false;
+            }
+
+            // TODO: ajustar a rota e os campos quando o back-end estiver pronto
+            fetch("/empresas/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    razaoServer: razaoVar,
+                    cnpjServer: cnpjVar,
+                    emailServer: emailVar
+                }),
+            })
+
+                .then(function (resposta) {
+
+                    if (resposta.ok) {
+
+                        mostrarMensagem("Empresa cadastrada com sucesso!", true);
+
+                        ipt_razao.value = "";
+                        ipt_cnpj.value = "";
+                        ipt_email.value = "";
+
+                    } else {
+
+                        resposta.text().then(texto => {
+
+                            if (texto.includes("Duplicate entry")) {
+                                mostrarMensagem("Esse CNPJ já foi cadastrado!", false);
+                            } else {
+                                mostrarMensagem("Erro ao realizar cadastro!", false);
+                            }
+
+                        });
+                    }
+                })
+
+                .catch(function (erro) {
+                    console.log(erro);
+                    mostrarMensagem("Erro ao tentar cadastrar a empresa!", false);
+                });
+
+            return false;
+        }
+    </script>
+</body>
+
+</html>

@@ -1,9 +1,7 @@
-// var ambiente_processo = 'producao';
 var ambiente_processo = 'desenvolvimento';
 
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
-// Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
-// A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
+
 
 require("dotenv").config({ path: caminho_env });
 
@@ -27,6 +25,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
+
+var paginas = {
+    "/": "index.html",
+    "/login": "login.html",
+    "/cadastro": "cadastro.html",
+    "/cadastro-servidor": "cadastro-servidor.html",
+    "/cadastro-empresa": "cadastro-empresa.html",
+    "/dashboard": "dashboard/dashboard.html",
+};
+
+Object.keys(paginas).forEach(function (rota) {
+    app.get(rota, function (req, res) {
+        res.sendFile(path.join(__dirname, "public", paginas[rota]));
+    });
+});
 
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
