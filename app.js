@@ -35,6 +35,7 @@ var paginas = {
     "/cadastro": "cadastro.html",
     "/cadastro-servidor": "cadastro-servidor.html",
     "/cadastro-empresa": "cadastro-empresa.html",
+    "/cadastro-usuario": "cadastro-usuario.html",
     "/overview": "overview.html",
     "/dashboard": "dashboard/dashboard.html",
 };
