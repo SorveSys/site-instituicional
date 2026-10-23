@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SorveSys | Overview</title>
+
+    <script src="/js/sessao.js"></script>
+    <link rel="icon" href="/assets/LOGO SORVESYS.png">
+    <link rel="stylesheet" href="/css/overview.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-topo">
+                <div class="marca-icone"><img src="/assets/icons/home/LOGO.svg" alt=""></div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <span class="nav-secao">Principal</span>
+                <a href="/overview" class="nav-item ativo">
+                    <img src="/assets/icons/overview/ICON-GRID.svg" class="ico" alt="">
+                    <span>Overview</span>
+                    <em id="nav_total">9</em>
+                </a>
+                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Alicia</span></a>
+                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Danilo</span></a>
+                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Matheus</span></a>
+                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Melissa</span></a>
+                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Nicolas</span></a>
+                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Rodrigo</span></a>
+            </nav>
+
+            <div class="sidebar-rodape">
+                <div class="operador">
+                    <div class="operador-avatar">OP</div>
+                    <div class="operador-info">
+                        <strong id="nome_operador">Operador NOC #409</strong>
+                        <small>Gestor de Infraestrutura</small>
+                    </div>
+                    <button class="btn-sair" onclick="sair()" aria-label="Sair">
+                        <img src="/assets/icons/overview/ICON-LOGOUT.svg" class="ico" alt="">
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO -->
+        <main class="main">
+            <header class="page-header">
+                <div>
+                    <h1>Overview</h1>
+                    <p>Visão geral da infraestrutura monitorada nas praças de pedágio</p>
+                </div>
+                <div class="page-header-acoes">
+                    <span class="atualizado">
+                        <img src="/assets/icons/overview/ICON-RELOGIO.svg" class="ico" alt="">
+                        Atualizado: <b id="hora_atualizado">--:--</b>
+                    </span>
+                    <a href="/cadastro-servidor" class="btn-novo">
+                        <img src="/assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Servidor
+                    </a>
+                </div>
+            </header>
+
+            <div class="conteudo">
+                <!-- KPIs -->
+                <section class="kpis">
+                    <article class="kpi kpi-total">
+                        <div class="kpi-topo">
+                            <span class="kpi-titulo">Total de servidores</span>
+                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-TOTAL-SERVIDORES.svg" class="ico" alt=""></div>
+                        </div>
+                        <div class="kpi-numero"><strong id="kpi_total">0</strong><span>unidades monitoradas</span></div>
+                        <div class="kpi-barra"><i style="width:100%"></i></div>
+                    </article>
+
+                    <article class="kpi kpi-ok">
+                        <div class="kpi-topo">
+                            <span class="kpi-titulo">Operacionais</span>
+                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-ESCUDO.svg" class="ico" alt=""></div>
+                        </div>
+                        <div class="kpi-numero"><strong id="kpi_ok">0</strong><span id="kpi_ok_pct">0%</span></div>
+                        <p class="kpi-desc"><i class="ponto"></i> Operando dentro dos parâmetros de telemetria</p>
+                        <div class="kpi-barra"><i id="barra_ok"></i></div>
+                        <div class="kpi-lista">
+                            <div class="kpi-lista-topo">
+                                <span id="lbl_ok">Servidores ativos (0)</span>
+                                <a href="#tabela" onclick="filtrarStatus('operacional')">Filtrar todos</a>
+                            </div>
+                            <div class="chips" id="chips_ok"></div>
+                        </div>
+                    </article>
+
+                    <article class="kpi kpi-alerta">
+                        <div class="kpi-topo">
+                            <span class="kpi-titulo">Com alertas</span>
+                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-ALERTA.svg" class="ico" alt=""></div>
+                        </div>
+                        <div class="kpi-numero"><strong id="kpi_alerta">0</strong><span id="kpi_alerta_pct">0%</span></div>
+                        <p class="kpi-desc"><img src="/assets/icons/overview/ICON-TRENDING.svg" class="ico mini" alt=""> Carga elevada de CPU ou NVMe próximo do teto</p>
+                        <div class="kpi-barra"><i id="barra_alerta"></i></div>
+                        <div class="kpi-lista">
+                            <div class="kpi-lista-topo">
+                                <span id="lbl_alerta">Servidores em alerta (0)</span>
+                                <a href="#tabela" onclick="filtrarStatus('atencao')">Filtrar todos</a>
+                            </div>
+                            <div class="chips" id="chips_alerta"></div>
+                        </div>
+                    </article>
+
+                    <article class="kpi kpi-critico">
+                        <div class="kpi-topo">
+                            <span class="kpi-titulo">Críticos ou offline</span>
+                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-OFFLINE.svg" class="ico" alt=""></div>
+                        </div>
+                        <div class="kpi-numero"><strong id="kpi_critico">0</strong><span id="kpi_critico_pct">0%</span></div>
+                        <p class="kpi-desc">
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            Intervenção técnica imediata necessária
+                        </p>
+                        <div class="kpi-barra"><i id="barra_critico"></i></div>
+                        <div class="kpi-lista">
+                            <div class="kpi-lista-topo">
+                                <span id="lbl_critico">Servidor crítico (0)</span>
+                                <a href="#tabela" onclick="filtrarStatus('critico')">Filtrar todos</a>
+                            </div>
+                            <div class="chips" id="chips_critico"></div>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- TABELA -->
+                <section class="card" id="tabela">
+                    <div class="tabela-topo">
+                        <div class="tabela-titulo">
+                            <h2>Servidores Monitorados <span class="contador" id="contador_tabela">0 de 0</span></h2>
+                            <p>Acompanhamento contínuo de hardware, telemetria e disponibilidade das praças</p>
+                        </div>
+
+                        <div class="filtros">
+                            <div class="busca">
+                                <img src="/assets/icons/overview/ICON-LUPA.svg" class="ico" alt="">
+                                <input type="text" id="ipt_busca" placeholder="Buscar por nome, IP ou praça..." oninput="renderTabela()">
+                            </div>
+
+                            <select id="slt_tipo" onchange="renderTabela()">
+                                <option value="">Todos os Tipos</option>
+                                <option value="armazenamento">Armazenamento para auditoria</option>
+                                <option value="pagamento">Processamento de pagamentos</option>
+                                <option value="captura">Captura de informações</option>
+                            </select>
+
+                            <select id="slt_status" onchange="renderTabela()">
+                                <option value="">Todos os Status</option>
+                                <option value="operacional">Operacional</option>
+                                <option value="atencao">Atenção</option>
+                                <option value="critico">Crítico</option>
+                            </select>
+
+                            <select id="slt_ordem" onchange="renderTabela()">
+                                <option value="nome">Ordenar: Nome (A-Z)</option>
+                                <option value="nome-desc">Ordenar: Nome (Z-A)</option>
+                                <option value="cpu">Ordenar: Maior CPU</option>
+                                <option value="ram">Ordenar: Maior RAM</option>
+                                <option value="disco">Ordenar: Maior Disco</option>
+                                <option value="gravidade">Ordenar: Gravidade</option>
+                            </select>
+
+                            <button class="btn-reload" onclick="recarregar()" aria-label="Recarregar">
+                                <img src="/assets/icons/overview/ICON-RELOAD.svg" class="ico" alt="">
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="tabela-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nome do servidor</th>
+                                    <th>Endereço IP / Praça</th>
+                                    <th>Tipo do servidor</th>
+                                    <th>Status operacional</th>
+                                    <th>Uso CPU</th>
+                                    <th>Uso RAM</th>
+                                    <th>Uso Disco</th>
+                                    <th>Última comunicação</th>
+                                    <th class="acoes">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpo_tabela"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="tabela-rodape">
+                        <span id="info_registros">Exibindo 0 registros</span>
+                        <div class="paginacao" id="paginacao"></div>
+                    </div>
+                </section>
+
+                <!-- ALERTAS -->
+                <section class="card alertas">
+                    <div class="alertas-topo">
+                        <div>
+                            <h2>Alertas Recentes <span class="contador amarelo" id="contador_alertas">4 eventos</span></h2>
+                            <p>Últimos eventos de hardware, rede e subsistemas de pista detectados pelo agente</p>
+                        </div>
+                        <div class="alertas-links">
+                            <button onclick="marcarLidos()">Marcar lidos</button>
+                            <a href="#">Ver todos os alertas →</a>
+                        </div>
+                    </div>
+                    <div id="lista_alertas"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/overview.js"></script>
+</body>
+</html>
