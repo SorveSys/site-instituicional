@@ -210,12 +210,13 @@
                 .then(function (resposta) {
 
                     if (resposta.ok) {
+                        mostrarMensagem("Empresa cadastrada com sucesso! Redirecionando...",true);
 
-                        mostrarMensagem("Empresa cadastrada com sucesso!", true);
+                            setTimeout(function () {window.location.href = "cadastro-usuario";}, 1500);
 
-                        ipt_razao.value = "";
-                        ipt_cnpj.value = "";
-                        ipt_fantasia.value = "";
+                            ipt_razao.value = "";
+                            ipt_cnpj.value = "";
+                            ipt_fantasia.value = "";
 
                     } else {
 
