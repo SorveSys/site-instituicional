@@ -43,9 +43,10 @@
         </video>
 
         <div class="hero-conteudo">
-            <span class="hero-tag">Módulo de concessionárias • Gestão de lotes</span>
+            <span class="hero-tag">Módulo de empresas 
+            </span>
             <h1>Cadastro de Empresa</h1>
-            <p>Provisionamento de concessionárias para vincular praças, servidores e telemetria contínua.</p>
+            <p>Provisionamento de empresas para vincular praças, servidores e telemetria contínua.</p>
         </div>
     </section>
 
@@ -63,37 +64,35 @@
 
                 <div class="campo-grupo">
                     <div class="linha-label">
-                        <label for="ipt_razao">Razão Social <b>*</b></label>
-                        <code>empresa.razao_social</code>
+                        <label for="ipt_fantasia">Nome Fantasia</label>
                     </div>
-                    <p class="ajuda">Nome jurídico da concessionária conforme o contrato de concessão.</p>
+                    <p class="ajuda">Nome comercial ou marca utilizada pela concessionária.</p>
                     <div class="campo-input">
                         <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
-                        <input type="text" id="ipt_razao" placeholder="Concessionária Rodovias do Sul S.A." autocomplete="organization">
+                        <input type="text" id="ipt_fantasia" placeholder="Rodovias do Sul" autocomplete="organization">
+                    </div>
+                </div>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="ipt_razao">Razão Social <b>*</b></label>
+                       
+                    </div>
+                    <p class="ajuda">Nome jurídico da empresa conforme o contrato de concessão.</p>
+                    <div class="campo-input">
+                        <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
+                        <input type="text" id="ipt_razao" placeholder="Empresa Rodovias do Sul S.A." autocomplete="organization">
                     </div>
                 </div>
 
                 <div class="campo-grupo">
                     <div class="linha-label">
                         <label for="ipt_cnpj">CNPJ <b>*</b></label>
-                        <code>empresa.cnpj</code>
                     </div>
-                    <p class="ajuda">Documento da concessionária (ex: 12.345.678/0001-90).</p>
+                    <p class="ajuda">CNPJ da empresa (ex: 12.345.678/0001-90).</p>
                     <div class="campo-input">
                         <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg" alt="" class="ico ico-campo">
                         <input type="text" id="ipt_cnpj" placeholder="00.000.000/0000-00" inputmode="numeric" maxlength="18" oninput="mascararCnpj(this)" autocomplete="off">
-                    </div>
-                </div>
-
-                <div class="campo-grupo">
-                    <div class="linha-label">
-                        <label for="ipt_email">E-mail corporativo <b>*</b></label>
-                        <code>empresa.email</code>
-                    </div>
-                    <p class="ajuda">Contato do responsável técnico pela operação do lote rodoviário.</p>
-                    <div class="campo-input">
-                        <img src="/assets/icons/cadastro-empresa/Icon-email.svg" alt="" class="ico ico-campo">
-                        <input type="email" id="ipt_email" placeholder="operador@concessionaria.com.br" autocomplete="email">
                     </div>
                 </div>
 
@@ -115,7 +114,7 @@
                 <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-semaforo.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Escopo: Operação</span>
-                    <h3>Operação • Pistas &amp; Sinalização</h3>
+                    <h3>Operação DE Pistas &amp; Sinalização</h3>
                     <p>Monitoramento dos controladores de pista, pórticos free-flow e sinalização da praça.</p>
                 </div>
             </article>
@@ -124,8 +123,8 @@
                 <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-pagamento.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Escopo: Arrecadação</span>
-                    <h3>Arrecadação • TEF / TAG / Cabines Manuais</h3>
-                    <p>Visibilidade dos servidores de pagamento e das transações da concessionária.</p>
+                    <h3>Arrecadação - TEF / TAG / Cabines Manuais</h3>
+                    <p>Visibilidade dos servidores de pagamento e das transações da empresa.</p>
                 </div>
             </article>
 
@@ -133,7 +132,7 @@
                 <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-escudo-certo.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Escopo: Conformidade</span>
-                    <h3>Conformidade • Auditoria ANTT</h3>
+                    <h3>Conformidade - Auditoria ANTT</h3>
                     <p>Trilha de auditoria e redundância sincronizada com o datacenter regulador.</p>
                 </div>
             </article>
@@ -183,10 +182,10 @@
 
             var razaoVar = ipt_razao.value.trim();
             var cnpjVar = ipt_cnpj.value.trim();
-            var emailVar = ipt_email.value.trim();
+            var fantasiaVar = ipt_fantasia.value.trim();
 
             if (razaoVar == "" || cnpjVar == "") {
-                mostrarMensagem("Preencha todos os campos!", false);
+                mostrarMensagem("Preencha todos os campos obrigatórios!", false);
                 return false;
             }
 
@@ -195,12 +194,7 @@
                 return false;
             }
 
-            if (emailVar.indexOf("@") < 1 || emailVar.indexOf(".", emailVar.indexOf("@")) < 0) {
-                mostrarMensagem("E-mail inválido!", false);
-                return false;
-            }
-
-            // TODO: ajustar a rota e os campos quando o back-end estiver pronto
+            // Envio para o backend adaptado para o schema da SorveSys
             fetch("/empresas/cadastrar", {
                 method: "POST",
                 headers: {
@@ -209,7 +203,7 @@
                 body: JSON.stringify({
                     razaoServer: razaoVar,
                     cnpjServer: cnpjVar,
-                    emailServer: emailVar
+                    nomeFantasiaServer: fantasiaVar
                 }),
             })
 
@@ -221,7 +215,7 @@
 
                         ipt_razao.value = "";
                         ipt_cnpj.value = "";
-                        ipt_email.value = "";
+                        ipt_fantasia.value = "";
 
                     } else {
 
