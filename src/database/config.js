@@ -1,14 +1,23 @@
 
 var mysql = require("mysql2");
+var path = require("path");
 
-// CONEXÃO DO BANCO MYSQL SERVER
-var mySqlConfig = {
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
-};
+// Carrega as variáveis de ambiente caso ainda não tenham sido carregadas
+if (!process.env.DB_USER) {
+    var ambiente = process.env.AMBIENTE_PROCESSO || "desenvolvimento";
+    var arquivoEnv = ambiente === "producao" ? ".env" : ".env.dev";
+    require("dotenv").config({ path: path.resolve(__dirname, "..", "..", arquivoEnv) });
+}
+
+function getMySqlConfig() {
+    return {
+        host: process.env.DB_HOST || "127.0.0.1",
+        database: process.env.DB_DATABASE || "sorvesys",
+        user: process.env.DB_USER || "root",
+        password: process.env.DB_PASSWORD,
+        port: Number(process.env.DB_PORT) || 3306
+    };
+}
 
 function executar(instrucao, valores) {
 
@@ -27,11 +36,12 @@ function executar(instrucao, valores) {
 
     return new Promise(function (resolve, reject) {
 
-        var conexao = mysql.createConnection(mySqlConfig);
+        var conexao = mysql.createConnection(getMySqlConfig());
 
         conexao.connect(function (erroConexao) {
 
             if (erroConexao) {
+                console.error("Erro ao conectar no MySQL:", erroConexao.sqlMessage || erroConexao.message);
                 return reject(erroConexao);
             }
 

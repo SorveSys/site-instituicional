@@ -66,7 +66,7 @@
 
                 <div class="tabs">
                     <a href="login.html" class="tab ativa"><img src="./assets/icons/login/Icon-entrar-conta.svg" alt="" class="ico"> Entrar na Conta</a>
-                    <a href="cadastro.html" class="tab"><img src="./assets/icons/login/Icon-cadastrar.svg" alt="" class="ico"> Cadastrar Concessionária</a>
+                    <a href="cadastro-empresa.html" class="tab"><img src="./assets/icons/login/Icon-cadastrar.svg" alt="" class="ico"> Cadastrar Concessionária</a>
                 </div>
 
                 <span class="status-tag"><i class="ponto"></i> Terminal homologado</span>
@@ -113,7 +113,7 @@
 
                 <p class="alternar">
                     Não possui credencial autorizada?
-                    <a href="cadastro.html">Alternar para Cadastro de Concessionária <img src="./assets/icons/login/Icon-seta.svg" alt="" class="ico ico-mini"></a>
+                    <a href="cadastro-empresa.html">Alternar para Cadastro de Concessionária <img src="./assets/icons/login/Icon-seta.svg" alt="" class="ico ico-mini"></a>
                 </p>
 
                 <div class="status-rodape">
@@ -191,6 +191,10 @@
                             sessionStorage.EMAIL_USUARIO = json.email;
                             sessionStorage.NOME_USUARIO = json.nome;
                             sessionStorage.ID_USUARIO = json.id;
+                            if (json.fk_empresa) sessionStorage.FK_EMPRESA = json.fk_empresa;
+                            if (json.fk_tipo_usuario) sessionStorage.FK_TIPO_USUARIO = json.fk_tipo_usuario;
+                            if (json.perfil) sessionStorage.PERFIL_USUARIO = json.perfil;
+                            if (json.empresa) sessionStorage.EMPRESA_USUARIO = json.empresa;
 
                             cardErro.className = "card-erro sucesso";
                             cardErro.style.display = "block";
@@ -198,7 +202,7 @@
 
                             setTimeout(() => {
                                 window.location = "./dashboard/dashboard.html";
-                            }, 2000);
+                            }, 1500);
 
                         });
 

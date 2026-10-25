@@ -304,7 +304,8 @@ a {
     margin-left: 14px;
 }
 
-.campo-input .ico-campo + input {
+.campo-input .ico-campo + input,
+.campo-input .ico-campo + select {
     padding-left: 12px;
 }
 

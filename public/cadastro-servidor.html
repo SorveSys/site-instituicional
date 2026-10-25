@@ -68,9 +68,9 @@
                     <div class="campo-input">
                         <select id="slt_tipo">
                             <option value="">Selecione o tipo de servidor..</option>
-                            <option value="TRANSITO">Trânsito - Pistas Automáticas</option>
-                            <option value="PAGAMENTO">Pagamento - TEF / TAG / Cabines Manuais</option>
-                            <option value="AUDITORIA">Auditoria - CCO &amp; Fiscalização ANTT</option>
+                            <option value="transito">Trânsito - Pistas Automáticas</option>
+                            <option value="pagamento">Pagamento - TEF / TAG / Cabines Manuais</option>
+                            <option value="auditoria">Auditoria - CCO &amp; Fiscalização ANTT</option>
                         </select>
                     </div>
                 </div>
@@ -88,14 +88,14 @@
 
                 <div class="campo-grupo">
                     <div class="linha-label">
-                        <label for="slt_empresa">Empresa Proprietária <b>*</b></label>
+                        <label for="slt_empresa">Concessionária Proprietária <b>*</b></label>
                     </div>
-                    <p class="ajuda">Empresa administradora responsável pelo lote rodoviário.</p>
+                    <p class="ajuda">Selecione a concessionária responsável pelo lote rodoviário.</p>
                     <div class="campo-input">
+                        <img src="assets/icons/cadastro-servidor/Icon-predio.svg" alt="" class="ico ico-campo">
                         <select id="slt_empresa">
-                            <option value="">Vincular a uma concessionária ativa...</option>
+                            <option value="">Carregando concessionárias...</option>
                         </select>
-                        <img src="assets/icons/cadastro-servidor/Icon-predio.svg" alt="" class="ico ico-direita">
                     </div>
                 </div>
 
@@ -113,7 +113,7 @@
         <!-- TIPOS DE SERVIDOR -->
         <section class="tipos">
 
-            <article class="tipo-card laranja" onclick="escolherTipo('TRANSITO')">
+            <article class="tipo-card laranja" onclick="escolherTipo('transito')">
                 <div class="tipo-icone"><img src="assets/icons/cadastro-servidor/Icon-carro.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Tipo: Trânsito</span>
@@ -122,7 +122,7 @@
                 </div>
             </article>
 
-            <article class="tipo-card laranja" onclick="escolherTipo('PAGAMENTO')">
+            <article class="tipo-card laranja" onclick="escolherTipo('pagamento')">
                 <div class="tipo-icone"><img src="assets/icons/cadastro-servidor/Icon-pagamento.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Tipo: Pagamento</span>
@@ -131,7 +131,7 @@
                 </div>
             </article>
 
-            <article class="tipo-card azul" onclick="escolherTipo('AUDITORIA')">
+            <article class="tipo-card azul" onclick="escolherTipo('auditoria')">
                 <div class="tipo-icone"><img src="assets/icons/cadastro-servidor/Icon-escudo.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Tipo: Auditoria</span>
@@ -145,7 +145,7 @@
 
     <script>
         function escolherTipo(tipo) {
-            slt_tipo.value = tipo;
+            slt_tipo.value = String(tipo).toLowerCase();
             slt_tipo.focus();
         }
 
@@ -163,14 +163,64 @@
             });
         }
 
-        function cadastrar() {
+        function carregarEmpresas() {
+            var selectEmpresa = document.getElementById("slt_empresa");
+            if (!selectEmpresa) return;
 
-            var tipoVar = slt_tipo.value;
-            var ipVar = ipt_ip.value.trim();
-            var empresaVar = slt_empresa.value;
+            fetch("/empresas/listar")
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                        throw new Error("Erro na resposta do servidor: " + resposta.status);
+                    }
+                    return resposta.json();
+                })
+                .then(function (lista) {
+                    selectEmpresa.innerHTML = '<option value="">Selecione uma concessionária...</option>';
+                    var empresaSalva = sessionStorage.getItem("EMPRESA_CADASTRADA_ID") || sessionStorage.getItem("FK_EMPRESA");
+
+                    if (!Array.isArray(lista) || lista.length === 0) {
+                        selectEmpresa.innerHTML = '<option value="">Nenhuma concessionária encontrada</option>';
+                        return;
+                    }
+
+                    lista.forEach(function (empresa) {
+                        var opcao = document.createElement("option");
+                        opcao.value = empresa.id;
+                        var nomeExibicao = empresa.nome_fantasia || empresa.razao_social || empresa.nome || ("Concessionária " + empresa.id);
+                        if (empresa.cnpj) {
+                            nomeExibicao += " (" + empresa.cnpj + ")";
+                        }
+                        opcao.textContent = nomeExibicao;
+
+                        if (empresaSalva && String(empresa.id) === String(empresaSalva)) {
+                            opcao.selected = true;
+                        }
+                        selectEmpresa.appendChild(opcao);
+                    });
+                })
+                .catch(function (erro) {
+                    console.error("Aviso ao carregar concessionárias:", erro);
+                    selectEmpresa.innerHTML = '<option value="">Erro ao carregar concessionárias</option>';
+                });
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", carregarEmpresas);
+        } else {
+            carregarEmpresas();
+        }
+
+        function cadastrar() {
+            var selectTipo = document.getElementById("slt_tipo");
+            var inputIp = document.getElementById("ipt_ip");
+            var selectEmpresa = document.getElementById("slt_empresa");
+
+            var tipoVar = selectTipo.value.toLowerCase();
+            var ipVar = inputIp.value.trim();
+            var empresaVar = selectEmpresa.value;
 
             if (tipoVar == "" || empresaVar == "") {
-                mostrarMensagem("Preencha os campos obrigatórios!", false);
+                mostrarMensagem("Preencha todos os campos obrigatórios (Tipo e Concessionária)!", false);
                 return false;
             }
 
@@ -190,33 +240,26 @@
                     empresaServer: empresaVar
                 }),
             })
-
                 .then(function (resposta) {
-
                     if (resposta.ok) {
-
                         mostrarMensagem("Servidor cadastrado com sucesso!", true);
 
-                        slt_tipo.value = "";
-                        ipt_ip.value = "";
-                        slt_empresa.value = "";
+                        selectTipo.value = "";
+                        inputIp.value = "";
+                        selectEmpresa.value = "";
 
                     } else {
-
-                        resposta.text().then(texto => {
-
+                        resposta.text().then(function (texto) {
                             if (texto.includes("Duplicate entry")) {
                                 mostrarMensagem("Esse endereço IP já foi cadastrado!", false);
                             } else {
-                                mostrarMensagem("Erro ao realizar cadastro!", false);
+                                mostrarMensagem("Erro ao realizar cadastro: " + texto, false);
                             }
-
                         });
                     }
                 })
-
                 .catch(function (erro) {
-                    console.log(erro);
+                    console.error(erro);
                     mostrarMensagem("Erro ao tentar cadastrar o servidor!", false);
                 });
 

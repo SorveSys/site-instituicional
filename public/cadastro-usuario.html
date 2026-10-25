@@ -64,8 +64,6 @@
                 <div class="campo-grupo">
                     <div class="linha-label">
                         <label for="ipt_nome">Nome completo <b>*</b></label>
-                       
-                    
                     </div>
                     <p class="ajuda">Nome do colaborador que vai acessar a plataforma.</p>
                     <div class="campo-input">
@@ -87,17 +85,27 @@
 
                 <div class="campo-grupo">
                     <div class="linha-label">
-                        <label for="slt_perfil">Perfil de acesso <b>*</b></label>
-                      
+                        <label for="slt_empresa">Empresa / Concessionária <b>*</b></label>
+                    </div>
+                    <p class="ajuda">Empresa administradora vinculada ao colaborador.</p>
+                    <div class="campo-input">
+                        <select id="slt_empresa">
+                            <option value="">Carregando concessionárias ativas...</option>
+                        </select>
+                        <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-direita">
+                    </div>
+                </div>
 
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="slt_perfil">Perfil de acesso <b>*</b></label>
                     </div>
                     <p class="ajuda">Define o nível de permissão do usuário na plataforma.</p>
                     <div class="campo-input">
                         <select id="slt_perfil">
                             <option value="">Selecione o perfil...</option>
-                            <!-- TODO: confirmar os ids reais da tabela perfil -->
-                            <option value="1">Analista</option>
-                            <option value="2">Gestor</option>
+                            <option value="2">Analista</option>
+                            <option value="1">Gestor</option>
                         </select>
                     </div>
                 </div>
@@ -107,6 +115,7 @@
                         <div class="linha-label">
                             <label for="ipt_senha">Senha <b>*</b></label>
                         </div>
+                        <p class="ajuda" style="margin-bottom:0;">Mínimo 8 caracteres, 1 número e 1 caractere especial.</p>
                         <div class="campo-input" style="margin-top:8px;">
                             <img src="/assets/icons/login/Icon-chave.svg" alt="" class="ico ico-campo">
                             <input type="password" id="ipt_senha" placeholder="••••••••" maxlength="300" autocomplete="new-password">
@@ -120,6 +129,7 @@
                         <div class="linha-label">
                             <label for="ipt_confirmar">Confirmar senha <b>*</b></label>
                         </div>
+                        <p class="ajuda" style="margin-bottom:0;">Repita a senha informada.</p>
                         <div class="campo-input" style="margin-top:8px;">
                             <img src="/assets/icons/login/Icon-chave.svg" alt="" class="ico ico-campo">
                             <input type="password" id="ipt_confirmar" placeholder="••••••••" maxlength="300" autocomplete="new-password">
@@ -144,7 +154,7 @@
         <!-- PERFIS -->
         <section class="tipos">
 
-            <article class="tipo-card laranja" onclick="escolherPerfil('1')">
+            <article class="tipo-card laranja" onclick="escolherPerfil('2')">
                 <div class="tipo-icone"><img src="/assets/icons/cadastro/Icon-computador.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Perfil: Analista</span>
@@ -153,7 +163,7 @@
                 </div>
             </article>
 
-            <article class="tipo-card azul" onclick="escolherPerfil('2')">
+            <article class="tipo-card azul" onclick="escolherPerfil('1')">
                 <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-escudo-certo.svg" alt="" class="ico"></div>
                 <div>
                     <span class="tipo-tag">Perfil: Gestor</span>
@@ -173,8 +183,16 @@
         }
 
         // Clicar num card de perfil seleciona o perfil no formulário
-        function escolherPerfil(id) {
-            slt_perfil.value = id;
+        function escolherPerfil(idOuNome) {
+            for (var i = 0; i < slt_perfil.options.length; i++) {
+                var opt = slt_perfil.options[i];
+                if (opt.value == idOuNome || opt.textContent.trim().toLowerCase() === String(idOuNome).toLowerCase()) {
+                    slt_perfil.value = opt.value;
+                    slt_perfil.focus();
+                    return;
+                }
+            }
+            slt_perfil.value = idOuNome;
             slt_perfil.focus();
         }
 
@@ -190,8 +208,30 @@
                 : "/assets/icons/login/Icon-olho.svg";
         }
 
+        // Carrega os perfis cadastrados no banco
+        function carregarPerfis() {
+            fetch("/usuarios/perfis")
+                .then(function (resposta) {
+                    if (!resposta.ok) throw "Rota de perfis indisponível";
+                    return resposta.json();
+                })
+                .then(function (perfis) {
+                    if (Array.isArray(perfis) && perfis.length > 0) {
+                        slt_perfil.innerHTML = '<option value="">Selecione o perfil...</option>';
+                        perfis.forEach(function (perfil) {
+                            var opcao = document.createElement("option");
+                            opcao.value = perfil.id;
+                            opcao.textContent = perfil.tipo;
+                            slt_perfil.appendChild(opcao);
+                        });
+                    }
+                })
+                .catch(function (erro) {
+                    console.log("Aviso ao carregar perfis:", erro);
+                });
+        }
+
         // Carrega as empresas no select
-        // TODO: ajustar a rota quando o back-end estiver pronto (value = id da empresa)
         function carregarEmpresas() {
             fetch("/empresas/listar")
                 .then(function (resposta) {
@@ -199,48 +239,71 @@
                     return resposta.json();
                 })
                 .then(function (lista) {
+                    slt_empresa.innerHTML = '<option value="">Vincular a uma concessionária ativa...</option>';
+                    var empresaSalva = sessionStorage.getItem("EMPRESA_CADASTRADA_ID");
+
                     lista.forEach(function (empresa) {
                         var opcao = document.createElement("option");
                         opcao.value = empresa.id;
-                        opcao.textContent = empresa.razao_social || empresa.nome;
+                        var nomeExibicao = empresa.razao_social || empresa.nome_fantasia || empresa.nome || ("Empresa " + empresa.id);
+                        if (empresa.cnpj) {
+                            nomeExibicao += " (" + empresa.cnpj + ")";
+                        }
+                        opcao.textContent = nomeExibicao;
+
+                        if (empresaSalva && String(empresa.id) === String(empresaSalva)) {
+                            opcao.selected = true;
+                        }
                         slt_empresa.appendChild(opcao);
                     });
                 })
                 .catch(function (erro) {
-                    console.log(erro);
+                    console.log("Aviso ao carregar empresas:", erro);
+                    slt_empresa.innerHTML = '<option value="">Erro ao carregar concessionárias</option>';
                 });
         }
 
+        carregarPerfis();
         carregarEmpresas();
 
         function cadastrar() {
-
             var nomeVar = ipt_nome.value.trim();
             var emailVar = ipt_email.value.trim();
-            var perfilVar = slt_perfil.value;
             var empresaVar = slt_empresa.value;
+            var perfilVar = slt_perfil.value;
             var senhaVar = ipt_senha.value;
             var confirmacaoSenhaVar = ipt_confirmar.value;
 
             if (
                 nomeVar == "" ||
                 emailVar == "" ||
-                perfilVar == "" ||
                 empresaVar == "" ||
+                perfilVar == "" ||
                 senhaVar == "" ||
                 confirmacaoSenhaVar == ""
             ) {
-                mostrarMensagem("Preencha todos os campos!", false);
+                mostrarMensagem("Preencha todos os campos obrigatórios!", false);
                 return false;
             }
 
-            if (emailVar.indexOf("@") < 1 || emailVar.indexOf(".", emailVar.indexOf("@")) < 0) {
-                mostrarMensagem("E-mail inválido!", false);
+            if (!emailVar.includes("@")) {
+                mostrarMensagem("O e-mail deve conter '@'!", false);
                 return false;
             }
 
-            if (senhaVar.length < 6) {
-                mostrarMensagem("A senha deve ter pelo menos 6 caracteres!", false);
+            if (senhaVar.length < 8) {
+                mostrarMensagem("A senha deve ter no mínimo 8 caracteres!", false);
+                return false;
+            }
+
+            if (!/\d/.test(senhaVar)) {
+                mostrarMensagem("A senha deve conter pelo menos um número!", false);
+                return false;
+            }
+
+            var regexEspecial = /[!@#$%^&*(),.?":{}|<>_\-+=\\/~`[\]]/;
+            if (!regexEspecial.test(senhaVar)) {
+                mostrarMensagem("A senha deve conter pelo menos um caractere especial (!@#$%...)!", false);
                 return false;
             }
 
@@ -262,34 +325,35 @@
                     perfilServer: perfilVar
                 }),
             })
-
                 .then(function (resposta) {
-
                     if (resposta.ok) {
+                        mostrarMensagem("Usuário cadastrado com sucesso! Redirecionando para o login...", true);
 
-                        mostrarMensagem("Usuário cadastrado com sucesso!", true);
+                        try {
+                            sessionStorage.removeItem("EMPRESA_CADASTRADA_ID");
+                        } catch (e) {}
 
                         ipt_nome.value = "";
                         ipt_email.value = "";
-                        slt_perfil.value = "";
                         slt_empresa.value = "";
+                        slt_perfil.value = "";
                         ipt_senha.value = "";
                         ipt_confirmar.value = "";
 
+                        setTimeout(function () {
+                            window.location.href = "login.html";
+                        }, 2000);
+
                     } else {
-
-                        resposta.text().then(texto => {
-
-                            if (texto.includes("Duplicate entry")) {
+                        resposta.text().then(function (texto) {
+                            if (texto.includes("Duplicate entry") || texto.includes("já foi cadastrado")) {
                                 mostrarMensagem("Esse e-mail já foi cadastrado!", false);
                             } else {
-                                mostrarMensagem("Erro ao realizar cadastro!", false);
+                                mostrarMensagem("Erro ao realizar cadastro: " + texto, false);
                             }
-
                         });
                     }
                 })
-
                 .catch(function (erro) {
                     console.log(erro);
                     mostrarMensagem("Erro ao tentar cadastrar o usuário!", false);

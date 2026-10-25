@@ -158,24 +158,10 @@
             campo.value = r;
         }
 
-        // Validação dos dígitos verificadores do CNPJ
+        // Validação do formato e tamanho do CNPJ (14 dígitos numéricos)
         function cnpjValido(valor) {
-            var c = valor.replace(/\D/g, "");
-            if (c.length != 14 || /^(\d)\1+$/.test(c)) return false;
-
-            function digito(base) {
-                var pesos = base.length == 12
-                    ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
-                    : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-                var soma = 0;
-                for (var i = 0; i < base.length; i++) soma += Number(base[i]) * pesos[i];
-                var resto = soma % 11;
-                return resto < 2 ? 0 : 11 - resto;
-            }
-
-            var d1 = digito(c.slice(0, 12));
-            var d2 = digito(c.slice(0, 12) + d1);
-            return c.slice(12) == String(d1) + String(d2);
+            var c = String(valor || "").replace(/\D/g, "");
+            return c.length === 14;
         }
 
         function cadastrar() {
@@ -210,13 +196,24 @@
                 .then(function (resposta) {
 
                     if (resposta.ok) {
-                        mostrarMensagem("Empresa cadastrada com sucesso! Redirecionando...",true);
+                        resposta.json().then(function (dados) {
+                            if (dados && dados.id) {
+                                sessionStorage.setItem("EMPRESA_CADASTRADA_ID", dados.id);
+                            }
+                            mostrarMensagem("Empresa cadastrada com sucesso! Redirecionando...", true);
+                            setTimeout(function () {
+                                window.location.href = "cadastro-usuario.html";
+                            }, 1500);
+                        }).catch(function () {
+                            mostrarMensagem("Empresa cadastrada com sucesso! Redirecionando...", true);
+                            setTimeout(function () {
+                                window.location.href = "cadastro-usuario.html";
+                            }, 1500);
+                        });
 
-                            setTimeout(function () {window.location.href = "cadastro-usuario";}, 1500);
-
-                            ipt_razao.value = "";
-                            ipt_cnpj.value = "";
-                            ipt_fantasia.value = "";
+                        ipt_razao.value = "";
+                        ipt_cnpj.value = "";
+                        ipt_fantasia.value = "";
 
                     } else {
 

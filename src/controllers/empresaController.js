@@ -65,14 +65,18 @@ function buscarPorId(req, res) {
 }
 
 function cadastrar(req, res) {
-    var razaoSocial = String(req.body.razaoServer || "").trim();
-    var cnpj = String(req.body.cnpjServer || "").replace(/\D/g, "");
-    var nomeFantasia = String(req.body.nomeFantasiaServer || "").trim();
+    var razaoSocial = String(req.body.razaoServer || req.body.razaoSocial || req.body.razao_social || "").trim();
+    var cnpj = String(req.body.cnpjServer || req.body.cnpj || "").replace(/\D/g, "");
+    var nomeFantasia = String(req.body.nomeFantasiaServer || req.body.nomeFantasia || req.body.nome_fantasia || req.body.fantasiaServer || "").trim();
 
-    if (!razaoSocial || !cnpj || !nomeFantasia) {
+    if (!razaoSocial || !cnpj) {
         return res.status(400).json({
-            mensagem: "Preencha o nome fantasia, a razão social e o CNPJ."
+            mensagem: "Preencha a razão social e o CNPJ."
         });
+    }
+
+    if (!nomeFantasia) {
+        nomeFantasia = razaoSocial;
     }
 
     if (razaoSocial.length > 100 || nomeFantasia.length > 200) {
@@ -81,37 +85,9 @@ function cadastrar(req, res) {
         });
     }
 
-    if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) {
+    if (cnpj.length !== 14) {
         return res.status(400).json({
-            mensagem: "CNPJ inválido."
-        });
-    }
-
-    // Validação dos dígitos verificadores do CNPJ
-    function calcularDigito(base) {
-        var pesos = base.length === 12
-            ? [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
-            : [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-
-        var soma = 0;
-
-        for (var i = 0; i < base.length; i++) {
-            soma += Number(base[i]) * pesos[i];
-        }
-
-        var resto = soma % 11;
-
-        return resto < 2 ? 0 : 11 - resto;
-    }
-
-    var digito1 = calcularDigito(cnpj.substring(0, 12));
-    var digito2 = calcularDigito(cnpj.substring(0, 12) + digito1);
-
-    var cnpjValido = cnpj.substring(12) === String(digito1) + String(digito2);
-
-    if (!cnpjValido) {
-        return res.status(400).json({
-            mensagem: "CNPJ inválido."
+            mensagem: "CNPJ inválido. O CNPJ deve conter exatamente 14 dígitos numéricos."
         });
     }
 
