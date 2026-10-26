@@ -86,18 +86,6 @@
                     </div>
                 </div>
 
-                <div class="campo-grupo">
-                    <div class="linha-label">
-                        <label for="slt_empresa">Concessionária Proprietária <b>*</b></label>
-                    </div>
-                    <p class="ajuda">Selecione a concessionária responsável pelo lote rodoviário.</p>
-                    <div class="campo-input">
-                        <img src="assets/icons/cadastro-servidor/Icon-predio.svg" alt="" class="ico ico-campo">
-                        <select id="slt_empresa">
-                            <option value="">Carregando concessionárias...</option>
-                        </select>
-                    </div>
-                </div>
 
                 <button type="submit" class="btn-cadastrar">
                     <img src="assets/icons/cadastro-servidor/Icon-adicionar.svg" alt="" class="ico">
@@ -246,7 +234,6 @@
 
                         selectTipo.value = "";
                         inputIp.value = "";
-                        selectEmpresa.value = "";
 
                     } else {
                         resposta.text().then(function (texto) {
