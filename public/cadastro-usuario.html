@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SorveSys | Cadastro de Usuário</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="icon" href="assets/LOGO SORVESYS.png">
+    <!-- Mesmo CSS das telas de cadastro de servidor e empresa (layout compartilhado) -->
+    <link rel="stylesheet" href="/css/cadastro-servidor.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- TOPO (igual ao login) -->
+    <header class="topbar">
+        <a href="index.html" class="topbar-logo">
+            <img src="/assets/icons/login/Logo-SorveSys-Fundo-Escuro.svg" alt="SorveSys Logo">
+        </a>
+
+        <a href="index.html" class="topbar-voltar">
+            <img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Home
+        </a>
+
+        <a href="#" class="topbar-noc">
+            <img src="/assets/icons/login/Icon-fone.svg" alt="" class="ico"> Contate o NOC
+        </a>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+            <source src="/assets/icons/login/pedagio-horizontal-otimizado.mp4" type="video/mp4">
+        </video>
+
+        <div class="hero-conteudo">
+            <span class="hero-tag">Módulo de acesso • Gestão de usuários</span>
+            <h1>Cadastro de Usuário</h1>
+            <p>Provisionamento de operadores e gestores para acessar a plataforma de monitoramento.</p>
+        </div>
+    </section>
+
+    <!-- CONTEÚDO -->
+    <main class="conteudo">
+
+        <!-- FORMULÁRIO -->
+        <section class="card-form">
+            <div class="card-form-topo">
+                <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg" alt="" class="ico">
+                <h2>Novo usuário</h2>
+            </div>
+
+            <form class="card-form-corpo" onsubmit="return cadastrar()" novalidate>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="ipt_nome">Nome completo <b>*</b></label>
+                    </div>
+                    <p class="ajuda">Nome do colaborador que vai acessar a plataforma.</p>
+                    <div class="campo-input">
+                        <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg" alt="" class="ico ico-campo">
+                        <input type="text" id="ipt_nome" placeholder="Seu nome completo" maxlength="200" autocomplete="name">
+                    </div>
+                </div>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="ipt_email">E-mail corporativo <b>*</b></label>
+                    </div>
+                    <p class="ajuda">Será usado como login de acesso.</p>
+                    <div class="campo-input">
+                        <img src="/assets/icons/cadastro-empresa/Icon-email.svg" alt="" class="ico ico-campo">
+                        <input type="email" id="ipt_email" placeholder="nome@concessionaria.com.br" maxlength="350" autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="slt_empresa">Empresa / Concessionária <b>*</b></label>
+                    </div>
+                    <p class="ajuda">Empresa administradora vinculada ao colaborador.</p>
+                    <div class="campo-input">
+                        <select id="slt_empresa">
+                            <option value="">Carregando concessionárias ativas...</option>
+                        </select>
+                        <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-direita">
+                    </div>
+                </div>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="slt_perfil">Perfil de acesso <b>*</b></label>
+                    </div>
+                    <p class="ajuda">Define o nível de permissão do usuário na plataforma.</p>
+                    <div class="campo-input">
+                        <select id="slt_perfil">
+                            <option value="">Selecione o perfil...</option>
+                            <option value="2">Analista</option>
+                            <option value="1">Gestor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo-duplo">
+                    <div class="campo-grupo">
+                        <div class="linha-label">
+                            <label for="ipt_senha">Senha <b>*</b></label>
+                        </div>
+                        <p class="ajuda" style="margin-bottom:0;">Mínimo 8 caracteres, 1 número e 1 caractere especial.</p>
+                        <div class="campo-input" style="margin-top:8px;">
+                            <img src="/assets/icons/login/Icon-chave.svg" alt="" class="ico ico-campo">
+                            <input type="password" id="ipt_senha" placeholder="••••••••" maxlength="300" autocomplete="new-password">
+                            <button type="button" class="olho" onclick="alternarSenha('ipt_senha', 'olho_senha')" aria-label="Mostrar senha">
+                                <img src="/assets/icons/login/Icon-olho.svg" alt="" class="ico" id="olho_senha">
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <div class="linha-label">
+                            <label for="ipt_confirmar">Confirmar senha <b>*</b></label>
+                        </div>
+                        <p class="ajuda" style="margin-bottom:0;">Repita a senha informada.</p>
+                        <div class="campo-input" style="margin-top:8px;">
+                            <img src="/assets/icons/login/Icon-chave.svg" alt="" class="ico ico-campo">
+                            <input type="password" id="ipt_confirmar" placeholder="••••••••" maxlength="300" autocomplete="new-password">
+                            <button type="button" class="olho" onclick="alternarSenha('ipt_confirmar', 'olho_confirmar')" aria-label="Mostrar senha">
+                                <img src="/assets/icons/login/Icon-olho.svg" alt="" class="ico" id="olho_confirmar">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-cadastrar">
+                    <img src="/assets/icons/cadastro-empresa/Icon-adicionar.svg" alt="" class="ico">
+                    Cadastrar Usuário
+                </button>
+
+                <div id="cardErro" class="card-erro" style="display:none;">
+                    <span id="mensagem_erro"></span>
+                </div>
+            </form>
+        </section>
+
+        <!-- PERFIS -->
+        <section class="tipos">
+
+            <article class="tipo-card laranja" onclick="escolherPerfil('2')">
+                <div class="tipo-icone"><img src="/assets/icons/cadastro/Icon-computador.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Perfil: Analista</span>
+                    <h3>Analista • Operação do NOC</h3>
+                    <p>Acompanha servidores, métricas e alertas das praças e atua nos incidentes do dia a dia.</p>
+                </div>
+            </article>
+
+            <article class="tipo-card azul" onclick="escolherPerfil('1')">
+                <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-escudo-certo.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Perfil: Gestor</span>
+                    <h3>Gestor • Administração da Concessionária</h3>
+                    <p>Gerencia usuários, servidores e configurações, com visão consolidada da operação.</p>
+                </div>
+            </article>
+
+        </section>
+    </main>
+
+    <script>
+        function mostrarMensagem(texto, sucesso) {
+            cardErro.className = sucesso ? "card-erro sucesso" : "card-erro";
+            cardErro.style.display = "block";
+            mensagem_erro.innerHTML = texto;
+        }
+
+        // Clicar num card de perfil seleciona o perfil no formulário
+        function escolherPerfil(idOuNome) {
+            for (var i = 0; i < slt_perfil.options.length; i++) {
+                var opt = slt_perfil.options[i];
+                if (opt.value == idOuNome || opt.textContent.trim().toLowerCase() === String(idOuNome).toLowerCase()) {
+                    slt_perfil.value = opt.value;
+                    slt_perfil.focus();
+                    return;
+                }
+            }
+            slt_perfil.value = idOuNome;
+            slt_perfil.focus();
+        }
+
+        // Mostra / oculta a senha
+        function alternarSenha(idCampo, idIcone) {
+            var campo = document.getElementById(idCampo);
+            var icone = document.getElementById(idIcone);
+            var mostrar = campo.type === "password";
+
+            campo.type = mostrar ? "text" : "password";
+            icone.src = mostrar
+                ? "/assets/icons/login/Icon-olho-fechado.svg"
+                : "/assets/icons/login/Icon-olho.svg";
+        }
+
+        // Carrega os perfis cadastrados no banco
+        function carregarPerfis() {
+            fetch("/usuarios/perfis")
+                .then(function (resposta) {
+                    if (!resposta.ok) throw "Rota de perfis indisponível";
+                    return resposta.json();
+                })
+                .then(function (perfis) {
+                    if (Array.isArray(perfis) && perfis.length > 0) {
+                        slt_perfil.innerHTML = '<option value="">Selecione o perfil...</option>';
+                        perfis.forEach(function (perfil) {
+                            var opcao = document.createElement("option");
+                            opcao.value = perfil.id;
+                            opcao.textContent = perfil.tipo;
+                            slt_perfil.appendChild(opcao);
+                        });
+                    }
+                })
+                .catch(function (erro) {
+                    console.log("Aviso ao carregar perfis:", erro);
+                });
+        }
+
+        // Carrega as empresas no select
+        function carregarEmpresas() {
+            fetch("/empresas/listar")
+                .then(function (resposta) {
+                    if (!resposta.ok) throw "Rota de empresas indisponível";
+                    return resposta.json();
+                })
+                .then(function (lista) {
+                    slt_empresa.innerHTML = '<option value="">Vincular a uma concessionária ativa...</option>';
+                    var empresaSalva = sessionStorage.getItem("EMPRESA_CADASTRADA_ID");
+
+                    lista.forEach(function (empresa) {
+                        var opcao = document.createElement("option");
+                        opcao.value = empresa.id;
+                        var nomeExibicao = empresa.razao_social || empresa.nome_fantasia || empresa.nome || ("Empresa " + empresa.id);
+                        if (empresa.cnpj) {
+                            nomeExibicao += " (" + empresa.cnpj + ")";
+                        }
+                        opcao.textContent = nomeExibicao;
+
+                        if (empresaSalva && String(empresa.id) === String(empresaSalva)) {
+                            opcao.selected = true;
+                        }
+                        slt_empresa.appendChild(opcao);
+                    });
+                })
+                .catch(function (erro) {
+                    console.log("Aviso ao carregar empresas:", erro);
+                    slt_empresa.innerHTML = '<option value="">Erro ao carregar concessionárias</option>';
+                });
+        }
+
+        carregarPerfis();
+        carregarEmpresas();
+
+        function cadastrar() {
+            var nomeVar = ipt_nome.value.trim();
+            var emailVar = ipt_email.value.trim();
+            var empresaVar = slt_empresa.value;
+            var perfilVar = slt_perfil.value;
+            var senhaVar = ipt_senha.value;
+            var confirmacaoSenhaVar = ipt_confirmar.value;
+
+            if (
+                nomeVar == "" ||
+                emailVar == "" ||
+                empresaVar == "" ||
+                perfilVar == "" ||
+                senhaVar == "" ||
+                confirmacaoSenhaVar == ""
+            ) {
+                mostrarMensagem("Preencha todos os campos obrigatórios!", false);
+                return false;
+            }
+
+            if (!emailVar.includes("@")) {
+                mostrarMensagem("O e-mail deve conter '@'!", false);
+                return false;
+            }
+
+            if (senhaVar.length < 8) {
+                mostrarMensagem("A senha deve ter no mínimo 8 caracteres!", false);
+                return false;
+            }
+
+            if (!/\d/.test(senhaVar)) {
+                mostrarMensagem("A senha deve conter pelo menos um número!", false);
+                return false;
+            }
+
+            var regexEspecial = /[!@#$%^&*(),.?":{}|<>_\-+=\\/~`[\]]/;
+            if (!regexEspecial.test(senhaVar)) {
+                mostrarMensagem("A senha deve conter pelo menos um caractere especial (!@#$%...)!", false);
+                return false;
+            }
+
+            if (senhaVar != confirmacaoSenhaVar) {
+                mostrarMensagem("As senhas não coincidem!", false);
+                return false;
+            }
+
+            fetch("/usuarios/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nomeServer: nomeVar,
+                    emailServer: emailVar,
+                    senhaServer: senhaVar,
+                    empresaServer: empresaVar,
+                    perfilServer: perfilVar
+                }),
+            })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        mostrarMensagem("Usuário cadastrado com sucesso! Redirecionando para o login...", true);
+
+                        try {
+                            sessionStorage.removeItem("EMPRESA_CADASTRADA_ID");
+                        } catch (e) {}
+
+                        ipt_nome.value = "";
+                        ipt_email.value = "";
+                        slt_empresa.value = "";
+                        slt_perfil.value = "";
+                        ipt_senha.value = "";
+                        ipt_confirmar.value = "";
+
+                        setTimeout(function () {
+                            window.location.href = "login.html";
+                        }, 2000);
+
+                    } else {
+                        resposta.text().then(function (texto) {
+                            if (texto.includes("Duplicate entry") || texto.includes("já foi cadastrado")) {
+                                mostrarMensagem("Esse e-mail já foi cadastrado!", false);
+                            } else {
+                                mostrarMensagem("Erro ao realizar cadastro: " + texto, false);
+                            }
+                        });
+                    }
+                })
+                .catch(function (erro) {
+                    console.log(erro);
+                    mostrarMensagem("Erro ao tentar cadastrar o usuário!", false);
+                });
+
+            return false;
+        }
+    </script>
+</body>
+
+</html>

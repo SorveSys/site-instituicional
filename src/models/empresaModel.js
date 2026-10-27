@@ -1,27 +1,55 @@
 var database = require("../database/config");
 
 function buscarPorId(id) {
-  var instrucaoSql = `SELECT * FROM empresa WHERE id = '${id}'`;
+    var instrucaoSql = `
+        SELECT id, nome_fantasia, razao_social, cnpj
+        FROM empresa
+        WHERE id = ?
+    `;
 
-  return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql, [id]);
 }
 
 function listar() {
-  var instrucaoSql = `SELECT id, razao_social, cnpj, codigo_ativacao FROM empresa`;
+    var instrucaoSql = `
+        SELECT id, nome_fantasia, razao_social, cnpj
+        FROM empresa
+        ORDER BY id DESC
+    `;
 
-  return database.executar(instrucaoSql);
+    return database.executar(instrucaoSql);
 }
 
 function buscarPorCnpj(cnpj) {
-  var instrucaoSql = `SELECT * FROM empresa WHERE cnpj = '${cnpj}'`;
+    var cnpjLimpo = String(cnpj || "").replace(/\D/g, "");
 
-  return database.executar(instrucaoSql);
+    var instrucaoSql = `
+        SELECT id, nome_fantasia, razao_social, cnpj
+        FROM empresa
+        WHERE cnpj = ?
+    `;
+
+    return database.executar(instrucaoSql, [cnpjLimpo]);
 }
 
-function cadastrar(razaoSocial, cnpj) {
-  var instrucaoSql = `INSERT INTO empresa (razao_social, cnpj) VALUES ('${razaoSocial}', '${cnpj}')`;
+function cadastrar(razaoSocial, cnpj, nomeFantasia) {
+    var cnpjLimpo = String(cnpj || "").replace(/\D/g, "");
 
-  return database.executar(instrucaoSql);
+    var instrucaoSql = `
+        INSERT INTO empresa (nome_fantasia, cnpj, razao_social)
+        VALUES (?, ?, ?)
+    `;
+
+    return database.executar(instrucaoSql, [
+        nomeFantasia,
+        cnpjLimpo,
+        razaoSocial
+    ]);
 }
 
-module.exports = { buscarPorCnpj, buscarPorId, cadastrar, listar };
+module.exports = {
+    buscarPorId,
+    listar,
+    buscarPorCnpj,
+    cadastrar
+};

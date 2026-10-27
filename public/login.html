@@ -1,206 +1,233 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>SorveSys | Monitoramento de Sistemas Rodoviários</title>
+    <title>SorveSys | Entrar na Conta</title>
 
     <script src="./js/sessao.js"></script>
 
     <link rel="icon" href="assets/LOGO SORVESYS.png">
-    <link rel="stylesheet" href="./css/login-cadastro.css">
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="/css/login.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-    <div class="header">
-        <div class="container">
-           
-            <div class="logo">
-                <img src="./assets/LOGO SORVESYS.png" alt="SorveSys Logo">
-            </div>
+    <!-- TOPO -->
+    <header class="topbar">
+        <a href="index.html" class="topbar-logo">
+            <img src="/assets/icons/login/Logo-SorveSys-Fundo-Escuro.svg" alt="SorveSys Logo">
+        </a>
 
-          
-            <ul class="navbar">
-                <li class="agora"><a href="index.html">Início</a></li>
-            </ul>
+        <a href="index.html" class="topbar-voltar">
+            <img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Home
+        </a>
 
-        
-            <div class="header-actions">
-                <a href="login.html" class="btn-outline">Login</a>
-                <a href="cadastro.html" class="btn-primary">Cadastro</a>
-            </div>
-        </div>
-    </div>
+        <a href="#" class="topbar-noc">
+            <img src="/assets/icons/login/Icon-fone.svg" alt="" class="ico"> Contate o NOC
+        </a>
+    </header>
 
-    <div class="conteudo-principal">
+    <main class="split">
+
       
+        <section class="hero">
+            <div class="hero-card">
+                <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+                    <source src="/assets/icons/login/pedagio-horizontal-otimizado.mp4" type="video/mp4">
+                </video>
 
-        <div class="esquerda">
-            
-            <div class="titulo">
-                <h1>Rodovias funcionam melhor com tecnologia que <span class="linha">previne.</span></h1>
-            </div>
 
-            <div class="descricao">
-                <p>O SorveSys monitora a saúde da infraestrutura de TI nas praças de pedágio, garantindo alta
-                    disponibilidade, desempenho e segurança para operações ininterruptas.</p>
+                <span class="hero-badge">Sorve<span>Sys</span></span>
+
+                <div class="hero-texto">
+                    <span class="hero-tag">Operação em tempo real</span>
+                    <h2>Infraestrutura Inteligente de Arrecadação &amp; Pedágio</h2>
+                    <p>Monitoramento integrado de pistas automáticas, pórticos free-flow e subsistemas críticos com telemetria direta 24/7.</p>
+
+                    <div class="hero-rodape">
+                        <span>SLA Operacional: 99.98%</span>
+                        <span>Auditoria ANTT Ativa</span>
+                    </div>
+                </div>
             </div>
+        </section>
+
+       
+        <section class="painel">
+            <div class="painel-conteudo">
+
+                <div class="tabs">
+                    <a href="login.html" class="tab ativa"><img src="./assets/icons/login/Icon-entrar-conta.svg" alt="" class="ico"> Entrar na Conta</a>
+                    <a href="cadastro-empresa.html" class="tab"><img src="./assets/icons/login/Icon-cadastrar.svg" alt="" class="ico"> Cadastrar Concessionária</a>
+                </div>
+
+                <span class="status-tag"><i class="ponto"></i> Terminal homologado</span>
+                <h1>Entrar na Conta</h1>
+                <p class="subtitulo">Acesse a plataforma SorveSys com suas credenciais corporativas.</p>
+
+                <form onsubmit="return entrar()" novalidate>
+
+                    <div class="campo-grupo">
+                        <label for="ipt_email">E-mail corporativo</label>
+                        <div class="campo-input">
+                            <img src="./assets/icons/login/Icon-email.svg" alt="" class="ico ico-campo">
+                            <input type="email" id="ipt_email" placeholder="ex: operador@concessionaria.com.br" autocomplete="email">
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
+                        <div class="linha-label">
+                            <label for="ipt_senha">Senha de acesso</label>
+                            <a href="#" class="esqueci">Esqueceu a senha?</a>
+                        </div>
+                        <div class="campo-input">
+                            <img src="./assets/icons/login/Icon-chave.svg" alt="" class="ico ico-campo">
+                            <input type="password" id="ipt_senha" placeholder="••••••••••••" autocomplete="current-password">
+                            <button type="button" class="olho" id="btn_olho" onclick="alternarSenha()" aria-label="Mostrar senha">
+                                <img src="./assets/icons/login/Icon-olho.svg" alt="" class="ico" id="icone_olho">
+                            </button>
+                        </div>
+                    </div>
+
+                    <label class="lembrar">
+                        <input type="checkbox" id="chk_lembrar">
+                        <span>Lembrar este terminal operacional</span>
+                    </label>
+
+                    <button type="submit" class="btn-acessar">
+                        ACESSAR PAINEL DE CONTROLE
+                    </button>
+
+                    <div id="cardErro" class="card-erro" style="display:none;">
+                        <span id="mensagem_erro"></span>
+                    </div>
+                </form>
+
+                <p class="alternar">
+                    Não possui credencial autorizada?
+                    <a href="cadastro-empresa.html">Alternar para Cadastro de Concessionária <img src="./assets/icons/login/Icon-seta.svg" alt="" class="ico ico-mini"></a>
+                </p>
+
+                <div class="status-rodape">
+                    <span class="seguranca"><img src="./assets/icons/login/Icon-escudo.svg" alt="" class="ico"></span>
+                    <span class="telemetria">
+                        <i class="ponto verde"></i> Latência NOC: <b>4.2 ms</b>
+                        <i class="sep"></i> Sessão segura
+                    </span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Mostra / oculta a senha
+        function alternarSenha() {
+            var campo = document.getElementById("ipt_senha");
+            var icone = document.getElementById("icone_olho");
+            var mostrar = campo.type === "password";
+
+            campo.type = mostrar ? "text" : "password";
+            icone.src = mostrar
+                ? "./assets/icons/login/Icon-olho-fechado.svg"
+                : "./assets/icons/login/Icon-olho.svg";
+        }
 
         
-        </div>
+        window.addEventListener("load", function () {
+            try {
+                var salvo = localStorage.getItem("EMAIL_LEMBRADO");
+                if (salvo) {
+                    document.getElementById("ipt_email").value = salvo;
+                    document.getElementById("chk_lembrar").checked = true;
+                }
+            } catch (e) { }
+        });
 
-        
-        <div class="direita">
+        function entrar() {
 
-            <div class="formulario">
+            var emailVar = ipt_email.value;
+            var senhaVar = ipt_senha.value;
 
-                <div class="intro-form">
-                    <h2>Bem-vindo à SorveSys</h2>
-                    <p>Acesse sua conta para acompanhar o monitoramento da infraestrutura.</p>
-                </div>
+            if (emailVar == "" || senhaVar == "") {
+                cardErro.className = "card-erro";
+                cardErro.style.display = "block";
+                mensagem_erro.innerHTML = "Preencha todos os campos!";
+                return false;
+            }
 
-                <div class="info-form">
-                    <label for="email">E-mail</label>
-                    <input class="campo" type="email" id="ipt_email" placeholder="nome@email.com.br">
-                </div>
+            try {
+                if (chk_lembrar.checked) {
+                    localStorage.setItem("EMAIL_LEMBRADO", emailVar);
+                } else {
+                    localStorage.removeItem("EMAIL_LEMBRADO");
+                }
+            } catch (e) { }
 
-                <div class="info-form">
-                    <label for="password">Senha</label>
-                    <input class="campo" type="password" id="ipt_senha" placeholder="••••••••">
-                </div>
+            fetch("/usuarios/autenticar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    emailServer: emailVar,
+                    senhaServer: senhaVar
+                })
+            })
 
-                <a class="esqueciSenha" href="#">Esqueci minha senha</a>
+                .then(function (resposta) {
 
-                <button onclick="entrar()">Entrar <i class="ph ph-arrow-right"></i></button>
+                    if (resposta.ok) {
 
-                <div id="cardErro" style="display:none; margin-top:10px;">
-                    <span id="mensagem_erro" style="color:black;"></span>
-                </div>
+                        resposta.json().then(json => {
 
-                <div class="cadastre-se">
-                    Ainda não possui uma conta?<a href="cadastro.html"> Cadastre-se</a>
-                </div>
-            </div>
-        </div>
-    </div>
+                            sessionStorage.EMAIL_USUARIO = json.email;
+                            sessionStorage.NOME_USUARIO = json.nome;
+                            sessionStorage.ID_USUARIO = json.id;
+                            if (json.fk_empresa) sessionStorage.FK_EMPRESA = json.fk_empresa;
+                            if (json.fk_tipo_usuario) sessionStorage.FK_TIPO_USUARIO = json.fk_tipo_usuario;
+                            if (json.perfil) sessionStorage.PERFIL_USUARIO = json.perfil;
+                            if (json.empresa) sessionStorage.EMPRESA_USUARIO = json.empresa;
 
-    <div class="footer">
-        <div class="container flex-col">
-            <div class="footer-top">
-                <div class="footer-col brand-col">
-                    <p class="brand-slogan">
-                  <span class="brand-name">SorveSys:</span>  <span class="highlight">Tecnologia que garante a </span> 
-                  <span class="highlight">disponibilidade  da </span> 
-                  <span class="highlight">infraestrutura de servidores</span>  <span class="highlight">das rodovias.</span>
-                    </p>
-                </div>
+                            cardErro.className = "card-erro sucesso";
+                            cardErro.style.display = "block";
+                            mensagem_erro.innerHTML = "Login realizado com sucesso!";
 
-                <div class="footer-col">
-                    <h5>Empresa</h5>
-                    <ul>
-                        <li><a href="#">Código de conduta</a></li>
-                    </ul>
-                </div>
+                            setTimeout(() => {
+                                window.location = "overview.html";
+                            }, 1500);
 
-                <div class="footer-col">
-                    <h5>Suporte</h5>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                         
-                    </ul>
-                </div>
+                        });
 
-                <div class="footer-col contact-col">
-                    <h5>Contatos</h5>
-                    <p><span>&#9094;</span> comercial@sorvesys.com.br</p>
-                    <p><span>&#9742;</span> (11) 4070-2374</p>
-                    <p><span>&#9906;</span> São Paulo,Brasil</p>
-                </div>
-            </div>
+                    } else {
 
-            <div class="footer-bottom">
-                <p>&copy; 2026 SorveSys. Todos os direitos reservados.</p>
-                <div class="footer-links">
-                    <a href="#">Política de Privacidade</a>
-                </div>
-            </div>
-        </div>
-    </div>
+                        cardErro.className = "card-erro";
+                        cardErro.style.display = "block";
+                        mensagem_erro.innerHTML = "E-mail ou senha inválidos!";
+                        throw "Erro ao realizar login";
+                    }
+                })
+
+                .catch(function (erro) {
+                    console.log(erro);
+
+                    cardErro.className = "card-erro";
+                    cardErro.style.display = "block";
+                    if (mensagem_erro.innerHTML == "") {
+                        mensagem_erro.innerHTML = "Erro ao tentar fazer login!";
+                    }
+                });
+
+            return false;
+        }
+    </script>
 </body>
 
 </html>
-
-<script>
-
-    function entrar() {
-
-    var emailVar = ipt_email.value;
-    var senhaVar = ipt_senha.value;
-
-    if (emailVar == "" || senhaVar == "") {
-
-        cardErro.style.display = "block";
-        mensagem_erro.innerHTML = "Preencha todos os campos!";
-        return false;
-    }
-
-    fetch("/usuarios/autenticar", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            emailServer: emailVar,
-            senhaServer: senhaVar
-        })
-    })
-
-    .then(function (resposta) {
-
-        if (resposta.ok) {
-
-            resposta.json().then(json => {
-
-                sessionStorage.EMAIL_USUARIO = json.email;
-                sessionStorage.NOME_USUARIO = json.nome;
-                sessionStorage.ID_USUARIO = json.id;
-
-                cardErro.style.display = "block";
-                mensagem_erro.innerHTML = "Login realizado com sucesso!";
-
-                setTimeout(() => {
-                    window.location = "./dashboard/dashboard.html";
-                }, 2000);
-
-            });
-
-        } else {
-
-            cardErro.style.display = "block";
-            mensagem_erro.innerHTML = "E-mail ou senha inválidos!";
-            throw "Erro ao realizar login";
-        }
-    })
-
-    .catch(function (erro) {
-        console.log(erro);
-
-        cardErro.style.display = "block";
-        mensagem_erro.innerHTML = "Erro ao tentar fazer login!";
-    });
-
-    return false;
-}
-
-</script>

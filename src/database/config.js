@@ -1,34 +1,72 @@
+
 var mysql = require("mysql2");
+var path = require("path");
 
-// CONEXÃO DO BANCO MYSQL SERVER
-var mySqlConfig = {
-    host: process.env.DB_HOST,
-    database: process.env.DB_DATABASE,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT
-};
+// Carrega as variáveis de ambiente caso ainda não tenham sido carregadas
+if (!process.env.DB_USER) {
+    var ambiente = process.env.AMBIENTE_PROCESSO || "desenvolvimento";
+    var arquivoEnv = ambiente === "producao" ? ".env" : ".env.dev";
+    require("dotenv").config({ path: path.resolve(__dirname, "..", "..", arquivoEnv) });
+}
 
-function executar(instrucao) {
+function getMySqlConfig() {
+    return {
+        host: process.env.DB_HOST || "127.0.0.1",
+        database: process.env.DB_DATABASE || "sorvesys",
+        user: process.env.DB_USER || "root",
+        password: process.env.DB_PASSWORD,
+        port: Number(process.env.DB_PORT) || 3306
+    };
+}
 
-    if (process.env.AMBIENTE_PROCESSO !== "producao" && process.env.AMBIENTE_PROCESSO !== "desenvolvimento") {
-        console.log("\nO AMBIENTE (produção OU desenvolvimento) NÃO FOI DEFINIDO EM .env OU dev.env OU app.js\n");
-        return Promise.reject("AMBIENTE NÃO CONFIGURADO EM .env");
+function executar(instrucao, valores) {
+
+    if (
+        process.env.AMBIENTE_PROCESSO !== "producao" &&
+        process.env.AMBIENTE_PROCESSO !== "desenvolvimento"
+    ) {
+        console.log(
+            "\nO AMBIENTE (producao ou desenvolvimento) NÃO FOI DEFINIDO.\n"
+        );
+
+        return Promise.reject(
+            new Error("AMBIENTE NÃO CONFIGURADO")
+        );
     }
 
     return new Promise(function (resolve, reject) {
-        var conexao = mysql.createConnection(mySqlConfig);
-        conexao.connect();
-        conexao.query(instrucao, function (erro, resultados) {
-            conexao.end();
-            if (erro) {
-                reject(erro);
+
+        var conexao = mysql.createConnection(getMySqlConfig());
+
+        conexao.connect(function (erroConexao) {
+
+            if (erroConexao) {
+                console.error("Erro ao conectar no MySQL:", erroConexao.sqlMessage || erroConexao.message);
+                return reject(erroConexao);
             }
-            console.log(resultados);
-            resolve(resultados);
-        });
-        conexao.on('error', function (erro) {
-            return ("ERRO NO MySQL SERVER: ", erro.sqlMessage);
+
+            conexao.query(
+                instrucao,
+                valores || [],
+                function (erro, resultados) {
+
+                    conexao.end(function (erroFechar) {
+                        if (erroFechar) {
+                            console.error(
+                                "Erro ao fechar conexão:",
+                                erroFechar
+                            );
+                        }
+                    });
+
+                    if (erro) {
+                        console.error("Erro SQL:", erro.sqlMessage);
+                        return reject(erro);
+                    }
+
+                    resolve(resultados);
+                }
+            );
         });
     });
 }

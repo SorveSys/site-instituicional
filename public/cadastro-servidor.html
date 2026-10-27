@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SorveSys | Cadastro de Servidor</title>
+
+    <script src="./js/sessao.js"></script>
+
+    <link rel="icon" href="assets/LOGO SORVESYS.png">
+    <link rel="stylesheet" href="./css/cadastro-servidor.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- TOPO -->
+    <header class="topbar">
+        <a href="index.html" class="topbar-logo">
+            <img src="assets/icons/login/Logo-SorveSys-Fundo-Escuro.svg" alt="SorveSys Logo">
+        </a>
+
+        <a href="index.html" class="topbar-voltar">
+            <img src="assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Home
+        </a>
+
+        <a href="#" class="topbar-noc">
+            <img src="assets/icons/login/Icon-fone.svg" alt="" class="ico"> Contate o NOC
+        </a>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+            <source src="assets/icons/login/pedagio-horizontal-otimizado.mp4" type="video/mp4">
+        </video>
+
+        <div class="hero-conteudo">
+            <span class="hero-tag">Módulo de telemetria - Pistas rodoviárias</span>
+            <h1>Cadastro de Servidor</h1>
+            <p>Provisionamento de servidores de praça de pedágio para telemetria contínua.</p>
+        </div>
+    </section>
+
+    <!-- CONTEÚDO -->
+    <main class="conteudo">
+
+        <!-- FORMULÁRIO -->
+        <section class="card-form">
+            <div class="card-form-topo">
+                <img src="assets/icons/cadastro-servidor/Icon-computador.svg" alt="" class="ico">
+                <h2>Novo servidor</h2>
+            </div>
+
+            <form class="card-form-corpo" onsubmit="return cadastrar()" novalidate>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="slt_tipo">Tipo do Servidor <b>*</b></label>
+                    </div>
+                    <p class="ajuda">Selecione a alocação funcional do host na praça de pedágio.</p>
+                    <div class="campo-input">
+                        <select id="slt_tipo">
+                            <option value="">Selecione o tipo de servidor..</option>
+                            <option value="transito">Trânsito - Pistas Automáticas</option>
+                            <option value="pagamento">Pagamento - TEF / TAG / Cabines Manuais</option>
+                            <option value="auditoria">Auditoria - CCO &amp; Fiscalização ANTT</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="ipt_ip">Endereço IPv4 <small>(Recomendado)</small></label>
+                    </div>
+                    <p class="ajuda">Endereço da subnet privada da praça (ex: 192.168.10.45).</p>
+                    <div class="campo-input">
+                        <img src="assets/icons/cadastro-servidor/Icon-conexao-quadrado.svg" alt="" class="ico ico-campo">
+                        <input type="text" id="ipt_ip" placeholder="192.168.10.45" inputmode="decimal" autocomplete="off" maxlength="15">
+                    </div>
+                </div>
+
+                <div class="campo-grupo">
+                    <div class="linha-label">
+                        <label for="slt_empresa">Empresa Proprietária <b>*</b></label>
+                    </div>
+                    <p class="ajuda">Concessionária administradora responsável pelo lote rodoviário.</p>
+                    <div class="campo-input">
+                        <select id="slt_empresa">
+                            <option value="">Vincular a uma concessionária ativa...</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <button type="submit" class="btn-cadastrar">
+                    <img src="assets/icons/cadastro-servidor/Icon-adicionar.svg" alt="" class="ico">
+                    Cadastrar Servidor
+                </button>
+
+                <div id="cardErro" class="card-erro" style="display:none;">
+                    <span id="mensagem_erro"></span>
+                </div>
+            </form>
+
+        </section>
+
+        <!-- TIPOS DE SERVIDOR -->
+        <section class="tipos">
+
+            <article class="tipo-card laranja" onclick="escolherTipo('transito')">
+                <div class="tipo-icone"><img src="assets/icons/cadastro-servidor/Icon-carro.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Tipo: Trânsito</span>
+                    <h3>Trânsito - Pistas Automáticas</h3>
+                    <p>Controlador dos laços indutivos, leitores RFID e câmeras de barreira ótica.</p>
+                </div>
+            </article>
+
+            <article class="tipo-card laranja" onclick="escolherTipo('pagamento')">
+                <div class="tipo-icone"><img src="assets/icons/cadastro-servidor/Icon-pagamento.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Tipo: Pagamento</span>
+                    <h3>Pagamento - TEF / TAG / Cabines Manuais</h3>
+                    <p>Processador PCI-DSS de transações bancárias instantâneas e liberação de cancela.</p>
+                </div>
+            </article>
+
+            <article class="tipo-card azul" onclick="escolherTipo('auditoria')">
+                <div class="tipo-icone"><img src="assets/icons/cadastro-servidor/Icon-escudo.svg" alt="" class="ico"></div>
+                <div>
+                    <span class="tipo-tag">Tipo: Auditoria</span>
+                    <h3>Auditoria - CCO &amp; Fiscalização ANTT</h3>
+                    <p>Assinatura digital de passagens e redundância síncrona com o datacenter regulador.</p>
+                </div>
+            </article>
+
+        </section>
+    </main>
+
+    <script>
+        function escolherTipo(tipo) {
+            slt_tipo.value = String(tipo).toLowerCase();
+            slt_tipo.focus();
+        }
+
+        function mostrarMensagem(texto, sucesso) {
+            cardErro.className = sucesso ? "card-erro sucesso" : "card-erro";
+            cardErro.style.display = "block";
+            mensagem_erro.innerHTML = texto;
+        }
+
+        function ipValido(ip) {
+            var partes = ip.split(".");
+            if (partes.length != 4) return false;
+            return partes.every(function (p) {
+                return /^\d{1,3}$/.test(p) && Number(p) <= 255;
+            });
+        }
+
+        function aplicarMascaraIp(input) {
+            var pos = input.selectionStart;
+            var raw = input.value;
+
+            // Remove tudo que não for dígito ou ponto
+            raw = raw.replace(/[^\d.]/g, "");
+
+            // Quebra em octetos e valida cada um
+            var octetos = raw.split(".");
+
+            // Limita a 4 octetos
+            octetos = octetos.slice(0, 4);
+
+            octetos = octetos.map(function (oct, idx) {
+                // Limita cada octeto a 3 dígitos
+                oct = oct.replace(/\D/g, "").slice(0, 3);
+
+                // Se o valor numérico passar de 255, corta para 25
+                if (oct.length === 3 && Number(oct) > 255) {
+                    oct = oct.slice(0, 2);
+                }
+
+                return oct;
+            });
+
+            // Reconstrói o valor formatado
+            var resultado = octetos.join(".");
+
+            // Auto-adiciona ponto se octeto tiver 3 dígitos e ainda não tiver 4 octetos
+            if (octetos.length < 4) {
+                var ultimo = octetos[octetos.length - 1];
+                if (ultimo && ultimo.length === 3 && Number(ultimo) <= 255 && raw.slice(-1) !== ".") {
+                    resultado += ".";
+                }
+            }
+
+            input.value = resultado;
+
+            // Reposiciona o cursor
+            try {
+                input.setSelectionRange(pos, pos);
+            } catch (e) {}
+        }
+
+        function iniciarMascaraIp() {
+            var inputIp = document.getElementById("ipt_ip");
+            if (!inputIp) return;
+
+            inputIp.addEventListener("input", function () {
+                aplicarMascaraIp(this);
+            });
+
+            // Bloqueia teclas não permitidas (letras, símbolos), mas deixa passar Backspace, Delete, Tab, setas
+            inputIp.addEventListener("keydown", function (e) {
+                var permitidas = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", "Home", "End"];
+                if (permitidas.includes(e.key)) return;
+                if (e.ctrlKey || e.metaKey) return; // Ctrl+C, Ctrl+V, etc.
+                if (!/[\d.]/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Trata colagem
+            inputIp.addEventListener("paste", function (e) {
+                e.preventDefault();
+                var colado = (e.clipboardData || window.clipboardData).getData("text");
+                var antes = this.value;
+                this.value = antes + colado;
+                aplicarMascaraIp(this);
+            });
+        }
+
+        function carregarEmpresas() {
+            var selectEmpresa = document.getElementById("slt_empresa");
+            if (!selectEmpresa) return;
+
+            var idEmpresa = sessionStorage.getItem("FK_EMPRESA");
+
+            if (!idEmpresa) {
+                selectEmpresa.innerHTML = '<option value="">Nenhuma empresa vinculada ao usuário</option>';
+                return;
+            }
+
+            fetch("/empresas/buscar/" + idEmpresa)
+                .then(function (resposta) {
+                    if (!resposta.ok) {
+                        throw new Error("Erro na resposta do servidor: " + resposta.status);
+                    }
+                    return resposta.json();
+                })
+                .then(function (empresa) {
+                    selectEmpresa.innerHTML = '';
+
+                    if (!empresa || !empresa.id) {
+                        selectEmpresa.innerHTML = '<option value="">Empresa não encontrada</option>';
+                        return;
+                    }
+
+                    var opcao = document.createElement("option");
+                    opcao.value = empresa.id;
+                    var nomeExibicao = empresa.nome_fantasia || empresa.razao_social || ("Concessionária " + empresa.id);
+                    if (empresa.cnpj) {
+                        nomeExibicao += " (" + empresa.cnpj + ")";
+                    }
+                    opcao.textContent = nomeExibicao;
+                    opcao.selected = true;
+                    selectEmpresa.appendChild(opcao);
+                })
+                .catch(function (erro) {
+                    console.error("Aviso ao carregar empresa:", erro);
+                    selectEmpresa.innerHTML = '<option value="">Erro ao carregar empresa</option>';
+                });
+        }
+
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", function () {
+                carregarEmpresas();
+                iniciarMascaraIp();
+            });
+        } else {
+            carregarEmpresas();
+            iniciarMascaraIp();
+        }
+
+        function cadastrar() {
+            var selectTipo = document.getElementById("slt_tipo");
+            var inputIp = document.getElementById("ipt_ip");
+            var selectEmpresa = document.getElementById("slt_empresa");
+
+            var tipoVar = selectTipo.value.toLowerCase();
+            var ipVar = inputIp.value.trim();
+            var empresaVar = selectEmpresa.value;
+
+            if (tipoVar == "" || empresaVar == "") {
+                mostrarMensagem("Preencha todos os campos obrigatórios (Tipo e Concessionária)!", false);
+                return false;
+            }
+
+            if (ipVar != "" && !ipValido(ipVar)) {
+                mostrarMensagem("Endereço IPv4 inválido!", false);
+                return false;
+            }
+
+            fetch("/servidores/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    tipoServer: tipoVar,
+                    ipServer: ipVar,
+                    empresaServer: empresaVar
+                }),
+            })
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        mostrarMensagem("Servidor cadastrado com sucesso!", true);
+
+                        selectTipo.value = "";
+                        inputIp.value = "";
+
+                    } else {
+                        resposta.text().then(function (texto) {
+                            if (texto.includes("Duplicate entry")) {
+                                mostrarMensagem("Esse endereço IP já foi cadastrado!", false);
+                            } else {
+                                mostrarMensagem("Erro ao realizar cadastro: " + texto, false);
+                            }
+                        });
+                    }
+                })
+                .catch(function (erro) {
+                    console.error(erro);
+                    mostrarMensagem("Erro ao tentar cadastrar o servidor!", false);
+                });
+
+            return false;
+        }
+    </script>
+</body>
+
+</html>

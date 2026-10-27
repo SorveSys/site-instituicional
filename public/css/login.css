@@ -1,0 +1,578 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --laranja: #ff9a1a;
+    --laranja-escuro: #d97706;
+    --preto: #111111;
+    --preto-2: #0d0d0d;
+    --fundo-painel: #f8fafc;
+    --texto: #0f172a;
+    --texto-suave: #64748b;
+    --borda: #e2e8f0;
+    --verde: #10b981;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--preto);
+    color: var(--texto);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ============ TOPO ============ */
+.topbar {
+    height: 64px;
+    background: var(--preto);
+    display: grid;
+    grid-template-columns: 533px 1fr auto;
+    align-items: center;
+    padding-right: 120px;
+    flex-shrink: 0;
+}
+
+.topbar-logo {
+    padding-left: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.topbar-logo img {
+    height: 38px;
+    width: auto;
+}
+
+.topbar-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--laranja);
+    font-size: 14px;
+    font-weight: 600;
+    margin-left: -340px;
+}
+
+.topbar-voltar:hover,
+.topbar-noc:hover {
+    opacity: .8;
+}
+
+.topbar-noc {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #e5e7eb;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.topbar-noc .ico {
+    width: 17px;
+    height: 17px;
+}
+
+/* ============ DIVISÃO ============ */
+.split {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 533px 1fr;
+    min-height: 0;
+}
+
+/* ============ LADO ESQUERDO ============ */
+.hero {
+    background: var(--preto-2);
+    padding: 32px 32px 32px 32px;
+    display: flex;
+}
+
+.hero-card {
+    position: relative;
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: #1f2937;
+}
+
+.hero-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+.hero-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, .75) 72%, #0b0b0b 100%);
+}
+
+.hero-badge {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    background: rgba(40, 40, 40, .92);
+    color: #fff;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 9px 15px;
+    border-radius: 10px;
+    backdrop-filter: blur(4px);
+    z-index: 2;
+}
+
+.hero-badge span {
+    color: var(--laranja);
+}
+
+.hero-texto {
+    position: relative;
+    z-index: 2;
+    padding: 32px;
+    color: #fff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-video {
+        display: none;
+    }
+}
+
+.hero-tag {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--laranja);
+    margin-bottom: 12px;
+}
+
+.hero-texto h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 24px;
+    line-height: 1.33;
+    margin-bottom: 14px;
+}
+
+.hero-texto p {
+    font-size: 13px;
+    line-height: 1.75;
+    color: #e5e7eb;
+    margin-bottom: 20px;
+}
+
+.hero-rodape {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, .15);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #d1d5db;
+}
+
+/* ============ LADO DIREITO ============ */
+.painel {
+    background: var(--fundo-painel);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 64px;
+}
+
+.painel-conteudo {
+    width: 100%;
+    max-width: 576px;
+}
+
+/* Abas */
+.tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    padding: 4px;
+    background: #e2e8f0;
+    border: 1px solid var(--borda);
+    border-radius: 4px;
+    margin-bottom: 32px;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 12px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: #475569;
+    border-radius: 3px;
+    transition: .2s;
+}
+
+.tab:hover {
+    color: var(--texto);
+}
+
+.tab.ativa {
+    background: #fff;
+    color: var(--texto);
+    font-weight: 600;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .06);
+}
+
+
+/* Títulos */
+.status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--laranja-escuro);
+    margin-bottom: 4px;
+}
+
+.olho .ico {
+    width: 20px;
+    height: 20px;
+}
+
+.ponto {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--laranja);
+}
+
+.ponto.verde {
+    background: var(--verde);
+    width: 6px;
+    height: 6px;
+}
+
+.painel h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    letter-spacing: -.5px;
+    color: var(--texto);
+    margin-bottom: 8px;
+}
+
+.subtitulo {
+    font-size: 14px;
+    color: var(--texto-suave);
+    margin-bottom: 32px;
+}
+
+/* Campos */
+.campo-grupo {
+    margin-bottom: 24px;
+}
+
+.campo-grupo label,
+.linha-label label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--texto);
+    margin-bottom: 8px;
+}
+
+.linha-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.esqueci {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--laranja-escuro);
+}
+
+.esqueci:hover {
+    text-decoration: underline;
+}
+
+.campo-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, .06);
+    transition: .2s;
+}
+
+.campo-input:focus-within {
+    border-color: var(--laranja);
+    box-shadow: 0 0 0 3px rgba(255, 154, 26, .18);
+}
+
+/* Ícones SVG (assets/icons/login) */
+.ico {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.ico-voltar {
+    transform: rotate(180deg);
+}
+
+.ico-mini {
+    width: 11px;
+    height: 11px;
+}
+
+.campo-input > .ico-campo {
+    width: 20px;
+    height: 20px;
+    margin-left: 14px;
+}
+
+.campo-input input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 15px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: var(--texto);
+}
+
+.campo-input input::placeholder {
+    color: #94a3b8;
+}
+
+.olho {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #94a3b8;
+    font-size: 19px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+}
+
+.olho:hover {
+    color: var(--texto);
+}
+
+/* Lembrar */
+.lembrar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--texto-suave);
+    cursor: pointer;
+    margin-bottom: 24px;
+}
+
+.lembrar input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--laranja);
+    cursor: pointer;
+}
+
+/* Botão */
+.btn-acessar {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--laranja);
+    color: #111;
+    border: none;
+    border-radius: 4px;
+    padding: 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .6px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(255, 154, 26, .3);
+    transition: .2s;
+}
+
+.btn-acessar:hover {
+    background: #ffa733;
+    transform: translateY(-1px);
+}
+
+.btn-acessar .ico {
+    width: 18px;
+    height: 18px;
+}
+
+/* Mensagens */
+.card-erro {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+}
+
+.card-erro.sucesso {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #047857;
+}
+
+/* Alternar */
+.alternar {
+    text-align: center;
+    font-size: 13px;
+    color: var(--texto-suave);
+    margin: 28px 0 28px;
+}
+
+.alternar a {
+    color: var(--laranja-escuro);
+    font-weight: 600;
+}
+
+.alternar a:hover {
+    text-decoration: underline;
+}
+
+.alternar a .ico-mini {
+    margin-left: 2px;
+}
+
+/* Rodapé de status */
+.status-rodape {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding-top: 22px;
+    border-top: 1px solid var(--borda);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    color: var(--texto-suave);
+}
+
+.seguranca {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.seguranca .ico {
+    width: 15px;
+    height: 15px;
+}
+
+.telemetria {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.telemetria b {
+    font-weight: 500;
+    color: var(--texto);
+}
+
+.sep {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    margin: 0 4px;
+}
+
+/* ============ RESPONSIVO ============ */
+@media (max-width: 1100px) {
+    .topbar {
+        grid-template-columns: auto 1fr auto;
+        padding: 0 24px;
+        gap: 24px;
+    }
+
+    .topbar-logo {
+        padding-left: 0;
+    }
+
+    .topbar-voltar {
+        margin-left: 0;
+    }
+
+    .split {
+        grid-template-columns: 380px 1fr;
+    }
+
+    .painel {
+        padding: 40px 32px;
+    }
+}
+
+@media (max-width: 800px) {
+    .split {
+        grid-template-columns: 1fr;
+    }
+
+    .hero {
+        display: none;
+    }
+
+    .painel {
+        padding: 32px 20px;
+    }
+
+    .tab {
+        font-size: 12px;
+        padding: 10px 6px;
+    }
+
+    .status-rodape {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
