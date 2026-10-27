@@ -134,6 +134,10 @@ function listaFiltrada() {
     return lista;
 }
 
+function abrirDashboard(nome) {
+    window.location.href = "/dashboard?srv=" + encodeURIComponent(nome);
+}
+
 function renderTabela() {
     var lista = listaFiltrada();
     var total = lista.length;
@@ -163,8 +167,7 @@ function renderTabela() {
             '<td class="mono ' + nivelUso(s.ram) + '">' + s.ram.toFixed(1) + '%</td>' +
             '<td class="mono ' + nivelUso(s.disco) + '">' + s.disco.toFixed(1) + '%</td>' +
             '<td class="mono comunicacao ' + (semResposta ? "offline" : "") + '"><i></i>' + s.comunicacao + '</td>' +
-            '<td class="acoes"><button class="btn-icone" aria-label="Ver detalhes de ' + s.nome + '"><img src="' + ICONES + 'ICON-OLHO.svg" alt="" class="ico"></button></td>' +
-            '</tr>';
+            '<td class="acoes"><button class="btn-icone" onclick="abrirDashboard(\'' + s.nome + '\')" aria-label="Ver detalhes de ' + s.nome + '"><img src="' + ICONES + 'ICON-OLHO.svg" alt="" class="ico"></button></td>' +            '</tr>';
     });
 
     document.getElementById("corpo_tabela").innerHTML = html;

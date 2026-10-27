@@ -29,7 +29,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use(cors());
 
-// ===== ROTAS DE PÁGINAS (link limpo -> arquivo dentro de /public) =====
 var paginas = {
     "/": "index.html",
     "/login": "login.html",
@@ -38,7 +37,7 @@ var paginas = {
     "/cadastro-empresa": "cadastro-empresa.html",
     "/cadastro-usuario": "cadastro-usuario.html",
     "/overview": "overview.html",
-    "/dashboard": "dashboard/dashboard.html",
+    "/dashboard": "dashboard.html",
 };
 
 Object.keys(paginas).forEach(function (rota) {
@@ -46,7 +45,6 @@ Object.keys(paginas).forEach(function (rota) {
         res.sendFile(path.join(__dirname, "public", paginas[rota]));
     });
 });
-// =======================================================================
 
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
