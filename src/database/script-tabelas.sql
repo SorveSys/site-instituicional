@@ -1,4 +1,4 @@
--- SCRIPT SQL — SORVESYS
+# SCRIPT SQL — SORVESYS
 
 -- ATENÇÃO: este script apaga e recria o banco.
 DROP DATABASE IF EXISTS sorvesys;
@@ -317,3 +317,6 @@ FROM registro_monitoramento;
 
 SELECT COUNT(*) AS total_alertas
 FROM alerta;
+
+SELECT *
+FROM servidor;

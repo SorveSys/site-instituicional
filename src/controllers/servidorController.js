@@ -37,24 +37,33 @@ function cadastrar(req, res) {
         ip = null;
     }
 
-    servidorModel.cadastrar(tipo, ip, fkEmpresa)
-        .then(function (resultado) {
-            var idServidor = resultado.insertId;
+    var promiseValidacaoIp = ip ? servidorModel.buscarPorIp(ip) : Promise.resolve([]);
 
-            // Vincula automaticamente componentes padrão (CPU, RAM, Disco, Rede) na tabela config
-            return servidorModel.vincularConfigComponentesPadrao(idServidor)
-                .then(function () {
-                    return res.status(201).json({
-                        mensagem: "Servidor cadastrado com sucesso!",
-                        id: idServidor
-                    });
-                })
-                .catch(function (erroConfig) {
-                    console.log("Servidor cadastrado, mas aviso ao vincular componentes na tabela config:", erroConfig);
-                    return res.status(201).json({
-                        mensagem: "Servidor cadastrado com sucesso!",
-                        id: idServidor
-                    });
+    return promiseValidacaoIp
+        .then(function (servidoresComIp) {
+            if (servidoresComIp && servidoresComIp.length > 0) {
+                return res.status(409).send("Duplicate entry: Esse endereço IP já foi cadastrado!");
+            }
+
+            return servidorModel.cadastrar(tipo, ip, fkEmpresa)
+                .then(function (resultado) {
+                    var idServidor = resultado.insertId;
+
+                    // Vincula automaticamente componentes padrão (CPU, RAM, Disco, Rede) na tabela config
+                    return servidorModel.vincularConfigComponentesPadrao(idServidor)
+                        .then(function () {
+                            return res.status(201).json({
+                                mensagem: "Servidor cadastrado com sucesso!",
+                                id: idServidor
+                            });
+                        })
+                        .catch(function (erroConfig) {
+                            console.log("Servidor cadastrado, mas aviso ao vincular componentes na tabela config:", erroConfig);
+                            return res.status(201).json({
+                                mensagem: "Servidor cadastrado com sucesso!",
+                                id: idServidor
+                            });
+                        });
                 });
         })
         .catch(function (erro) {
@@ -62,9 +71,28 @@ function cadastrar(req, res) {
             console.error("\nHouve um erro ao realizar o cadastro do servidor! Erro: ", erro.sqlMessage || erro.message);
 
             if (erro.code === "ER_DUP_ENTRY") {
-                return res.status(409).send("Duplicate entry: Esse servidor já foi cadastrado!");
+                return res.status(409).send("Duplicate entry: Esse endereço IP já foi cadastrado!");
             }
 
+            if (!res.headersSent) {
+                return res.status(500).json(erro.sqlMessage || erro.message);
+            }
+        });
+}
+
+function buscarPorIp(req, res) {
+    var ip = req.query.ip || req.params.ip;
+
+    if (!ip) {
+        return res.status(400).send("Informe o endereço IP do servidor!");
+    }
+
+    servidorModel.buscarPorIp(ip)
+        .then(function (resultado) {
+            return res.status(200).json(resultado);
+        })
+        .catch(function (erro) {
+            console.error(erro);
             return res.status(500).json(erro.sqlMessage || erro.message);
         });
 }
@@ -99,6 +127,7 @@ function listarPorEmpresa(req, res) {
 
 module.exports = {
     cadastrar,
+    buscarPorIp,
     listar,
     listarPorEmpresa
 };

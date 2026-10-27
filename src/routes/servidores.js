@@ -7,6 +7,10 @@ router.post("/cadastrar", function (req, res) {
     servidorController.cadastrar(req, res);
 });
 
+router.get("/buscar-por-ip", function (req, res) {
+    servidorController.buscarPorIp(req, res);
+});
+
 router.get("/listar", function (req, res) {
     servidorController.listar(req, res);
 });

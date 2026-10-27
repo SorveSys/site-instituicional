@@ -55,6 +55,24 @@ function buscarPorId(id) {
     return database.executar(instrucaoSql, [id]);
 }
 
+function buscarPorIp(ip) {
+    console.log("ACESSEI O SERVIDOR MODEL \n function buscarPorIp():", ip);
+    var instrucaoSql = `
+        SELECT 
+            s.id, 
+            s.tipo, 
+            s.ip, 
+            s.fk_empresa,
+            e.razao_social,
+            e.nome_fantasia
+        FROM servidor AS s
+        JOIN empresa AS e ON s.fk_empresa = e.id
+        WHERE s.ip = ?;
+    `;
+    console.log("Executando a instrução SQL: \n" + instrucaoSql);
+    return database.executar(instrucaoSql, [ip]);
+}
+
 function cadastrar(tipo, ip, fkEmpresa) {
     console.log("ACESSEI O SERVIDOR MODEL \n function cadastrar():", tipo, ip, fkEmpresa);
     var instrucaoSql = `
@@ -79,6 +97,7 @@ module.exports = {
     listar,
     listarPorEmpresa,
     buscarPorId,
+    buscarPorIp,
     cadastrar,
     vincularConfigComponentesPadrao
 };
