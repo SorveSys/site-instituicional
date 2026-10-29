@@ -26,8 +26,8 @@
             <img src="assets/icons/login/Logo-SorveSys-Fundo-Escuro.svg" alt="SorveSys Logo">
         </a>
 
-        <a href="index.html" class="topbar-voltar">
-            <img src="assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Home
+        <a href="overview.html" class="topbar-voltar">
+            <img src="assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Overview
         </a>
 
         <a href="#" class="topbar-noc">
@@ -51,7 +51,15 @@
     <!-- CONTEÚDO -->
     <main class="conteudo">
 
-        <!-- FORMULÁRIO -->
+        <div id="aviso_primeiro_cadastro" class="aviso-primeiro-cadastro" style="display: none;">
+    <strong>Primeiro acesso!</strong>
+    <p>
+        Para começar a utilizar o SorveSys, cadastre o primeiro usuário
+        da sua empresa. Depois do cadastro, você poderá acessar a plataforma
+        pela tela de login.
+    </p>
+</div>
+
         <section class="card-form">
             <div class="card-form-topo">
                 <img src="assets/icons/cadastro-servidor/Icon-computador.svg" alt="" class="ico">
@@ -166,7 +174,6 @@
         }
 
         function aplicarMascaraIp(input) {
-            var pos = input.selectionStart;
             var raw = input.value;
 
             // Remove tudo que não for dígito ou ponto
@@ -178,7 +185,7 @@
             // Limita a 4 octetos
             octetos = octetos.slice(0, 4);
 
-            octetos = octetos.map(function (oct, idx) {
+            octetos = octetos.map(function (oct) {
                 // Limita cada octeto a 3 dígitos
                 oct = oct.replace(/\D/g, "").slice(0, 3);
 
@@ -202,37 +209,14 @@
             }
 
             input.value = resultado;
-
-            // Reposiciona o cursor
-            try {
-                input.setSelectionRange(pos, pos);
-            } catch (e) {}
         }
 
         function iniciarMascaraIp() {
             var inputIp = document.getElementById("ipt_ip");
             if (!inputIp) return;
 
+            // Aplica a máscara e validação conforme o usuário digita ou cola
             inputIp.addEventListener("input", function () {
-                aplicarMascaraIp(this);
-            });
-
-            // Bloqueia teclas não permitidas (letras, símbolos), mas deixa passar Backspace, Delete, Tab, setas
-            inputIp.addEventListener("keydown", function (e) {
-                var permitidas = ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight", "Home", "End"];
-                if (permitidas.includes(e.key)) return;
-                if (e.ctrlKey || e.metaKey) return; // Ctrl+C, Ctrl+V, etc.
-                if (!/[\d.]/.test(e.key)) {
-                    e.preventDefault();
-                }
-            });
-
-            // Trata colagem
-            inputIp.addEventListener("paste", function (e) {
-                e.preventDefault();
-                var colado = (e.clipboardData || window.clipboardData).getData("text");
-                var antes = this.value;
-                this.value = antes + colado;
                 aplicarMascaraIp(this);
             });
         }

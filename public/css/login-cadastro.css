@@ -506,6 +506,9 @@ a {
 
 /* ============ RESPONSIVO ============ */
 @media (max-width: 1100px) {
+    .pagina-cadastro-empresa .tipos {
+        display: none;
+    }
     .topbar {
         grid-template-columns: auto 1fr auto;
         padding: 0 24px;
@@ -527,9 +530,16 @@ a {
     .painel {
         padding: 40px 32px;
     }
+
+     body.pagina-cadastro-empresa main.conteudo > section.tipos {
+        display: none !important;
+    }
 }
 
 @media (max-width: 800px) {
+    .pagina-cadastro-empresa .tipos {
+        display: none;
+    }
     .split {
         grid-template-columns: 1fr;
     }
@@ -550,5 +560,9 @@ a {
     .status-rodape {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+     body.pagina-cadastro-empresa main.conteudo > section.tipos {
+        display: none !important;
     }
 }

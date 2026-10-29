@@ -16,10 +16,13 @@
 </head>
 <body>
     <div class="app">
+        <div class="menu-fundo" id="menu_fundo" onclick="alternarMenu()"></div>
 
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-topo">
-                <div class="marca-icone"><img src="/assets/icons/home/LOGO.svg" alt=""></div>
+                <div class="marca-icone">
+                    <img src="/assets/icons/home/LOGO.svg" alt="SorveSys">
+                </div>
             </div>
 
             <nav class="sidebar-nav">
@@ -29,12 +32,35 @@
                     <span>Overview</span>
                     <em id="nav_total">9</em>
                 </a>
-                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Alicia</span></a>
-                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Danilo</span></a>
-                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Matheus</span></a>
-                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Melissa</span></a>
-                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Nicolas</span></a>
-                <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt=""><span>Monitoramento Rodrigo</span></a>
+
+                <a href="#" class="nav-item">
+                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <span>Monitoramento Alicia</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <span>Monitoramento Danilo</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <span>Monitoramento Matheus</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <span>Monitoramento Melissa</span>
+                </a>
+
+                <a href="#" class="nav-item">
+                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <span>Monitoramento Nicolas</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <span>Monitoramento Rodrigo</span>
+                </a>
             </nav>
 
             <div class="sidebar-rodape">
@@ -53,18 +79,30 @@
 
         <main class="main">
             <header class="page-header">
-                <div>
+                <button class="menu-hamburguer" id="menu_hamburguer" onclick="alternarMenu()" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+
+                <div class="page-header-titulo">
                     <h1>Overview</h1>
                     <p>Visão geral da infraestrutura monitorada nas praças de pedágio</p>
                 </div>
+
                 <div class="page-header-acoes">
                     <span class="atualizado">
                         <img src="/assets/icons/overview/ICON-RELOGIO.svg" class="ico" alt="">
                         Atualizado: <b id="hora_atualizado">--:--</b>
                     </span>
-                    <a href="/cadastro-servidor" class="btn-novo">
-                        <img src="/assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Servidor
-                    </a>
+                    <div class="page-header-botoes">
+                        <a href="/cadastro-usuario" class="btn-novo">
+                            <img src="/assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Usuario
+                        </a>
+                        <a href="/cadastro-servidor" class="btn-novo">
+                            <img src="/assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Servidor
+                        </a>
+                    </div>
                 </div>
             </header>
 
@@ -216,6 +254,7 @@
                     <div id="lista_alertas"></div>
                 </section>
             </div>
+            
         </main>
     </div>
 
