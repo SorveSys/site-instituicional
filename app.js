@@ -1,7 +1,6 @@
 var ambiente_processo = 'producao';
 // var ambiente_processo = 'desenvolvimento';
 
-
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 // Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
 // A sintaxe do operador ternário é: condição ? valor_se_verdadeiro : valor_se_falso
@@ -57,14 +56,14 @@ app.use("/servidores", servidoresRouter);
 
 app.listen(PORTA_APP, "0.0.0.0", function () {
     console.log(`
-    ##   ##  ######   #####             ####       ##     ######     ##              ##  ##    ####    ######  
-    ##   ##  ##       ##  ##            ## ##     ####      ##      ####             ##  ##     ##         ##  
-    ##   ##  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##        ##   
-    ## # ##  ####     #####    ######   ##  ##   ######     ##     ######   ######   ##  ##     ##       ##    
-    #######  ##       ##  ##            ##  ##   ##  ##     ##     ##  ##            ##  ##     ##      ##     
-    ### ###  ##       ##  ##            ## ##    ##  ##     ##     ##  ##             ####      ##     ##      
-    ##   ##  ######   #####             ####     ##  ##     ##     ##  ##              ##      ####    ######  
-    \n\n\n                                                                                                 
+    ##  ##  ######   #####               ####        ##      ######     ##                ##  ##    ####    ######  
+    ##  ##  ##      ##  ##              ## ##      ####       ##      ####                ##  ##     ##         ##  
+    ##  ##  ##      ##  ##              ##  ##    ##  ##      ##     ##  ##               ##  ##     ##        ##   
+    ## # ##  ####     #####   ######    ##  ##    ######      ##     ######   ######    ##  ##     ##       ##    
+    #######  ##      ##  ##             ##  ##    ##  ##      ##     ##  ##             ##  ##     ##      ##     
+    ### ###  ##      ##  ##             ## ##     ##  ##      ##     ##  ##              ####      ##     ##      
+    ##  ##  ######   #####               ####      ##  ##      ##     ##  ##               ##      ####    ######  
+    \n\n\n                                                                                                   
     Servidor do seu site já está rodando! Acesse o caminho a seguir para visualizar .: http://${HOST_APP}:${PORTA_APP} :. \n\n
     Você está rodando sua aplicação em ambiente de .:${process.env.AMBIENTE_PROCESSO}:. \n\n
     \tSe .:desenvolvimento:. você está se conectando ao banco local. \n
