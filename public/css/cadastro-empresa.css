@@ -1,0 +1,85 @@
+.pagina-cadastro-empresa .painel {
+    align-items: flex-start;
+    overflow-y: auto;
+}
+
+.pagina-cadastro-empresa .painel-conteudo {
+    padding: 12px 0;
+}
+
+.pagina-cadastro-empresa .tabs {
+    margin-bottom: 24px;
+}
+
+.pagina-cadastro-empresa .painel h1 {
+    margin-top: 4px;
+}
+
+.pagina-cadastro-empresa .subtitulo {
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.pagina-cadastro-empresa .campo-grupo {
+    margin-bottom: 18px;
+}
+
+.pagina-cadastro-empresa .campo-grupo label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--texto);
+    margin-bottom: 0;
+}
+
+.pagina-cadastro-empresa .campo-grupo label b {
+    color: var(--laranja-escuro);
+}
+
+.pagina-cadastro-empresa .ajuda {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--texto-suave);
+    margin: 4px 0 8px;
+}
+
+.pagina-cadastro-empresa .btn-acessar {
+    margin-top: 26px;
+}
+
+.pagina-cadastro-empresa .alternar {
+    margin: 22px 0;
+}
+
+.pagina-cadastro-empresa .status-rodape {
+    padding-top: 18px;
+}
+
+@media (max-width: 1100px) {
+    .pagina-cadastro-empresa .painel {
+        padding: 32px 24px;
+    }
+
+    .pagina-cadastro-empresa .painel-conteudo {
+        max-width: 576px;
+    }
+}
+
+@media (max-width: 800px) {
+    .pagina-cadastro-empresa .painel {
+        padding: 24px 20px;
+    }
+
+    .pagina-cadastro-empresa .painel-conteudo {
+        padding: 8px 0;
+    }
+
+    .pagina-cadastro-empresa .tabs {
+        margin-bottom: 24px;
+    }
+
+    .pagina-cadastro-empresa .status-rodape {
+        flex-direction: row;
+        align-items: center;
+    }
+}

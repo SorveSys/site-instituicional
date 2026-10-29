@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -11,167 +12,231 @@
     <script src="./js/sessao.js"></script>
 
     <link rel="icon" href="assets/LOGO SORVESYS.png">
-    <!-- Mesmo CSS da tela de cadastro de servidor (layout compartilhado) -->
-    <link rel="stylesheet" href="/css/cadastro-servidor.css">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/cadastro-empresa.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body class="pagina-cadastro-empresa">
 
-    <!-- TOPO (igual ao login) -->
     <header class="topbar">
         <a href="index.html" class="topbar-logo">
             <img src="/assets/icons/login/Logo-SorveSys-Fundo-Escuro.svg" alt="SorveSys Logo">
         </a>
 
         <a href="index.html" class="topbar-voltar">
-            <img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Home
+            <img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar">
+            Home
         </a>
 
         <a href="#" class="topbar-noc">
-            <img src="/assets/icons/login/Icon-fone.svg" alt="" class="ico"> Contate o NOC
+            <img src="/assets/icons/login/Icon-fone.svg" alt="" class="ico">
+            Contate o NOC
         </a>
     </header>
 
-    <!-- HERO -->
-    <section class="hero">
-        <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-            <source src="/assets/icons/login/pedagio-horizontal-otimizado.mp4" type="video/mp4">
-        </video>
+    <main class="split">
 
-        <div class="hero-conteudo">
-            <span class="hero-tag">Módulo de empresas 
-            </span>
-            <h1>Cadastro de Empresa</h1>
-            <p>Provisionamento de empresas para vincular praças, servidores e telemetria contínua.</p>
-        </div>
-    </section>
+        <section class="hero">
+            <div class="hero-card">
 
-    <!-- CONTEÚDO -->
-    <main class="conteudo">
+                <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+                    <source src="/assets/icons/login/pedagio-horizontal-otimizado.mp4" type="video/mp4">
+                </video>
 
-        <!-- FORMULÁRIO -->
-        <section class="card-form">
-            <div class="card-form-topo">
-                <img src="/assets/icons/cadastro-empresa/Icon-predio-mais.svg" alt="" class="ico">
-                <h2>Nova empresa</h2>
+                <span class="hero-badge">Sorve<span>Sys</span></span>
+
+                <div class="hero-texto">
+                    <span class="hero-tag">Operação em tempo real</span>
+                    <h2>Infraestrutura Inteligente de Arrecadação &amp; Pedágio</h2>
+                    <p>Monitoramento integrado de servidores de pórticos.</p>
+
+                    
+                </div>
+
             </div>
+        </section>
 
-            <form class="card-form-corpo" onsubmit="return cadastrar()" novalidate>
+        <section class="painel">
+            <div class="painel-conteudo">
 
-                <div class="campo-grupo">
-                    <div class="linha-label">
+                <div class="tabs">
+                    <a href="login.html" class="tab">
+                        <img src="./assets/icons/login/Icon-entrar-conta.svg" alt="" class="ico">
+                        Entrar na Conta
+                    </a>
+
+                    <a href="cadastro-empresa.html" class="tab ativa">
+                        <img src="./assets/icons/login/Icon-cadastrar.svg" alt="" class="ico">
+                        Cadastrar Concessionária
+                    </a>
+                </div>
+
+                <span class="status-tag">
+                    <i class="ponto"></i>
+                    Cadastro de concessionária
+                </span>
+
+                <h1>Nova Empresa</h1>
+
+                <p class="subtitulo">
+                    Cadastre sua concessionária para vincular praças,
+                    servidores e monitoramento operacional.
+                </p>
+
+                <form onsubmit="return cadastrar()" novalidate>
+
+                    <div class="campo-grupo">
                         <label for="ipt_fantasia">Nome Fantasia</label>
-                    </div>
-                    <p class="ajuda">Nome comercial ou marca utilizada pela concessionária.</p>
-                    <div class="campo-input">
-                        <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
-                        <input type="text" id="ipt_fantasia" placeholder="Rodovias do Sul" autocomplete="organization">
-                    </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <div class="linha-label">
+                        <p class="ajuda">
+                            Nome comercial utilizado pela concessionária.
+                        </p>
+
+                        <div class="campo-input">
+                            <img src="/assets/icons/cadastro-empresa/Icon-predio.svg"
+                                 alt="" class="ico ico-campo">
+
+                            <input type="text"
+                                   id="ipt_fantasia"
+                                   placeholder="Rodovias do Sul"
+                                   autocomplete="organization">
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
                         <label for="ipt_razao">Razão Social <b>*</b></label>
-                       
-                    </div>
-                    <p class="ajuda">Nome jurídico da empresa conforme o contrato de concessão.</p>
-                    <div class="campo-input">
-                        <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
-                        <input type="text" id="ipt_razao" placeholder="Empresa Rodovias do Sul S.A." autocomplete="organization">
-                    </div>
-                </div>
 
-                <div class="campo-grupo">
-                    <div class="linha-label">
+                        <p class="ajuda">
+                            Nome jurídico conforme o contrato de concessão.
+                        </p>
+
+                        <div class="campo-input">
+                            <img src="/assets/icons/cadastro-empresa/Icon-predio.svg"
+                                 alt="" class="ico ico-campo">
+
+                            <input type="text"
+                                   id="ipt_razao"
+                                   placeholder="Empresa Rodovias do Sul S.A."
+                                   autocomplete="organization">
+                        </div>
+                    </div>
+
+                    <div class="campo-grupo">
                         <label for="ipt_cnpj">CNPJ <b>*</b></label>
+
+                        <p class="ajuda">
+                            Informe o CNPJ da concessionária.
+                        </p>
+
+                        <div class="campo-input">
+                            <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg"
+                                 alt="" class="ico ico-campo">
+
+                            <input type="text"
+                                   id="ipt_cnpj"
+                                   placeholder="00.000.000/0000-00"
+                                   inputmode="numeric"
+                                   maxlength="18"
+                                   oninput="mascararCnpj(this)"
+                                   autocomplete="off">
+                        </div>
                     </div>
-                    <p class="ajuda">CNPJ da empresa (ex: 12.345.678/0001-90).</p>
-                    <div class="campo-input">
-                        <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg" alt="" class="ico ico-campo">
-                        <input type="text" id="ipt_cnpj" placeholder="00.000.000/0000-00" inputmode="numeric" maxlength="18" oninput="mascararCnpj(this)" autocomplete="off">
+
+                    <button type="submit" class="btn-acessar">
+                        CADASTRAR EMPRESA
+                    </button>
+
+                    <div id="cardErro" class="card-erro" style="display:none;">
+                        <span id="mensagem_erro"></span>
                     </div>
+
+                </form>
+
+                <p class="alternar">
+                    Já possui uma conta?
+                    <a href="login.html">
+                        Entrar na Conta
+                        <img src="./assets/icons/login/Icon-seta.svg" alt="" class="ico ico-mini">
+                    </a>
+                </p>
+
+                <div class="status-rodape">
+                    <span class="seguranca">
+                        <img src="./assets/icons/login/Icon-escudo.svg"
+                             alt="Sessão protegida" class="ico">
+                    </span>
+
+                    <span class="telemetria">
+                        <i class="ponto verde"></i>
+                        SorveSys
+                        <i class="sep"></i>
+                        Cadastro corporativo
+                    </span>
                 </div>
 
-                <button type="submit" class="btn-cadastrar">
-                    <img src="/assets/icons/cadastro-empresa/Icon-adicionar.svg" alt="" class="ico">
-                    Cadastrar Empresa
-                </button>
-
-                <div id="cardErro" class="card-erro" style="display:none;">
-                    <span id="mensagem_erro"></span>
-                </div>
-            </form>
+            </div>
         </section>
 
-        <!-- O QUE A EMPRESA RECEBE -->
-        <section class="tipos">
-
-            <article class="tipo-card verde">
-                <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-semaforo.svg" alt="" class="ico"></div>
-                <div>
-                    <span class="tipo-tag">Escopo: Operação</span>
-                    <h3>Operação DE Pistas &amp; Sinalização</h3>
-                    <p>Monitoramento dos controladores de pista, pórticos free-flow e sinalização da praça.</p>
-                </div>
-            </article>
-
-            <article class="tipo-card laranja">
-                <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-pagamento.svg" alt="" class="ico"></div>
-                <div>
-                    <span class="tipo-tag">Escopo: Arrecadação</span>
-                    <h3>Arrecadação - TEF / TAG / Cabines Manuais</h3>
-                    <p>Visibilidade dos servidores de pagamento e das transações da empresa.</p>
-                </div>
-            </article>
-
-            <article class="tipo-card azul">
-                <div class="tipo-icone"><img src="/assets/icons/cadastro-empresa/Icon-escudo-certo.svg" alt="" class="ico"></div>
-                <div>
-                    <span class="tipo-tag">Escopo: Conformidade</span>
-                    <h3>Conformidade - Auditoria ANTT</h3>
-                    <p>Trilha de auditoria e redundância sincronizada com o datacenter regulador.</p>
-                </div>
-            </article>
-
-        </section>
     </main>
 
     <script>
         function mostrarMensagem(texto, sucesso) {
-            cardErro.className = sucesso ? "card-erro sucesso" : "card-erro";
+            cardErro.className = sucesso
+                ? "card-erro sucesso"
+                : "card-erro";
+
             cardErro.style.display = "block";
             mensagem_erro.innerHTML = texto;
         }
 
-        // Máscara 00.000.000/0000-00
         function mascararCnpj(campo) {
             var d = campo.value.replace(/\D/g, "").slice(0, 14);
             var r = d;
-            if (d.length > 12) r = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*/, "$1.$2.$3/$4-$5");
-            else if (d.length > 8) r = d.replace(/^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/, "$1.$2.$3/$4");
-            else if (d.length > 5) r = d.replace(/^(\d{2})(\d{3})(\d{0,3}).*/, "$1.$2.$3");
-            else if (d.length > 2) r = d.replace(/^(\d{2})(\d{0,3}).*/, "$1.$2");
+
+            if (d.length > 12) {
+                r = d.replace(
+                    /^(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2}).*/,
+                    "$1.$2.$3/$4-$5"
+                );
+            } else if (d.length > 8) {
+                r = d.replace(
+                    /^(\d{2})(\d{3})(\d{3})(\d{0,4}).*/,
+                    "$1.$2.$3/$4"
+                );
+            } else if (d.length > 5) {
+                r = d.replace(
+                    /^(\d{2})(\d{3})(\d{0,3}).*/,
+                    "$1.$2.$3"
+                );
+            } else if (d.length > 2) {
+                r = d.replace(
+                    /^(\d{2})(\d{0,3}).*/,
+                    "$1.$2"
+                );
+            }
+
             campo.value = r;
         }
 
-        // Validação do formato e tamanho do CNPJ (14 dígitos numéricos)
         function cnpjValido(valor) {
             var c = String(valor || "").replace(/\D/g, "");
             return c.length === 14;
         }
 
         function cadastrar() {
-
             var razaoVar = ipt_razao.value.trim();
             var cnpjVar = ipt_cnpj.value.trim();
             var fantasiaVar = ipt_fantasia.value.trim();
 
             if (razaoVar == "" || cnpjVar == "") {
-                mostrarMensagem("Preencha todos os campos obrigatórios!", false);
+                mostrarMensagem(
+                    "Preencha todos os campos obrigatórios!",
+                    false
+                );
                 return false;
             }
 
@@ -180,63 +245,72 @@
                 return false;
             }
 
-            // Envio para o backend adaptado para o schema da SorveSys
             fetch("/empresas/cadastrar", {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     razaoServer: razaoVar,
                     cnpjServer: cnpjVar,
                     nomeFantasiaServer: fantasiaVar
-                }),
-            })
-
-                .then(function (resposta) {
-
-                    if (resposta.ok) {
-                        resposta.json().then(function (dados) {
-                            if (dados && dados.id) {
-                                sessionStorage.setItem("EMPRESA_CADASTRADA_ID", dados.id);
-                            }
-                            mostrarMensagem("Empresa cadastrada com sucesso! Redirecionando...", true);
-                            setTimeout(function () {
-                                window.location.href = "cadastro-usuario.html";
-                            }, 1500);
-                        }).catch(function () {
-                            mostrarMensagem("Empresa cadastrada com sucesso! Redirecionando...", true);
-                            setTimeout(function () {
-                                window.location.href = "cadastro-usuario.html";
-                            }, 1500);
-                        });
-
-                        ipt_razao.value = "";
-                        ipt_cnpj.value = "";
-                        ipt_fantasia.value = "";
-
-                    } else {
-
-                        resposta.text().then(texto => {
-
-                            if (texto.includes("Duplicate entry")) {
-                                mostrarMensagem("Esse CNPJ já foi cadastrado!", false);
-                            } else {
-                                mostrarMensagem("Erro ao realizar cadastro!", false);
-                            }
-
-                        });
-                    }
                 })
+            })
+            .then(function (resposta) {
+                if (resposta.ok) {
+                    resposta.json()
+                    .then(function (dados) {
+                        if (dados && dados.id) {
+                            sessionStorage.setItem(
+                                "EMPRESA_CADASTRADA_ID",
+                                dados.id
+                            );
+                        }
 
-                .catch(function (erro) {
-                    console.log(erro);
-                    mostrarMensagem("Erro ao tentar cadastrar a empresa!", false);
-                });
+                        finalizarCadastro();
+                    })
+                    .catch(function () {
+                        finalizarCadastro();
+                    });
+
+                } else {
+                    resposta.text().then(function (texto) {
+                        if (texto.includes("Duplicate entry")) {
+                            mostrarMensagem(
+                                "Esse CNPJ já foi cadastrado!",
+                                false
+                            );
+                        } else {
+                            mostrarMensagem(
+                                "Erro ao realizar cadastro!",
+                                false
+                            );
+                        }
+                    });
+                }
+            })
+            .catch(function (erro) {
+                console.log(erro);
+                mostrarMensagem(
+                    "Erro ao tentar cadastrar a empresa!",
+                    false
+                );
+            });
 
             return false;
         }
-    </script>
-</body>
 
+        function finalizarCadastro() {
+            mostrarMensagem(
+                "Empresa cadastrada com sucesso! Redirecionando...",
+                true
+            );
+
+            setTimeout(function () {
+                window.location.href = "cadastro-usuario.html";
+            }, 1500);
+        }
+    </script>
+
+</body>
 </html>

@@ -239,7 +239,22 @@ function marcarLidos() {
     renderAlertas();
 }
 
-// ===== SESSÃO =====
+function alternarMenu() {
+  var sidebar = document.querySelector(".sidebar");
+  var fundo = document.getElementById("menu_fundo");
+  var botao = document.getElementById("menu_hamburguer");
+
+  sidebar.classList.toggle("menu-aberta");
+  fundo.classList.toggle("ativo");
+
+  var aberto = sidebar.classList.contains("menu-aberta");
+
+  botao.setAttribute("aria-expanded", aberto);
+  botao.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
+
+  document.body.classList.toggle("menu-aberto", aberto);
+}
+
 function sair() {
     try { sessionStorage.clear(); } catch (e) { }
     window.location = "/login";
