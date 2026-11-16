@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Concessionária | SorveSys</title>
+
+    <link rel="icon" href="./assets/LOGO_SORVESYS.png">
+    <link rel="stylesheet" href="./css/cadastro-concessionaria.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="./js/sessao.js"></script>
+</head>
+
+<body>
+
+    <!-- ==================== TOPO / HEADER ==================== -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="brand-logo" title="SorveSys - Página Inicial">
+                <img src="./assets/icons/home/LOGO.svg" alt="SorveSys – Monitoramento de Sistemas Rodoviários">
+            </a>
+
+            <div class="brand-divider"></div>
+
+            <div class="header-titles">
+                <span class="header-category">SORVESYS CORE • GESTÃO DE ATIVOS</span>
+                <h1 class="header-title">Cadastro de Concessionária</h1>
+            </div>
+        </div>
+
+        <div class="topbar-right">
+            <div class="status-badge">
+                <span class="dot"></span>
+                SISTEMA TELEMÉTRICO ATIVO
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
+    <main class="main-wrapper">
+        <div class="split-grid">
+
+            <!-- CARD FORMULÁRIO (ESQUERDA) -->
+            <section class="form-card">
+                <span class="step-indicator">ETAPA 01 DE 01</span>
+                <h2 class="card-heading">Identificação da Entidade Concessionária</h2>
+                <p class="card-lead">
+                    Insira os parâmetros legais, jurisdição da malha viária e o ponto kilométrico de referência para
+                    integração dos módulos de pedágio e telemetria.
+                </p>
+
+                <form id="form_concessionaria" class="form-content" onsubmit="return cadastrarConcessionaria(event)"
+                    novalidate>
+                    <!-- Campo 1: Nome da Concessionária -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="ipt_nome">Nome da Concessionária</label>
+                            <span class="badge-required">Obrigatório</span>
+                        </div>
+                        <div class="input-box">
+                            <span class="input-icon">
+                                <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+                                    <path
+                                        d="M0 13.5V0H7.5V3H15V13.5H0ZM1.5 12H6V10.5H1.5V12ZM1.5 9H6V7.5H1.5V9ZM1.5 6H6V4.5H1.5V6ZM1.5 3H6V1.5H1.5V3ZM7.5 12H13.5V4.5H7.5V12ZM9 7.5V6H12V7.5H9ZM9 10.5V9H12V10.5H9Z"
+                                        fill="#94A3B8" />
+                                </svg>
+                            </span>
+                            <input type="text" id="ipt_nome" name="nome_concessionaria"
+                                placeholder="Ex: Concessionária AutoBandeirantes S.A." autocomplete="organization"
+                                required>
+                        </div>
+                        <p class="input-help">Denominação social registrada na ANTT ou agência reguladora estadual
+                            (ARTESP, etc.).</p>
+                    </div>
+
+                    <!-- Campo 2: CNPJ -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="ipt_cnpj">CNPJ</label>
+                            <span class="badge-required">Obrigatório</span>
+                        </div>
+                        <div class="input-box">
+                            <span class="input-icon">
+                                <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                                    <path
+                                        d="M1.5 15C1.0875 15 0.734375 14.8531 0.440625 14.5594C0.146875 14.2656 0 13.9125 0 13.5V5.25C0 4.8375 0.146875 4.48438 0.440625 4.19063C0.734375 3.89688 1.0875 3.75 1.5 3.75H5.25V1.5C5.25 1.0875 5.39688 0.734375 5.69063 0.440625C5.98438 0.146875 6.3375 0 6.75 0H8.25C8.6625 0 9.01562 0.146875 9.30937 0.440625C9.60312 0.734375 9.75 1.0875 9.75 1.5V3.75H13.5C13.9125 3.75 14.2656 3.89688 14.5594 4.19063C14.8531 4.48438 15 4.8375 15 5.25V13.5C15 13.9125 14.8531 14.2656 14.5594 14.5594C14.2656 14.8531 13.9125 15 13.5 15H1.5ZM1.5 13.5H13.5V5.25H9.75C9.75 5.6625 9.60312 6.01562 9.30937 6.30937C9.01562 6.60312 8.6625 6.75 8.25 6.75H6.75C6.3375 6.75 5.98438 6.60312 5.69063 6.30937C5.39688 6.01562 5.25 5.6625 5.25 5.25H1.5V13.5ZM3 12H7.5V11.6625C7.5 11.45 7.44063 11.2531 7.32188 11.0719C7.20313 10.8906 7.0375 10.75 6.825 10.65C6.575 10.5375 6.32188 10.4531 6.06563 10.3969C5.80938 10.3406 5.5375 10.3125 5.25 10.3125C4.9625 10.3125 4.69062 10.3406 4.43437 10.3969C4.17812 10.4531 3.925 10.5375 3.675 10.65C3.4625 10.75 3.29687 10.8906 3.17812 11.0719C3.05937 11.2531 3 11.45 3 11.6625V12ZM9 10.875H12V9.75H9V10.875ZM5.25 9.75C5.5625 9.75 5.82812 9.64062 6.04688 9.42188C6.26562 9.20312 6.375 8.9375 6.375 8.625C6.375 8.3125 6.26562 8.04688 6.04688 7.82812C5.82812 7.60938 5.5625 7.5 5.25 7.5C4.9375 7.5 4.67188 7.60938 4.45312 7.82812C4.23438 8.04688 4.125 8.3125 4.125 8.625C4.125 8.9375 4.23438 9.20312 4.45312 9.42188C4.67188 9.64062 4.9375 9.75 5.25 9.75ZM9 8.625H12V7.5H9V8.625ZM6.75 5.25H8.25V1.5H6.75V5.25Z"
+                                        fill="#94A3B8" />
+                                </svg>
+                            </span>
+                            <input type="text" id="ipt_cnpj" name="cnpj" placeholder="00.000.000/0000-00" maxlength="18"
+                                oninput="mascararCnpj(this)" inputmode="numeric" required>
+                        </div>
+                        <p class="input-help">Utilizado para validação fiscal e faturamento de arrecadação tarifária.
+                        </p>
+                    </div>
+
+                    <!-- Linha dupla: Rodovia Principal + Km de Operação -->
+                    <div class="form-row">
+                        <!-- Campo 3: Rodovia Principal -->
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="ipt_rodovia">Rodovia Principal</label>
+                                <span class="badge-required">Obrigatório</span>
+                            </div>
+                            <div class="input-box">
+                                <span class="input-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 19L8 5"></path>
+                                        <path d="M20 19L16 5"></path>
+                                        <line x1="12" y1="6" x2="12" y2="8"></line>
+                                        <line x1="12" y1="12" x2="12" y2="14"></line>
+                                        <line x1="12" y1="18" x2="12" y2="20"></line>
+                                    </svg>
+                                </span>
+                                <input type="text" id="ipt_rodovia" name="rodovia" placeholder="Ex: SP-330 / Anhanguera"
+                                    required>
+                            </div>
+                            <p class="input-help">Identificador da malha concedida</p>
+                        </div>
+
+                        <!-- Campo 4: Km de Operação / Trecho -->
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="ipt_km">Km de Operação / Trecho</label>
+                                <span class="badge-required">Obrigatório</span>
+                            </div>
+                            <div class="input-box">
+                                <span class="input-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8"
+                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </span>
+                                <input type="text" id="ipt_km" name="km_operacao" placeholder="Ex: Km 142" required>
+                            </div>
+                            <p class="input-help">Marco quilométrico ou extensão operacional</p>
+                        </div>
+                    </div>
+
+                    <!-- Botão de Ação -->
+                    <div class="form-actions">
+                        <button type="submit" id="btn_cadastrar" class="btn-submit">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                                <circle cx="10" cy="10" r="9" stroke="white" stroke-width="2" />
+                                <path d="M6 10.3L8.8 13.1L14 7.5" stroke="white" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Cadastrar Concessionária
+                        </button>
+                    </div>
+
+                    <!-- Notificações de Alerta -->
+                    <div id="alerta_mensagem" class="alert-feedback"></div>
+                </form>
+            </section>
+
+            <!-- CARD HERO / VISUAL (DIREITA) -->
+            <aside class="hero-card">
+                <!-- Badges Superiores -->
+                <div class="hero-top-badges">
+                    <span class="hero-badge-item">
+                        <span class="green-dot"></span>
+                        MONITORAMENTO ATIVO
+                    </span>
+
+                    <span class="hero-badge-item">
+                        VIA LIVRE / FREE-FLOW
+                    </span>
+                </div>
+
+                <!-- Conteúdo Textual Sobreposto -->
+                <div class="hero-main-content">
+                    <h2 class="hero-card-title">Monitoramento de Praças &amp; Malha Viária</h2>
+                    <p class="hero-card-desc">
+                        Sincronização telemétrica contínua com sensores de pista, leitura de pórticos OCR/RFID e gestão
+                        unificada da concessionária.
+                    </p>
+
+                    <div class="hero-infra-tag">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4.93 4.93a10 10 0 0 1 14.14 0"></path>
+                            <path d="M7.76 7.76a6 6 0 0 1 8.48 0"></path>
+                            <circle cx="12" cy="12" r="2"></circle>
+                            <path d="M12 14v7"></path>
+                        </svg>
+                        INFRAESTRUTURA INTELIGENTE
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </main>
+</body>
+
+</html>
