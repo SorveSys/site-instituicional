@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SorveSys | Overview</title>
 
-    <script src="/js/sessao.js"></script>
-    <link rel="icon" href="/assets/LOGO SORVESYS.png">
+    <script src="./js/sessao.js"></script>
+    <link rel="icon" href="./assets/LOGO_SORVESYS.png">
     <link rel="stylesheet" href="./css/overview.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="app">
         <div class="menu-fundo" id="menu_fundo" onclick="alternarMenu()"></div>
@@ -21,44 +25,44 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-topo">
                 <div class="marca-icone">
-                    <img src="/assets/icons/home/LOGO.svg" alt="SorveSys">
+                    <img src="./assets/icons/home/LOGO.svg" alt="SorveSys">
                 </div>
             </div>
 
             <nav class="sidebar-nav">
                 <span class="nav-secao">Principal</span>
                 <a href="/overview" class="nav-item ativo">
-                    <img src="/assets/icons/overview/ICON-GRID.svg" class="ico" alt="">
+                    <img src="./assets/icons/overview/ICON-GRID.svg" class="ico" alt="">
                     <span>Overview</span>
                     <em id="nav_total">9</em>
                 </a>
 
                 <a href="#" class="nav-item">
-                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <img src="./assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
                     <span>Monitoramento Alicia</span>
                 </a>
 
                 <a href="#" class="nav-item">
-                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <img src="./assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
                     <span>Monitoramento Danilo</span>
                 </a>
 
                 <a href="#" class="nav-item">
-                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <img src="./assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
                     <span>Monitoramento Matheus</span>
                 </a>
 
                 <a href="#" class="nav-item">
-                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <img src="./assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
                     <span>Monitoramento Melissa</span>
                 </a>
 
                 <a href="#" class="nav-item">
-                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <img src="./assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
                     <span>Monitoramento Nicolas</span>
                 </a>
                 <a href="#" class="nav-item">
-                    <img src="/assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
+                    <img src="./assets/icons/overview/ICON-SERVIDORES.svg" class="ico" alt="">
                     <span>Monitoramento Rodrigo</span>
                 </a>
             </nav>
@@ -71,7 +75,7 @@
                         <small>Gestor de Infraestrutura</small>
                     </div>
                     <button class="btn-sair" onclick="sair()" aria-label="Sair">
-                        <img src="/assets/icons/overview/ICON-LOGOUT.svg" class="ico" alt="">
+                        <img src="./assets/icons/overview/ICON-LOGOUT.svg" class="ico" alt="">
                     </button>
                 </div>
             </div>
@@ -79,7 +83,8 @@
 
         <main class="main">
             <header class="page-header">
-                <button class="menu-hamburguer" id="menu_hamburguer" onclick="alternarMenu()" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+                <button class="menu-hamburguer" id="menu_hamburguer" onclick="alternarMenu()" aria-label="Abrir menu"
+                    aria-expanded="false" aria-controls="sidebar">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -92,16 +97,20 @@
 
                 <div class="page-header-acoes">
                     <span class="atualizado">
-                        <img src="/assets/icons/overview/ICON-RELOGIO.svg" class="ico" alt="">
+                        <img src="./assets/icons/overview/ICON-RELOGIO.svg" class="ico" alt="">
                         Atualizado: <b id="hora_atualizado">--:--</b>
                     </span>
                     <div class="page-header-botoes">
-                        <a href="/cadastro-usuario" class="btn-novo">
-                            <img src="/assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Usuario
+                        <button type="button" class="btn-novo btn-chamado" onclick="abrirModalChamado()"
+                            title="Abrir chamado de suporte no Jira">
+                            <img src="./assets/icons/overview/ICON-ALERTA.svg" class="ico" alt=""> Abrir Chamado
+                        </button>
+                        <!-- <a href="/cadastro-usuario" class="btn-novo">
+                            <img src="./assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Usuario
                         </a>
                         <a href="/cadastro-servidor" class="btn-novo">
-                            <img src="/assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Servidor
-                        </a>
+                            <img src="./assets/icons/overview/ICON-PLUS.svg" class="ico" alt=""> Novo Servidor
+                        </a> -->
                     </div>
                 </div>
             </header>
@@ -111,7 +120,8 @@
                     <article class="kpi kpi-total">
                         <div class="kpi-topo">
                             <span class="kpi-titulo">Total de servidores</span>
-                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-TOTAL-SERVIDORES.svg" class="ico" alt=""></div>
+                            <div class="kpi-icone"><img src="./assets/icons/overview/ICON-TOTAL-SERVIDORES.svg"
+                                    class="ico" alt=""></div>
                         </div>
                         <div class="kpi-numero"><strong id="kpi_total">0</strong><span>unidades monitoradas</span></div>
                         <div class="kpi-barra"><i style="width:100%"></i></div>
@@ -120,7 +130,8 @@
                     <article class="kpi kpi-ok">
                         <div class="kpi-topo">
                             <span class="kpi-titulo">Operacionais</span>
-                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-ESCUDO.svg" class="ico" alt=""></div>
+                            <div class="kpi-icone"><img src="./assets/icons/overview/ICON-ESCUDO.svg" class="ico"
+                                    alt=""></div>
                         </div>
                         <div class="kpi-numero"><strong id="kpi_ok">0</strong><span id="kpi_ok_pct">0%</span></div>
                         <p class="kpi-desc"><i class="ponto"></i> Operando dentro dos parâmetros de telemetria</p>
@@ -137,10 +148,13 @@
                     <article class="kpi kpi-alerta">
                         <div class="kpi-topo">
                             <span class="kpi-titulo">Com alertas</span>
-                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-ALERTA.svg" class="ico" alt=""></div>
+                            <div class="kpi-icone"><img src="./assets/icons/overview/ICON-ALERTA.svg" class="ico"
+                                    alt=""></div>
                         </div>
-                        <div class="kpi-numero"><strong id="kpi_alerta">0</strong><span id="kpi_alerta_pct">0%</span></div>
-                        <p class="kpi-desc"><img src="/assets/icons/overview/ICON-TRENDING.svg" class="ico mini" alt=""> Carga elevada de CPU ou NVMe próximo do teto</p>
+                        <div class="kpi-numero"><strong id="kpi_alerta">0</strong><span id="kpi_alerta_pct">0%</span>
+                        </div>
+                        <p class="kpi-desc"><img src="./assets/icons/overview/ICON-TRENDING.svg" class="ico mini"
+                                alt=""> Carga elevada de CPU ou NVMe próximo do teto</p>
                         <div class="kpi-barra"><i id="barra_alerta"></i></div>
                         <div class="kpi-lista">
                             <div class="kpi-lista-topo">
@@ -154,11 +168,17 @@
                     <article class="kpi kpi-critico">
                         <div class="kpi-topo">
                             <span class="kpi-titulo">Críticos ou offline</span>
-                            <div class="kpi-icone"><img src="/assets/icons/overview/ICON-OFFLINE.svg" class="ico" alt=""></div>
+                            <div class="kpi-icone"><img src="./assets/icons/overview/ICON-OFFLINE.svg" class="ico"
+                                    alt=""></div>
                         </div>
-                        <div class="kpi-numero"><strong id="kpi_critico">0</strong><span id="kpi_critico_pct">0%</span></div>
+                        <div class="kpi-numero"><strong id="kpi_critico">0</strong><span id="kpi_critico_pct">0%</span>
+                        </div>
                         <p class="kpi-desc">
-                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+                            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#dc2626"
+                                stroke-width="2" stroke-linecap="round">
+                                <circle cx="12" cy="12" r="10" />
+                                <path d="M12 8v4M12 16h.01" />
+                            </svg>
                             Intervenção técnica imediata necessária
                         </p>
                         <div class="kpi-barra"><i id="barra_critico"></i></div>
@@ -181,8 +201,9 @@
 
                         <div class="filtros">
                             <div class="busca">
-                                <img src="/assets/icons/overview/ICON-LUPA.svg" class="ico" alt="">
-                                <input type="text" id="ipt_busca" placeholder="Buscar por nome, IP ou praça..." oninput="renderTabela()">
+                                <img src="./assets/icons/overview/ICON-LUPA.svg" class="ico" alt="">
+                                <input type="text" id="ipt_busca" placeholder="Buscar por nome, IP ou praça..."
+                                    oninput="renderTabela()">
                             </div>
 
                             <select id="slt_tipo" onchange="renderTabela()">
@@ -209,7 +230,7 @@
                             </select>
 
                             <button class="btn-reload" onclick="recarregar()" aria-label="Recarregar">
-                                <img src="/assets/icons/overview/ICON-RELOAD.svg" class="ico" alt="">
+                                <img src="./assets/icons/overview/ICON-RELOAD.svg" class="ico" alt="">
                             </button>
                         </div>
                     </div>
@@ -243,7 +264,8 @@
                 <section class="card alertas">
                     <div class="alertas-topo">
                         <div>
-                            <h2>Alertas Recentes <span class="contador amarelo" id="contador_alertas">4 eventos</span></h2>
+                            <h2>Alertas Recentes <span class="contador amarelo" id="contador_alertas">4 eventos</span>
+                            </h2>
                             <p>Últimos eventos de hardware, rede e subsistemas de pista detectados pelo agente</p>
                         </div>
                         <div class="alertas-links">
@@ -254,10 +276,76 @@
                     <div id="lista_alertas"></div>
                 </section>
             </div>
-            
+
         </main>
     </div>
 
-    <script src="/js/overview.js"></script>
+    <!-- MODAL ABERTURA DE CHAMADO JIRA -->
+    <div class="modal-overlay" id="modal_chamado" onclick="fecharModalChamadoPorOverlay(event)">
+        <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modal_chamado_titulo">
+            <div class="modal-topo">
+                <div class="modal-titulo-wrapper">
+                    <div class="modal-icone-chamado">
+                        <img src="./assets/icons/overview/ICON-ALERTA.svg" class="ico" alt="">
+                    </div>
+                    <div>
+                        <h2 id="modal_chamado_titulo">Abertura de Chamado (Jira)</h2>
+                        <p>Notifique a equipe de suporte e manutenção de hardware</p>
+                    </div>
+                </div>
+                <button type="button" class="modal-btn-fechar" onclick="fecharModalChamado()"
+                    aria-label="Fechar modal">&times;</button>
+            </div>
+
+            <form id="form_chamado" onsubmit="enviarChamado(event)">
+                <div class="modal-corpo">
+                    <div class="form-grupo">
+                        <label for="ipt_chamado_servidor">Servidor Afetado <span class="obrigatorio">*</span></label>
+                        <select id="ipt_chamado_servidor" required>
+                            <option value="" disabled selected>Selecione o servidor...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="slt_chamado_motivo">Motivo da Solicitação <span class="obrigatorio">*</span></label>
+                        <select id="slt_chamado_motivo" required>
+                            <option value="" disabled selected>Selecione o motivo...</option>
+                            <option value="Inatividade">Inatividade</option>
+                            <option value="Solicitar Troca">Solicitar Troca</option>
+                            <option value="Solicitar Análise">Solicitar Análise</option>
+                        </select>
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="ipt_chamado_resumo">Resumo / Título do Chamado <span
+                                class="obrigatorio">*</span></label>
+                        <input type="text" id="ipt_chamado_resumo"
+                            placeholder="Ex: Servidor SRV-GW04 sem resposta da telemetria" required maxlength="120">
+                    </div>
+
+                    <div class="form-grupo">
+                        <label for="txt_chamado_descricao">Descrição Detalhada <span
+                                class="obrigatorio">*</span></label>
+                        <textarea id="txt_chamado_descricao" rows="4"
+                            placeholder="Descreva os sintomas, comportamentos anômalos ou logs observados..."
+                            required></textarea>
+                    </div>
+
+                    <div class="modal-feedback" id="modal_feedback" style="display: none;"></div>
+                </div>
+
+                <div class="modal-rodape">
+                    <button type="button" class="btn-cancelar" onclick="fecharModalChamado()">Cancelar</button>
+                    <button type="submit" class="btn-enviar-chamado" id="btn_enviar_chamado">
+                        <span id="btn_chamado_texto">Criar Chamado no Jira</span>
+                        <span id="btn_chamado_spinner" class="spinner-carregando" style="display: none;"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="./js/overview.js"></script>
 </body>
+
 </html>
