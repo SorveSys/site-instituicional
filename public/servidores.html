@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Servidores | SorveSys</title>
+
+    <link rel="icon" href="./assets/LOGO_SORVESYS.png">
+    <link rel="stylesheet" href="./css/gerenciamento.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="./js/sessao.js"></script>
+</head>
+
+<body>
+
+    <!-- ==================== HEADER / NAVBAR ==================== -->
+    <header class="topbar">
+        <div class="topbar-brand">
+            <a href="overview.html" title="SorveSys - Overview">
+                <img src="./assets/icons/home/LOGO.svg" alt="SorveSys – Monitoramento de Sistemas Rodoviários">
+            </a>
+        </div>
+
+        <nav class="topbar-nav" aria-label="Navegação Principal">
+            <a href="overview.html" class="nav-link">OverView</a>
+            <a href="concessionarias.html" class="nav-link">Concessionarias</a>
+            <a href="usuarios.html" class="nav-link">Usuários</a>
+            <a href="servidores.html" class="nav-link ativo" aria-current="page">Servidores</a>
+        </nav>
+
+        <div class="topbar-user">
+            <div class="user-pill">
+                <span id="nome_usuario_header">Danilo Vrena</span>
+                <div class="user-avatar" title="Perfil do Usuário">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
+    <main class="container">
+
+        <!-- Topo da Página -->
+        <div class="page-header">
+            <div class="page-titles">
+                <h1 class="page-title">Gerenciamento de Servidores</h1>
+                <p class="page-subtitle">
+                    Monitore, adicione, configure parâmetros ou remova instâncias de servidores alocados nas praças de pedágio. Gestão integrada de borda com telemetria contínua.
+                </p>
+            </div>
+
+            <a href="cadastro-servidor.html" class="btn-primary-action">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                + Adicionar Novo Servidor
+            </a>
+        </div>
+
+        <!-- Barra de Filtros e Busca (conforme layout da imagem 3) -->
+        <div class="filter-bar" style="margin-top: 10px;">
+            <div class="search-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="ipt_busca" placeholder="Buscar por hostname" oninput="filtrarServidores()">
+            </div>
+
+            <div class="filter-actions">
+                <div class="filter-group">
+                    <span class="filter-label">STATUS:</span>
+                    <select id="slt_status" class="select-pill" onchange="filtrarServidores()">
+                        <option value="">Todos os Estados</option>
+                        <option value="Operacional">Operacional</option>
+                        <option value="Atenção">Atenção</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">RODOVIA:</span>
+                    <select id="slt_rodovia" class="select-pill" onchange="filtrarServidores()">
+                        <option value="">Todas as Rodovias</option>
+                        <option value="SP-348">SP-348 (Rod. Bandeirantes)</option>
+                        <option value="BR-116">BR-116 (Dutra)</option>
+                        <option value="SP-330">SP-330 (Anhanguera)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Servidores -->
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="data-table" id="tabela_servidores">
+                    <thead>
+                        <tr>
+                            <th>IDENTIFICAÇÃO DO SERVIDOR</th>
+                            <th>ENDEREÇO IP / PORTA</th>
+                            <th>LOCALIZAÇÃO / PRAÇA</th>
+                            <th>STATUS</th>
+                            <th style="text-align: right; padding-right: 30px;">AÇÕES DE GERENCIAMENTO</th>
+                        </tr>
+                    </thead>
+                    <tbody id="lista_servidores">
+                        <!-- Servidor 1 -->
+                        <tr data-host="SRV-AU01" data-status="Operacional" data-rodovia="SP-348">
+                            <td>
+                                <div class="cell-identificacao">
+                                    <div class="item-icon-box">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="item-text-group">
+                                        <span class="item-title">SRV-AU01</span>
+                                        <span class="item-subtitle">Edge Rack Pista Expressa</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-code">
+                                    192.168.10.45:8080
+                                    <button class="copy-btn" onclick="copiarTexto('192.168.10.45:8080')" title="Copiar IP e porta">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    </button>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="item-text-group">
+                                    <span style="font-weight: 600; font-size: 13px;">Praça Km 142 • Norte</span>
+                                    <span class="item-subtitle">SP-348 (Rod. Bandeirantes)</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-pill operacional">
+                                    <span class="status-dot"></span>
+                                    Operacional
+                                </span>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    </button>
+                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU01')" title="Excluir">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Servidor 2 (Destaque Atenção com fundo pêssego) -->
+                        <tr class="row-warning" data-host="SRV-AU02" data-status="Atenção" data-rodovia="BR-116">
+                            <td>
+                                <div class="cell-identificacao">
+                                    <div class="item-icon-box orange-accent">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="item-text-group">
+                                        <span class="item-title warning">SRV-AU02</span>
+                                        <span class="item-subtitle" style="color: #B45309;">Free-Flow Gateway 01</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-code" style="border-color: #FCD34D;">
+                                    192.168.12.30:9100
+                                    <button class="copy-btn" onclick="copiarTexto('192.168.12.30:9100')" title="Copiar IP e porta">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    </button>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="item-text-group">
+                                    <span style="font-weight: 600; font-size: 13px;">Pórtico 04 - Km 88</span>
+                                    <span class="item-subtitle">BR-116 (Rod. Pres. Dutra)</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-pill atencao">
+                                    <span class="status-dot"></span>
+                                    Atenção
+                                </span>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    </button>
+                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU02')" title="Excluir">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Servidor 3 -->
+                        <tr data-host="SRV-AU03" data-status="Operacional" data-rodovia="SP-330">
+                            <td>
+                                <div class="cell-identificacao">
+                                    <div class="item-icon-box">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="4"></circle>
+                                            <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="item-text-group">
+                                        <span class="item-title">SRV-AU03</span>
+                                        <span class="item-subtitle">Telemetria ANTT Res. 5.862</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-code">
+                                    192.168.10.99:443
+                                    <button class="copy-btn" onclick="copiarTexto('192.168.10.99:443')" title="Copiar IP e porta">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    </button>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="item-text-group">
+                                    <span style="font-weight: 600; font-size: 13px;">Data Hub Central • Km 38</span>
+                                    <span class="item-subtitle">SP-330 (Anhanguera)</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-pill operacional">
+                                    <span class="status-dot"></span>
+                                    Operacional
+                                </span>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    </button>
+                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU03')" title="Excluir">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Servidor 4 -->
+                        <tr data-host="SRV-AU04" data-status="Operacional" data-rodovia="BR-116">
+                            <td>
+                                <div class="cell-identificacao">
+                                    <div class="item-icon-box">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                            <circle cx="12" cy="13" r="4"></circle>
+                                        </svg>
+                                    </div>
+                                    <div class="item-text-group">
+                                        <span class="item-title">SRV-AU04</span>
+                                        <span class="item-subtitle">OCR &amp; Reconhecimento LPR</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-code">
+                                    192.168.14.22:5000
+                                    <button class="copy-btn" onclick="copiarTexto('192.168.14.22:5000')" title="Copiar IP e porta">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    </button>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="item-text-group">
+                                    <span style="font-weight: 600; font-size: 13px;">Praça Sul • Km 162</span>
+                                    <span class="item-subtitle">BR-116 (Dutra)</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-pill operacional">
+                                    <span class="status-dot"></span>
+                                    Operacional
+                                </span>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    </button>
+                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU04')" title="Excluir">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Servidor 5 -->
+                        <tr data-host="SRV-AU05" data-status="Operacional" data-rodovia="SP-330">
+                            <td>
+                                <div class="cell-identificacao">
+                                    <div class="item-icon-box">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="item-text-group">
+                                        <span class="item-title">SRV-AU05</span>
+                                        <span class="item-subtitle">Controlador Pista Cobrança</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-code">
+                                    192.168.18.11:8000
+                                    <button class="copy-btn" onclick="copiarTexto('192.168.18.11:8000')" title="Copiar IP e porta">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    </button>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="item-text-group">
+                                    <span style="font-weight: 600; font-size: 13px;">Cabines 01 a 06 - Km 64</span>
+                                    <span class="item-subtitle">SP-330 (Anhanguera)</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-pill operacional">
+                                    <span class="status-dot"></span>
+                                    Operacional
+                                </span>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    </button>
+                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU05')" title="Excluir">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <!-- Servidor 6 -->
+                        <tr data-host="SRV-AU06" data-status="Operacional" data-rodovia="SP-348">
+                            <td>
+                                <div class="cell-identificacao">
+                                    <div class="item-icon-box">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                                        </svg>
+                                    </div>
+                                    <div class="item-text-group">
+                                        <span class="item-title">SRV-AU06</span>
+                                        <span class="item-subtitle">Backup Local &amp; Failover</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge-code">
+                                    192.168.10.250:22
+                                    <button class="copy-btn" onclick="copiarTexto('192.168.10.250:22')" title="Copiar IP e porta">
+                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    </button>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="item-text-group">
+                                    <span style="font-weight: 600; font-size: 13px;">Praça Km 142 • Subestação</span>
+                                    <span class="item-subtitle">SP-348 (Bandeirantes)</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="status-pill operacional">
+                                    <span class="status-dot"></span>
+                                    Operacional
+                                </span>
+                            </td>
+                            <td style="text-align: right; padding-right: 24px;">
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                    </button>
+                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU06')" title="Excluir">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginação do Rodapé -->
+            <div class="table-footer">
+                <span class="table-info">
+                    Mostrando <strong id="contador_mostrados">6</strong> de <strong id="contador_total">6</strong> Servidores da Concessionária
+                </span>
+
+                <div class="pagination">
+                    <button class="page-btn" disabled>Anterior</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn" disabled>Próxima</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ==================== DRAWER LATERAL: CONFIGURAR SERVIDOR ==================== -->
+    <div class="drawer-overlay" id="drawer_overlay" onclick="fecharDrawer()"></div>
+
+    <aside class="drawer-panel" id="drawer_panel" aria-label="Painel de Configuração">
+        <div class="drawer-header">
+            <div class="drawer-header-left">
+                <div class="drawer-icon-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                        <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                        <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                        <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                    </svg>
+                </div>
+                <div class="drawer-title-group">
+                    <h3 class="drawer-title">Configurar Servidor</h3>
+                    <span class="drawer-subtitle" id="drawer_srv_subtitulo">SRV-AU03 (Telemetria ANTT)</span>
+                </div>
+            </div>
+            <button type="button" class="btn-close-drawer" onclick="fecharDrawer()" aria-label="Fechar">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <form class="drawer-body" id="form_drawer_srv" onsubmit="return salvarDrawerServidor(event)">
+            <!-- Seção 1: Identificação Básica -->
+            <div class="drawer-section">
+                <div class="drawer-section-header">
+                    <span class="drawer-section-title">1. IDENTIFICAÇÃO BÁSICA</span>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_srv_proprietaria" class="drawer-label">Concessionária Proprietária</label>
+                    <input type="text" id="drawer_srv_proprietaria" class="drawer-input" value="CCR DANILO">
+                </div>
+            </div>
+
+            <!-- Seção 2: Dados Servidor -->
+            <div class="drawer-section">
+                <div class="drawer-section-header">
+                    <span class="drawer-section-title">DADOS SERVIDOR</span>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_srv_ip" class="drawer-label">Endereço IP</label>
+                    <input type="text" id="drawer_srv_ip" class="drawer-input" style="font-family: var(--font-mono);" required>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_srv_tipo" class="drawer-label">Tipo Servidor</label>
+                    <select id="drawer_srv_tipo" class="drawer-select">
+                        <option value="PAGAMENTO">PAGAMENTO</option>
+                        <option value="TRANSITO">TRANSITO</option>
+                        <option value="AUDITORIA">AUDITORIA</option>
+                    </select>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_srv_concessionaria" class="drawer-label">Concessionaria</label>
+                    <select id="drawer_srv_concessionaria" class="drawer-select">
+                        <option value="CCR DANILO">CCR DANILO</option>
+                        <option value="VIAPAULISTA INFRA">VIAPAULISTA INFRA</option>
+                        <option value="AUTOBANDEIRANTES S.A.">AUTOBANDEIRANTES S.A.</option>
+                        <option value="RODA DAS COLINAS">RODA DAS COLINAS</option>
+                        <option value="ECORODOVIAS NORTE">ECORODOVIAS NORTE</option>
+                        <option value="ROTA DO OESTE MALHA">ROTA DO OESTE MALHA</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        <div class="drawer-footer">
+            <button type="button" class="btn-drawer-cancel" onclick="fecharDrawer()">Cancelar</button>
+            <button type="submit" form="form_drawer_srv" class="btn-drawer-save">Salvar Alterações</button>
+        </div>
+    </aside>
+
+    <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
+    <script>
+        var linhaEmEdicao = null;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var nomeSession = sessionStorage.getItem("NOME_USUARIO");
+            if (nomeSession) {
+                var el = document.getElementById("nome_usuario_header");
+                if (el) el.innerText = nomeSession;
+            }
+            atualizarContadores();
+        });
+
+        function abrirDrawerServidor(btn) {
+            var tr = btn.closest("tr");
+            if (!tr) return;
+            linhaEmEdicao = tr;
+
+            var hostEl = tr.querySelector(".item-title");
+            var subEl = tr.querySelector(".item-subtitle");
+            var ipEl = tr.querySelector(".badge-code");
+
+            var host = hostEl ? hostEl.innerText.trim() : "";
+            var sub = subEl ? subEl.innerText.trim() : "";
+            var ipCompleto = ipEl ? ipEl.innerText.replace(/[\r\n\t]+/g, ' ').trim() : "";
+            ipCompleto = ipCompleto.split(" ")[0] || ipCompleto;
+            var ipApenas = ipCompleto.split(":")[0] || ipCompleto;
+
+            document.getElementById("drawer_srv_subtitulo").innerText = host + " (" + sub + ")";
+            document.getElementById("drawer_srv_ip").value = ipApenas;
+
+            document.getElementById("drawer_overlay").classList.add("ativo");
+            document.getElementById("drawer_panel").classList.add("ativo");
+            document.body.style.overflow = "hidden";
+        }
+
+        function fecharDrawer() {
+            document.getElementById("drawer_overlay").classList.remove("ativo");
+            document.getElementById("drawer_panel").classList.remove("ativo");
+            document.body.style.overflow = "";
+            linhaEmEdicao = null;
+        }
+
+        function salvarDrawerServidor(event) {
+            if (event) event.preventDefault();
+            if (!linhaEmEdicao) return false;
+
+            var novoIp = document.getElementById("drawer_srv_ip").value.trim();
+            var proprietaria = document.getElementById("drawer_srv_proprietaria").value.trim();
+
+            if (!novoIp) {
+                alert("Por favor, preencha o endereço IP.");
+                return false;
+            }
+
+            var ipEl = linhaEmEdicao.querySelector(".badge-code");
+            if (ipEl) {
+                var porta = "8080";
+                var textoAtual = ipEl.innerText.split(" ")[0];
+                if (textoAtual.includes(":")) {
+                    porta = textoAtual.split(":")[1];
+                }
+                var ipComPorta = novoIp + (porta ? ":" + porta : "");
+
+                ipEl.innerHTML = ipComPorta + 
+                    '<button class="copy-btn" onclick="copiarTexto(\'' + ipComPorta + '\')" title="Copiar IP e porta">' +
+                    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' +
+                    '</button>';
+            }
+
+            fecharDrawer();
+            filtrarServidores();
+            return false;
+        }
+
+        function filtrarServidores() {
+            var textoBusca = document.getElementById("ipt_busca").value.toLowerCase().trim();
+            var statusFiltro = document.getElementById("slt_status").value.toLowerCase().trim();
+            var rodoviaFiltro = document.getElementById("slt_rodovia").value.toLowerCase().trim();
+
+            var linhas = document.querySelectorAll("#lista_servidores tr");
+            var visiveis = 0;
+
+            linhas.forEach(function (linha) {
+                var host = (linha.getAttribute("data-host") || "").toLowerCase();
+                var status = (linha.getAttribute("data-status") || "").toLowerCase();
+                var rodovia = (linha.getAttribute("data-rodovia") || "").toLowerCase();
+                var conteudoLinha = linha.innerText.toLowerCase();
+
+                var matchBusca = !textoBusca || conteudoLinha.includes(textoBusca) || host.includes(textoBusca);
+                var matchStatus = !statusFiltro || status.includes(statusFiltro);
+                var matchRodovia = !rodoviaFiltro || rodovia.includes(rodoviaFiltro);
+
+                if (matchBusca && matchStatus && matchRodovia) {
+                    linha.style.display = "";
+                    visiveis++;
+                } else {
+                    linha.style.display = "none";
+                }
+            });
+
+            document.getElementById("contador_mostrados").innerText = visiveis;
+        }
+
+        function atualizarContadores() {
+            var linhas = document.querySelectorAll("#lista_servidores tr");
+            var total = linhas.length;
+            document.getElementById("contador_total").innerText = total;
+            document.getElementById("contador_mostrados").innerText = total;
+        }
+
+        function copiarTexto(texto) {
+            navigator.clipboard.writeText(texto).then(function () {
+                alert("IP copiado: " + texto);
+            }).catch(function () {
+                prompt("Copie o endereço IP abaixo:", texto);
+            });
+        }
+
+        function excluirLinha(btn, host) {
+            if (confirm("Deseja realmente remover o servidor '" + host + "' da malha de telemetria?")) {
+                var tr = btn.closest("tr");
+                if (tr) {
+                    tr.remove();
+                    atualizarContadores();
+                    filtrarServidores();
+                }
+            }
+        }
+    </script>
+
+</body>
+
+</html>
