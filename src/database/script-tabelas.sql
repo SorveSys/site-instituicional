@@ -1,13 +1,11 @@
-# SCRIPT SQL — SORVESYS
+DROP DATABASE IF EXISTS sorvesys_db;
+CREATE DATABASE sorvesys_db;
+USE sorvesys_db;
 
--- ATENÇÃO: este script apaga e recria o banco.
-DROP DATABASE IF EXISTS sorvesys;
-CREATE DATABASE sorvesys;
-USE sorvesys;
+CREATE USER IF NOT EXISTS 'agente_pedagio'@'%' IDENTIFIED BY 'SenhaCaptura123!';
+GRANT SELECT, INSERT ON sorvesys_db.* TO 'agente_pedagio'@'%';
+FLUSH PRIVILEGES;
 
--- =========================================
--- 1. TABELA EMPRESA
--- =========================================
 CREATE TABLE empresa (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome_fantasia VARCHAR(200) NOT NULL,
@@ -15,57 +13,53 @@ CREATE TABLE empresa (
     razao_social VARCHAR(100) NOT NULL
 );
 
--- =========================================
--- 2. TABELA PERFIL
--- =========================================
-CREATE TABLE perfil (
+CREATE TABLE concessionaria (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    tipo VARCHAR(100) NOT NULL,
-    CONSTRAINT chk_tipo_usuario
-        CHECK (tipo IN ('Analista', 'Gestor'))
+    nome_praca VARCHAR(150) NOT NULL,
+    rodovia VARCHAR(100) NOT NULL,
+    km DECIMAL(6,2) NOT NULL,
+    cidade VARCHAR(100) NOT NULL,
+    uf CHAR(2) NOT NULL,
+    fk_empresa INT NOT NULL,
+    CONSTRAINT fk_concessionaria_empresa 
+        FOREIGN KEY (fk_empresa) REFERENCES empresa(id)
 );
 
--- =========================================
--- 3. TABELA USUARIO
--- =========================================
+CREATE TABLE perfil (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  tipo VARCHAR(100) NOT NULL,
+  CONSTRAINT chk_tipo_usuario CHECK (tipo IN ('Analista', 'Gestor'))
+);
+
 CREATE TABLE usuario (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome VARCHAR(200) NOT NULL,
-    email VARCHAR(350) NOT NULL,
-    senha VARCHAR(300) NOT NULL,
-    fk_empresa INT NOT NULL,
-    fk_tipo_usuario INT NOT NULL,
-    CONSTRAINT fk_usuario_empresa
-        FOREIGN KEY (fk_empresa) REFERENCES empresa(id),
-    CONSTRAINT fk_usuario_perfil
-        FOREIGN KEY (fk_tipo_usuario) REFERENCES perfil(id)
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  nome VARCHAR(200) NOT NULL,
+  email VARCHAR(350) NOT NULL,
+  senha VARCHAR(300) NOT NULL,
+  fk_empresa INT NULL,          
+  fk_concessionaria INT NULL,   
+  fk_tipo_usuario INT NOT NULL,
+  CONSTRAINT fk_usuario_empresa FOREIGN KEY (fk_empresa) REFERENCES empresa (id),
+  CONSTRAINT fk_usuario_concessionaria FOREIGN KEY (fk_concessionaria) REFERENCES concessionaria (id),
+  CONSTRAINT fk_usuario_perfil FOREIGN KEY (fk_tipo_usuario) REFERENCES perfil (id)
 ) AUTO_INCREMENT = 10000;
 
--- =========================================
--- 4. TABELA SERVIDOR
--- =========================================
 CREATE TABLE servidor (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    tipo VARCHAR(100) NOT NULL,
-    ip VARCHAR(100),
-    fk_empresa INT NOT NULL,
-    CONSTRAINT fk_servidores_empresa
-        FOREIGN KEY (fk_empresa) REFERENCES empresa(id),
-    CONSTRAINT check_servidor
-        CHECK (tipo IN ('transito', 'pagamento', 'auditoria'))
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  tipo VARCHAR(100) NOT NULL,
+  ip VARCHAR(100),
+  fk_concessionaria INT NOT NULL,
+  CONSTRAINT fk_servidores_concessionaria FOREIGN KEY (fk_concessionaria) REFERENCES concessionaria (id),
+  CONSTRAINT check_servidor CHECK (
+    tipo IN ('transito', 'pagamento', 'auditoria')
+  )
 );
 
--- =========================================
--- 5. TABELA COMPONENTE
--- =========================================
 CREATE TABLE componente (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL
 );
 
--- =========================================
--- 6. TABELA METRICA
--- =========================================
 CREATE TABLE metrica (
     id INT PRIMARY KEY AUTO_INCREMENT,
     tipo VARCHAR(100) NOT NULL,
@@ -74,9 +68,6 @@ CREATE TABLE metrica (
         FOREIGN KEY (fk_componente) REFERENCES componente(id)
 );
 
--- =========================================
--- 7. TABELA CONFIG
--- =========================================
 CREATE TABLE config (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fk_componente INT NOT NULL,
@@ -87,9 +78,6 @@ CREATE TABLE config (
         FOREIGN KEY (fk_servidor) REFERENCES servidor(id)
 );
 
--- =========================================
--- 8. TABELA REGISTRO DE MONITORAMENTO
--- =========================================
 CREATE TABLE registro_monitoramento (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fk_config INT NOT NULL,
@@ -102,9 +90,6 @@ CREATE TABLE registro_monitoramento (
         FOREIGN KEY (fk_metrica) REFERENCES metrica(id)
 );
 
--- =========================================
--- 9. TABELA ALERTA
--- =========================================
 CREATE TABLE alerta (
     id INT PRIMARY KEY AUTO_INCREMENT,
     categoria VARCHAR(15) NOT NULL,
@@ -117,62 +102,58 @@ CREATE TABLE alerta (
         CHECK (categoria IN ('Normal', 'Moderado', 'Critico'))
 );
 
--- =========================================
--- INSERTS: EMPRESA
--- =========================================
+CREATE TABLE chamado (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    chave_jira VARCHAR(20) NOT NULL UNIQUE,
+    motivo VARCHAR(50) NOT NULL,
+    descricao TEXT NOT NULL,
+    status_chamado VARCHAR(30) NOT NULL DEFAULT 'TO DO',
+    dt_abertura DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fk_usuario INT NOT NULL,
+    fk_servidor INT NOT NULL,
+    CONSTRAINT fk_chamado_usuario 
+        FOREIGN KEY (fk_usuario) REFERENCES usuario(id),
+    CONSTRAINT fk_chamado_servidor 
+        FOREIGN KEY (fk_servidor) REFERENCES servidor(id),
+    CONSTRAINT chk_motivo_chamado 
+        CHECK (motivo IN ('Inatividade', 'Solicitar Troca', 'Solicitar Análise'))
+);
+
 INSERT INTO empresa
     (nome_fantasia, cnpj, razao_social)
 VALUES
-    ('AquaTech Solutions', '12345678000100',
-     'AquaTech Solutions LTDA'),
-    ('SorveSys Monitoramento', '98765432000199',
-     'SorveSys Monitoramento LTDA');
+    ('AquaTech Solutions', '12345678000100', 'AquaTech Solutions LTDA'),
+    ('SorveSys Monitoramento', '98765432000199', 'SorveSys Monitoramento LTDA');
 
--- =========================================
--- INSERTS: PERFIL
--- =========================================
+INSERT INTO concessionaria (nome_praca, rodovia, km, cidade, uf, fk_empresa) 
+VALUES 
+    ('Praça Lapa', 'SP-280', 15.5, 'São Paulo', 'SP', 1),
+    ('Praça Barueri', 'SP-280', 26.0, 'Barueri', 'SP', 1),
+    ('Praça Campinas', 'SP-330', 88.0, 'Campinas', 'SP', 2);
+
 INSERT INTO perfil (tipo)
 VALUES
     ('Gestor'),
     ('Analista');
 
--- =========================================
--- INSERTS: USUARIO
--- =========================================
 INSERT INTO usuario
-    (nome, email, senha, fk_empresa, fk_tipo_usuario)
+    (nome, email, senha, fk_empresa, fk_concessionaria, fk_tipo_usuario)
 VALUES
-    ('Carlos Silva', 'carlos.silva@aquatech.com',
-     'hash_senha_123', 1, 1),
-    ('Ana Oliveira', 'ana.oliveira@sorvesys.com',
-     'hash_senha_456', 2, 2),
-    ('Lucas Martins', 'lucas.martins@aquatech.com',
-     'hash_senha_789', 1, 2);
+    ('Carlos Silva', 'carlos.silva@aquatech.com', 'hash_senha_123', 1, NULL, 1),       
+    ('Ana Oliveira', 'ana.oliveira@sorvesys.com', 'hash_senha_456', NULL, 3, 2),    
+    ('Lucas Martins', 'lucas.martins@aquatech.com', 'hash_senha_789', NULL, 1, 2);  
 
--- =========================================
--- INSERTS: SERVIDORES
--- =========================================
-INSERT INTO servidor (tipo, ip, fk_empresa)
-VALUES
-    ('transito', '192.168.1.10', 1),
-    ('pagamento', '192.168.1.15', 1),
-    ('auditoria', '10.0.0.50', 2);
+INSERT INTO servidor (tipo, ip, fk_concessionaria) VALUES
+('transito', '192.168.1.10', 1),
+('pagamento', '192.168.1.15', 1),
+('auditoria', '10.0.0.50', 2);
 
--- =========================================
--- INSERTS: COMPONENTES
--- =========================================
-INSERT INTO componente (nome)
-VALUES
-    ('CPU'),
-    ('Memoria RAM'),
-    ('Disco Rigido'),
-    ('Rede');
+INSERT INTO componente (nome) VALUES
+('CPU'),
+('Memoria RAM'),
+('Disco Rigido'),
+('Rede');
 
--- =========================================
--- INSERTS: METRICAS
--- IMPORTANTE: cadastradas antes dos registros.
--- Os nomes devem ser iguais aos usados no Python.
--- =========================================
 INSERT INTO metrica (tipo, fk_componente)
 VALUES
     ('Temperatura (Celsius)', 1),
@@ -181,61 +162,39 @@ VALUES
     ('Espaco em uso (%)', 3),
     ('Espaco disponivel (%)', 3);
 
--- =========================================
--- INSERTS: CONFIG
--- Cada servidor terá uma configuração por componente.
--- =========================================
+INSERT INTO metrica (tipo, fk_componente)
+VALUES
+    ('Latencia (ms)', 4),
+    ('Status Conectividade', 4),
+    ('Status Rede', 4);
+
 INSERT INTO config (fk_componente, fk_servidor)
 VALUES
     (1, 1), (2, 1), (3, 1), (4, 1),
     (1, 2), (2, 2), (3, 2), (4, 2),
     (1, 3), (2, 3), (3, 3), (4, 3);
 
--- =========================================
--- INSERTS: REGISTROS DE MONITORAMENTO
---
--- IDs de configuração neste banco recém-criado:
--- Trânsito: 1 = CPU, 2 = RAM, 3 = disco
--- Pagamento: 5 = CPU, 6 = RAM, 7 = disco
--- Auditoria: 9 = CPU, 10 = RAM, 11 = disco
---
--- IDs das métricas:
--- 1 = Temperatura (Celsius)
--- 2 = Porcentagem de Uso (%)
--- 3 = Uso da Memoria (%)
--- 4 = Espaco em uso (%)
--- 5 = Espaco disponivel (%)
--- =========================================
 INSERT INTO registro_monitoramento
     (fk_config, fk_metrica, valor, dt_hora)
 VALUES
-    -- Servidor de trânsito
     (1, 1, 45.50, '2026-10-23 10:00:00'),
     (1, 2, 45.50, '2026-10-23 10:00:00'),
     (2, 3, 68.00, '2026-10-23 10:00:00'),
     (3, 4, 55.00, '2026-10-23 10:00:00'),
     (3, 5, 45.00, '2026-10-23 10:00:00'),
 
-    -- Servidor de pagamento
     (5, 1, 92.00, '2026-10-23 10:01:00'),
     (5, 2, 92.00, '2026-10-23 10:01:00'),
     (6, 3, 94.00, '2026-10-23 10:01:00'),
     (7, 4, 93.00, '2026-10-23 10:01:00'),
     (7, 5, 7.00, '2026-10-23 10:01:00'),
 
-    -- Servidor de auditoria
     (9, 1, 78.00, '2026-10-23 10:02:00'),
     (9, 2, 78.00, '2026-10-23 10:02:00'),
     (10, 3, 82.00, '2026-10-23 10:02:00'),
     (11, 4, 80.00, '2026-10-23 10:02:00'),
     (11, 5, 20.00, '2026-10-23 10:02:00');
 
--- =========================================
--- INSERTS: ALERTAS DE EXEMPLO
---
--- Os IDs abaixo correspondem aos registros acima,
--- neste banco recém-criado.
--- =========================================
 INSERT INTO alerta (categoria, descricao, fk_registro)
 VALUES
     ('Critico', 'Alerta: Temperatura da CPU Critico', 6),
@@ -249,74 +208,98 @@ VALUES
     ('Moderado', 'Alerta: Uso da Memoria RAM Moderado', 13),
     ('Moderado', 'Alerta: Uso do Disco Moderado', 14),
     ('Moderado', 'Alerta: Espaco livre do Disco Moderado', 15);
-
--- =========================================
--- CONSULTAS PARA CONFERIR O BANCO
--- =========================================
-
--- Conferir componentes e métricas
-SELECT
+    
+    -- tras as capturas,seus componetes, o valor e de que pedagio é
+    
+    SELECT 
+    rm.id AS id_captura,
     c.nome AS componente,
-    m.id AS id_metrica,
-    m.tipo AS metrica
-FROM componente AS c
-LEFT JOIN metrica AS m
-    ON m.fk_componente = c.id
-ORDER BY c.id, m.id;
+    rm.valor,
+    rm.dt_hora,
+    con.nome_praca AS praca_pedagio,
+    con.rodovia,
+    con.km
+FROM registro_monitoramento rm
+JOIN config cfg ON rm.fk_config = cfg.id
+JOIN componente c ON cfg.fk_componente = c.id
+JOIN servidor s ON cfg.fk_servidor = s.id
+JOIN concessionaria con ON s.fk_concessionaria = con.id;
 
--- Conferir configurações dos servidores
-SELECT
-    cfg.id AS id_config,
-    s.tipo AS servidor,
+ -- view pros graficos
+CREATE OR REPLACE VIEW vw_historico_graficos AS
+SELECT 
+    s.id AS id_servidor,
+    rm.dt_hora,
+    DATE_FORMAT(rm.dt_hora, '%H:%i') AS horario_label,
+    
+    -- Pivoteamento das métricas por horário
+    MAX(CASE WHEN rm.fk_metrica = 2 THEN rm.valor END) AS cpu_uso_percent,
+    MAX(CASE WHEN rm.fk_metrica = 3 THEN rm.valor END) AS ram_uso_percent,
+    MAX(CASE WHEN rm.fk_metrica = 6 THEN rm.valor END) AS latencia_ms,
+    
+    -- Limites críticos fixos para traçar a linha vermelha no gráfico
+    85.00 AS limite_critico_cpu,
+    20.00 AS limite_critico_latencia
+
+FROM registro_monitoramento rm
+JOIN config cfg ON rm.fk_config = cfg.id
+JOIN servidor s ON cfg.fk_servidor = s.id
+GROUP BY s.id, rm.dt_hora
+ORDER BY rm.dt_hora ASC;
+
+
+-- view para as KPI'S
+
+CREATE OR REPLACE VIEW vw_gauges_servidor AS
+SELECT 
+    s.id AS id_servidor,
+    s.tipo AS tipo_servidor,
     s.ip,
-    c.nome AS componente
-FROM config AS cfg
-JOIN servidor AS s
-    ON s.id = cfg.fk_servidor
-JOIN componente AS c
-    ON c.id = cfg.fk_componente
-ORDER BY cfg.id;
+    con.nome_praca AS praca_pedagio,
 
--- Conferir todos os registros e suas métricas
-SELECT
-    r.id AS id_registro,
-    s.tipo AS servidor,
-    c.nome AS componente,
-    m.tipo AS metrica,
-    r.valor,
-    r.dt_hora
-FROM registro_monitoramento AS r
-JOIN config AS cfg
-    ON cfg.id = r.fk_config
-JOIN servidor AS s
-    ON s.id = cfg.fk_servidor
-JOIN componente AS c
-    ON c.id = cfg.fk_componente
-JOIN metrica AS m
-    ON m.id = r.fk_metrica
-ORDER BY r.id;
+    -- Últimos valores registrados (usando subquery para pegar sempre o registro mais recente de cada métrica)
+    (SELECT rm.valor FROM registro_monitoramento rm 
+     JOIN config cfg ON rm.fk_config = cfg.id 
+     WHERE cfg.fk_servidor = s.id AND rm.fk_metrica = 2 
+     ORDER BY rm.dt_hora DESC LIMIT 1) AS cpu_uso_atual,
 
--- Conferir alertas e valores que os provocaram
-SELECT
-    a.id AS id_alerta,
-    a.categoria,
-    a.descricao,
-    r.valor,
-    m.tipo AS metrica,
-    r.dt_hora
-FROM alerta AS a
-JOIN registro_monitoramento AS r
-    ON r.id = a.fk_registro
-JOIN metrica AS m
-    ON m.id = r.fk_metrica
-ORDER BY a.id DESC;
+    (SELECT rm.valor FROM registro_monitoramento rm 
+     JOIN config cfg ON rm.fk_config = cfg.id 
+     WHERE cfg.fk_servidor = s.id AND rm.fk_metrica = 1 
+     ORDER BY rm.dt_hora DESC LIMIT 1) AS cpu_temp_atual,
 
--- Conferir a quantidade de registros e alertas
-SELECT COUNT(*) AS total_registros
-FROM registro_monitoramento;
+    (SELECT rm.valor FROM registro_monitoramento rm 
+     JOIN config cfg ON rm.fk_config = cfg.id 
+     WHERE cfg.fk_servidor = s.id AND rm.fk_metrica = 3 
+     ORDER BY rm.dt_hora DESC LIMIT 1) AS ram_uso_atual,
 
-SELECT COUNT(*) AS total_alertas
-FROM alerta;
+    (SELECT rm.valor FROM registro_monitoramento rm 
+     JOIN config cfg ON rm.fk_config = cfg.id 
+     WHERE cfg.fk_servidor = s.id AND rm.fk_metrica = 4 
+     ORDER BY rm.dt_hora DESC LIMIT 1) AS disco_uso_atual,
 
-SELECT *
-FROM servidor;
+    (SELECT rm.valor FROM registro_monitoramento rm 
+     JOIN config cfg ON rm.fk_config = cfg.id 
+     WHERE cfg.fk_servidor = s.id AND rm.fk_metrica = 5 
+     ORDER BY rm.dt_hora DESC LIMIT 1) AS disco_livre_atual,
+
+    (SELECT rm.valor FROM registro_monitoramento rm 
+     JOIN config cfg ON rm.fk_config = cfg.id 
+     WHERE cfg.fk_servidor = s.id AND rm.fk_metrica = 6 
+     ORDER BY rm.dt_hora DESC LIMIT 1) AS latencia_atual,
+
+    -- Médias e Picos para os rodapés dos cards
+    ROUND(AVG(CASE WHEN rm.fk_metrica = 2 THEN rm.valor END), 1) AS cpu_media,
+    MAX(CASE WHEN rm.fk_metrica = 2 THEN rm.valor END) AS cpu_pico,
+    ROUND(AVG(CASE WHEN rm.fk_metrica = 1 THEN rm.valor END), 1) AS temp_media,
+    MAX(CASE WHEN rm.fk_metrica = 1 THEN rm.valor END) AS temp_max,
+    ROUND(AVG(CASE WHEN rm.fk_metrica = 6 THEN rm.valor END), 1) AS latencia_media
+
+FROM servidor s
+JOIN concessionaria con ON s.fk_concessionaria = con.id
+LEFT JOIN config cfg ON cfg.fk_servidor = s.id
+LEFT JOIN registro_monitoramento rm ON rm.fk_config = cfg.id
+GROUP BY s.id, s.tipo, s.ip, con.nome_praca;
+
+
+
