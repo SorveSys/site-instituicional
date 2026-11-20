@@ -1,0 +1,306 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SorveSys | Diagnóstico de Incidentes</title>
+    <link rel="stylesheet" href="./css/dashboardMelissa.css">
+    <link rel="stylesheet" href="/css/overview.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="sidebar-topo">
+
+            <div class="marca-icone">
+                <img src="/assets/icons/overview/ICON-ENERGIA.svg" alt="">
+            </div>
+
+            <div class="marca-texto">
+                <div class="marca-nome">
+                    SorveSys <span class="marca-noc">NOC</span>
+                </div>
+
+                <small>Monitoramento Rodoviário</small>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <span class="nav-secao">Principal</span>
+
+            <a href="/overview" class="nav-item">
+                <img src="/assets/icons/overview/ICON-GRID.svg" alt="" class="ico">
+                <span>Overview</span>
+                <em>9</em>
+            </a>
+
+            <a href="#" class="nav-item">
+                <img src="/assets/icons/overview/ICON-SERVIDORES.svg" alt="" class="ico">
+                <span>Monitoramento Alicia</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <img src="/assets/icons/overview/ICON-SERVIDORES.svg" alt="" class="ico">
+                <span>Monitoramento Danilo</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <img src="/assets/icons/overview/ICON-SERVIDORES.svg" alt="" class="ico">
+                <span>Monitoramento Matheus</span>
+            </a>
+
+            <a href="#" class="nav-item ativo">
+                <img src="/assets/icons/overview/ICON-SERVIDORES.svg" alt="" class="ico">
+                <span>Monitoramento Melissa</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <img src="/assets/icons/overview/ICON-SERVIDORES.svg" alt="" class="ico">
+                <span>Monitoramento Nicolas</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <img src="/assets/icons/overview/ICON-SERVIDORES.svg" alt="" class="ico">
+                <span>Monitoramento Rodrigo</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-rodape">
+
+            <div class="operador">
+
+                <div class="operador-avatar">OP</div>
+
+                <div class="operador-info">
+                    <strong id="nome_operador">Operador NOC #409</strong>
+                    <small>Telemetria Rodoviária</small>
+                </div>
+
+                <button class="btn-sair" onclick="sair()" aria-label="Sair">
+                    <img src="/assets/icons/overview/ICON-LOGOUT.svg" alt="" class="ico">
+                </button>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+    <main class="dashboard">
+
+        <header class="header">
+
+            <h1>Diagnóstico de alertas</h1>
+
+            <p class="subtitle">
+                Janela dos últimos 15 min · Leituras a cada 30 s ·
+                Atualizado às <span id="last-update">13:30:33</span>
+            </p>
+        </header>
+
+        <!-- INDICADORES -->
+        <section class="summary">
+
+            <article class="summary-card">
+                <strong>5</strong>
+                <span>servidores com alertas</span>
+            </article>
+
+            <article class="summary-card">
+                <strong>5</strong>
+                <span>com alerta crítico</span>
+            </article>
+
+            <article class="summary-card">
+                <strong>2</strong>
+                <span>sem alertas</span>
+            </article>
+
+        </section>
+
+        <!-- LISTA DE INCIDENTES -->
+        <section class="incidents">
+
+            <p class="section-description">
+                Servidores com alertas moderados ou críticos nos últimos
+                15 minutos. Escolha um para ver a correlação e o diagnóstico provável.
+            </p>
+
+            <div class="incident-list">
+
+                <!-- SERVIDOR 1 -->
+                <article class="incident-card critical">
+
+                    <div class="server-info">
+                        <h2>SRV-TR01</h2>
+                        <p>Captura de Tags</p>
+                        <p>192.168.10.11 · Praça 01 · SP-330</p>
+                    </div>
+
+                    <div class="diagnosis-info">
+                        <span class="hypothesis">Diagnóstico provável</span>
+                        <h3>Sobrecarga de processamento</h3>
+
+                        <div class="tags">
+                            <span class="tag critical-tag">CPU</span>
+                            <span class="tag critical-tag">Latência</span>
+                            <span class="tag neutral-tag">7 alertas</span>
+                        </div>
+                    </div>
+
+                    <button class="diagnosis-button"
+                        data-diagnosis="processing">
+                        Ver diagnóstico ›
+                    </button>
+
+                </article>
+
+                <!-- SERVIDOR 2 -->
+                <article class="incident-card critical">
+
+                    <div class="server-info">
+                        <h2>SRV-TR04</h2>
+                        <p>Captura de Tags</p>
+                        <p>192.168.10.14 · Praça 04 · SP-348</p>
+                    </div>
+
+                    <div class="diagnosis-info">
+                        <span class="hypothesis">Diagnóstico provável</span>
+                        <h3>Instabilidade de comunicação</h3>
+
+                        <div class="tags">
+                            <span class="tag critical-tag">Latência</span>
+                            <span class="tag neutral-tag">6 alertas</span>
+                        </div>
+                    </div>
+
+                    <button class="diagnosis-button"
+                        data-diagnosis="network">
+                        Ver diagnóstico ›
+                    </button>
+
+                </article>
+
+                <!-- SERVIDOR 3 -->
+                <article class="incident-card critical">
+
+                    <div class="server-info">
+                        <h2>SRV-PG02</h2>
+                        <p>Processamento de Pagamentos (TEF)</p>
+                        <p>192.168.10.22 · Praça 02 · SP-348</p>
+                    </div>
+
+                    <div class="diagnosis-info">
+                        <span class="hypothesis">Diagnóstico provável</span>
+                        <h3>Pressão de memória</h3>
+
+                        <div class="tags">
+                            <span class="tag warning-tag">CPU</span>
+                            <span class="tag critical-tag">Memória RAM</span>
+                            <span class="tag neutral-tag">3 alertas</span>
+                        </div>
+                    </div>
+
+                    <button class="diagnosis-button"
+                        data-diagnosis="memory">
+                        Ver diagnóstico ›
+                    </button>
+
+                </article>
+
+                <!-- SERVIDOR 4 -->
+                <article class="incident-card critical">
+
+                    <div class="server-info">
+                        <h2>SRV-AU03</h2>
+                        <p>Auditoria & Logs ANTT</p>
+                        <p>192.168.10.47 · Praça 03 · SP-330</p>
+                    </div>
+
+                    <div class="diagnosis-info">
+                        <span class="hypothesis">Diagnóstico provável</span>
+                        <h3>Risco de esgotamento de armazenamento</h3>
+
+                        <div class="tags">
+                            <span class="tag critical-tag">Disco</span>
+                            <span class="tag neutral-tag">2 alertas</span>
+                        </div>
+                    </div>
+
+                    <button class="diagnosis-button"
+                        data-diagnosis="storage">
+                        Ver diagnóstico ›
+                    </button>
+
+                </article>
+
+            </div>
+        </section>
+
+        <!-- DETALHES DO DIAGNÓSTICO -->
+        <section class="details" id="diagnosis-details" hidden>
+
+            <div class="details-header">
+                <div>
+                    <span class="details-label">ANÁLISE DO INCIDENTE</span>
+                    <h2 id="detail-title">Diagnóstico</h2>
+                    <p id="detail-server"></p>
+                </div>
+
+                <button class="close-button" id="close-details">
+                    Fechar ×
+                </button>
+            </div>
+
+            <div class="details-content">
+
+                <article class="detail-item">
+                    <h3>Condição observada</h3>
+                    <p id="detail-condition"></p>
+                </article>
+
+                <article class="detail-item">
+                    <h3>Possível causa</h3>
+                    <p id="detail-cause"></p>
+                </article>
+
+                <article class="detail-item">
+                    <h3>Recomendação ao analista</h3>
+                    <p id="detail-recommendation"></p>
+                </article>
+
+            </div>
+
+            <p class="disclaimer">
+                O diagnóstico representa uma hipótese baseada nos indicadores
+                disponíveis. A causa definitiva deve ser confirmada pela equipe técnica.
+            </p>
+
+        </section>
+
+        <footer>
+            SorveSys · Sistema de monitoramento de infraestrutura
+        </footer>
+
+    </main>
+    
+
+
+    <script src="script.js"></script>
+</body>
+</html>
