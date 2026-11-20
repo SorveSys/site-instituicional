@@ -160,6 +160,65 @@ a {
     color: #d1d5db;
 }
 
+.colaboradores {
+    display: block;
+    min-width: 0;
+    padding: 24px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.colaboradores-topo {
+    margin-bottom: 20px;
+}
+
+.colaboradores-topo h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.colaboradores-topo p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.tabela-colaboradores {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.tabela-colaboradores table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.tabela-colaboradores th,
+.tabela-colaboradores td {
+    padding: 13px 12px;
+    border-bottom: 1px solid #e8e8e8;
+    font-size: 13px;
+}
+
+.tabela-colaboradores th {
+    background: #f7f7f7;
+    color: #444;
+    font-weight: 600;
+}
+
+.tabela-colaboradores td {
+    color: #555;
+    overflow-wrap: anywhere;
+}
+
+#mensagem_colaboradores {
+    margin-top: 12px;
+    color: #666;
+    font-size: 13px;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .hero-video {
         display: none;
@@ -462,6 +521,7 @@ a {
 
 /* ============ RESPONSIVO ============ */
 @media (max-width: 1100px) {
+
     .topbar {
         grid-template-columns: auto 1fr auto;
         padding: 0 24px;
@@ -484,6 +544,16 @@ a {
     .hero-conteudo {
         padding: 0 24px;
     }
+    
+     body.pagina-cadastro-empresa .conteudo > .tipos {
+        display: none !important;
+    }
+
+    body.pagina-cadastro-empresa .conteudo {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 0;
+    }
 }
 
 @media (max-width: 860px) {
@@ -501,5 +571,15 @@ a {
 
     .tipo-card h3 {
         font-size: 19px;
+    }
+
+     body.pagina-cadastro-empresa .conteudo > .tipos {
+        display: none !important;
+    }
+
+    body.pagina-cadastro-empresa .conteudo {
+        grid-template-columns: 1fr;
+        padding: 16px;
+        gap: 0;
     }
 }
