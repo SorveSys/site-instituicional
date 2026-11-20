@@ -1,5 +1,5 @@
-var ambiente_processo = 'producao';
-// var ambiente_processo = 'desenvolvimento';
+// var ambiente_processo = 'producao';
+var ambiente_processo = 'desenvolvimento';
 
 var caminho_env = ambiente_processo === 'producao' ? '.env' : '.env.dev';
 // Acima, temos o uso do operador ternário para definir o caminho do arquivo .env
@@ -22,6 +22,7 @@ var medidasRouter = require("./src/routes/medidas");
 var aquariosRouter = require("./src/routes/aquarios");
 var empresasRouter = require("./src/routes/empresas");
 var servidoresRouter = require("./src/routes/servidores");
+var termometroRouter = require("./src/routes/termometro");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -38,6 +39,8 @@ var paginas = {
     "/cadastro-usuario": "cadastro-usuario.html",
     "/overview": "overview.html",
     "/dashboard": "dashboard.html",
+    "/dashboard-termometro": "dashboard-termometro.html",
+    "/monitoramento-danilo": "dashboard-termometro.html",
 };
 
 Object.keys(paginas).forEach(function (rota) {
@@ -53,6 +56,7 @@ app.use("/medidas", medidasRouter);
 app.use("/aquarios", aquariosRouter);
 app.use("/empresas", empresasRouter);
 app.use("/servidores", servidoresRouter);
+app.use("/termometro", termometroRouter);
 
 app.listen(PORTA_APP, "0.0.0.0", function () {
     console.log(`
