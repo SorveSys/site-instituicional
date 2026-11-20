@@ -7,11 +7,16 @@ function listar() {
             s.id, 
             s.tipo, 
             s.ip, 
-            s.fk_empresa,
+            s.fk_concessionaria,
+            c.nome_praca,
+            c.rodovia,
+            c.km,
+            e.id AS fk_empresa,
             e.razao_social,
             e.nome_fantasia
         FROM servidor AS s
-        JOIN empresa AS e ON s.fk_empresa = e.id
+        JOIN concessionaria AS c ON s.fk_concessionaria = c.id
+        JOIN empresa AS e ON c.fk_empresa = e.id
         ORDER BY s.id DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -25,12 +30,17 @@ function listarPorEmpresa(idEmpresa) {
             s.id, 
             s.tipo, 
             s.ip, 
-            s.fk_empresa,
+            s.fk_concessionaria,
+            c.nome_praca,
+            c.rodovia,
+            c.km,
+            e.id AS fk_empresa,
             e.razao_social,
             e.nome_fantasia
         FROM servidor AS s
-        JOIN empresa AS e ON s.fk_empresa = e.id
-        WHERE s.fk_empresa = ?
+        JOIN concessionaria AS c ON s.fk_concessionaria = c.id
+        JOIN empresa AS e ON c.fk_empresa = e.id
+        WHERE e.id = ?
         ORDER BY s.id DESC;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -44,11 +54,16 @@ function buscarPorId(id) {
             s.id, 
             s.tipo, 
             s.ip, 
-            s.fk_empresa,
+            s.fk_concessionaria,
+            c.nome_praca,
+            c.rodovia,
+            c.km,
+            e.id AS fk_empresa,
             e.razao_social,
             e.nome_fantasia
         FROM servidor AS s
-        JOIN empresa AS e ON s.fk_empresa = e.id
+        JOIN concessionaria AS c ON s.fk_concessionaria = c.id
+        JOIN empresa AS e ON c.fk_empresa = e.id
         WHERE s.id = ?;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
@@ -62,25 +77,30 @@ function buscarPorIp(ip) {
             s.id, 
             s.tipo, 
             s.ip, 
-            s.fk_empresa,
+            s.fk_concessionaria,
+            c.nome_praca,
+            c.rodovia,
+            c.km,
+            e.id AS fk_empresa,
             e.razao_social,
             e.nome_fantasia
         FROM servidor AS s
-        JOIN empresa AS e ON s.fk_empresa = e.id
+        JOIN concessionaria AS c ON s.fk_concessionaria = c.id
+        JOIN empresa AS e ON c.fk_empresa = e.id
         WHERE s.ip = ?;
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
     return database.executar(instrucaoSql, [ip]);
 }
 
-function cadastrar(tipo, ip, fkEmpresa) {
-    console.log("ACESSEI O SERVIDOR MODEL \n function cadastrar():", tipo, ip, fkEmpresa);
+function cadastrar(tipo, ip, fkConcessionaria) {
+    console.log("ACESSEI O SERVIDOR MODEL \n function cadastrar():", tipo, ip, fkConcessionaria);
     var instrucaoSql = `
-        INSERT INTO servidor (tipo, ip, fk_empresa) 
+        INSERT INTO servidor (tipo, ip, fk_concessionaria) 
         VALUES (?, ?, ?);
     `;
     console.log("Executando a instrução SQL: \n" + instrucaoSql);
-    return database.executar(instrucaoSql, [tipo, ip || null, fkEmpresa]);
+    return database.executar(instrucaoSql, [tipo, ip || null, fkConcessionaria]);
 }
 
 function vincularConfigComponentesPadrao(idServidor) {

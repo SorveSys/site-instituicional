@@ -1,15 +1,14 @@
-var ICONES = "/assets/icons/overview/";
+var ICONES = "./assets/icons/overview/";
 
 var servidores = [
-    { nome: "SRV-AU03", ip: "192.168.10.47", tipo: "armazenamento", status: "atencao", cpu: 52.4, ram: 72.8, disco: 87.4, comunicacao: "Há 18s" },
-    { nome: "SRV-AU04", ip: "192.168.10.99", tipo: "armazenamento", status: "operacional", cpu: 19.8, ram: 33.5, disco: 58.2, comunicacao: "Há 15s" },
-    { nome: "SRV-GW04", ip: "192.168.10.48", tipo: "armazenamento", status: "critico", cpu: 96.2, ram: 91.5, disco: 79.0, comunicacao: "Sem resposta (8m)" },
-    { nome: "SRV-PG01", ip: "192.168.10.20", tipo: "pagamento", status: "operacional", cpu: 28.5, ram: 44.0, disco: 31.8, comunicacao: "Há 2s" },
-    { nome: "SRV-PG02", ip: "192.168.10.22", tipo: "pagamento", status: "operacional", cpu: 34.0, ram: 51.3, disco: 18.9, comunicacao: "Há 6s" },
-    { nome: "SRV-PG03", ip: "192.168.10.25", tipo: "pagamento", status: "operacional", cpu: 31.7, ram: 48.2, disco: 36.5, comunicacao: "Há 5s" },
-    { nome: "SRV-TR01", ip: "192.168.10.12", tipo: "captura", status: "operacional", cpu: 41.2, ram: 38.6, disco: 22.4, comunicacao: "Há 12s" },
-    { nome: "SRV-TR02", ip: "192.168.10.14", tipo: "captura", status: "atencao", cpu: 78.9, ram: 64.2, disco: 45.1, comunicacao: "Há 4s" },
-
+    { id: 3, nome: "SRV-AU03", ip: "192.168.10.47", tipo: "armazenamento", status: "atencao", cpu: 52.4, ram: 72.8, disco: 87.4, comunicacao: "Há 18s" },
+    { id: 3, nome: "SRV-AU04", ip: "192.168.10.99", tipo: "armazenamento", status: "operacional", cpu: 19.8, ram: 33.5, disco: 58.2, comunicacao: "Há 15s" },
+    { id: 3, nome: "SRV-GW04", ip: "192.168.10.48", tipo: "armazenamento", status: "critico", cpu: 96.2, ram: 91.5, disco: 79.0, comunicacao: "Sem resposta (8m)" },
+    { id: 2, nome: "SRV-PG01", ip: "192.168.10.20", tipo: "pagamento", status: "operacional", cpu: 28.5, ram: 44.0, disco: 31.8, comunicacao: "Há 2s" },
+    { id: 2, nome: "SRV-PG02", ip: "192.168.10.22", tipo: "pagamento", status: "operacional", cpu: 34.0, ram: 51.3, disco: 18.9, comunicacao: "Há 6s" },
+    { id: 2, nome: "SRV-PG03", ip: "192.168.10.25", tipo: "pagamento", status: "operacional", cpu: 31.7, ram: 48.2, disco: 36.5, comunicacao: "Há 5s" },
+    { id: 1, nome: "SRV-TR01", ip: "192.168.10.12", tipo: "captura", status: "operacional", cpu: 41.2, ram: 38.6, disco: 22.4, comunicacao: "Há 12s" },
+    { id: 1, nome: "SRV-TR02", ip: "192.168.10.14", tipo: "captura", status: "atencao", cpu: 78.9, ram: 64.2, disco: 45.1, comunicacao: "Há 4s" },
 ];
 
 var alertas = [
@@ -272,3 +271,215 @@ setInterval(atualizarHora, 30000);
 renderKpis();
 renderTabela();
 renderAlertas();
+
+// ===== MODAL DE CHAMADOS JIRA =====
+function popularServidoresModal(servidorSelecionado) {
+    var slt = document.getElementById("ipt_chamado_servidor");
+    if (!slt) return;
+
+    var apiBase = window.location.protocol === "file:" ? "http://localhost:3333" : "";
+
+    function renderizarOptions(lista) {
+        var valorAtual = servidorSelecionado || slt.value;
+        var html = '<option value="" disabled ' + (!valorAtual ? "selected" : "") + '>Selecione o servidor...</option>';
+
+        lista.forEach(function (s) {
+            var idServidor = s.id || 1;
+            var nomeExibicao = s.nome || ("Servidor #" + s.id + (s.nome_praca ? " - " + s.nome_praca : ""));
+            var selected = (valorAtual == idServidor || valorAtual === s.nome || valorAtual === nomeExibicao) ? "selected" : "";
+            var tipoDesc = (TIPOS && TIPOS[s.tipo]) ? TIPOS[s.tipo].texto : (s.tipo || "");
+            var label = nomeExibicao + " (" + (s.ip || "Sem IP") + (tipoDesc ? " - " + tipoDesc : "") + ")";
+            html += '<option value="' + idServidor + '" data-nome="' + nomeExibicao + '" ' + selected + '>' + label + '</option>';
+        });
+
+        slt.innerHTML = html;
+    }
+
+    fetch(apiBase + "/servidores/listar")
+        .then(function (res) {
+            if (res.ok) return res.json();
+            throw new Error("Falha ao buscar servidores do banco");
+        })
+        .then(function (dadosBanco) {
+            if (Array.isArray(dadosBanco) && dadosBanco.length > 0) {
+                renderizarOptions(dadosBanco);
+            } else {
+                renderizarOptions(servidores);
+            }
+        })
+        .catch(function () {
+            renderizarOptions(servidores);
+        });
+}
+
+function abrirModalChamado(servidorNome) {
+    popularServidoresModal(servidorNome);
+
+    var modal = document.getElementById("modal_chamado");
+    var feedback = document.getElementById("modal_feedback");
+    if (feedback) feedback.style.display = "none";
+
+    if (modal) {
+        modal.classList.add("ativo");
+        document.body.classList.add("menu-aberto");
+    }
+
+    if (servidorNome) {
+        var iptResumo = document.getElementById("ipt_chamado_resumo");
+        if (iptResumo && !iptResumo.value) {
+            iptResumo.value = "Incidente reportado no servidor " + servidorNome;
+        }
+    }
+}
+
+function fecharModalChamado() {
+    var modal = document.getElementById("modal_chamado");
+    if (modal) {
+        modal.classList.remove("ativo");
+        document.body.classList.remove("menu-aberto");
+    }
+}
+
+function fecharModalChamadoPorOverlay(e) {
+    if (e.target && e.target.id === "modal_chamado") {
+        fecharModalChamado();
+    }
+}
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" || e.keyCode === 27) {
+        fecharModalChamado();
+    }
+});
+
+function exibirFeedbackModal(tipo, htmlConteudo) {
+    var feedback = document.getElementById("modal_feedback");
+    if (!feedback) return;
+
+    feedback.className = "modal-feedback " + (tipo === "sucesso" ? "sucesso" : "erro");
+    feedback.innerHTML = htmlConteudo;
+    feedback.style.display = "block";
+}
+
+function enviarChamado(event) {
+    if (event) event.preventDefault();
+
+    var sltServidor = document.getElementById("ipt_chamado_servidor");
+    var sltMotivo = document.getElementById("slt_chamado_motivo");
+    var iptResumo = document.getElementById("ipt_chamado_resumo");
+    var txtDescricao = document.getElementById("txt_chamado_descricao");
+
+    var idServidor = sltServidor ? sltServidor.value : "";
+    var servidorTexto = (sltServidor && sltServidor.selectedOptions && sltServidor.selectedOptions[0])
+        ? (sltServidor.selectedOptions[0].getAttribute("data-nome") || sltServidor.selectedOptions[0].text)
+        : idServidor;
+
+    var motivo = sltMotivo ? sltMotivo.value : "";
+    var resumo = iptResumo ? iptResumo.value.trim() : "";
+    var descricao = txtDescricao ? txtDescricao.value.trim() : "";
+
+    var idUsuario = null;
+    try {
+        idUsuario = sessionStorage.getItem("ID_USUARIO") || sessionStorage.ID_USUARIO;
+    } catch (e) { }
+
+    if (!idServidor) {
+        exibirFeedbackModal("erro", "Por favor, selecione o servidor afetado.");
+        return;
+    }
+
+    if (!motivo) {
+        exibirFeedbackModal("erro", "Por favor, selecione o motivo da solicitação.");
+        return;
+    }
+
+    if (!resumo) {
+        exibirFeedbackModal("erro", "Por favor, informe o resumo do chamado.");
+        return;
+    }
+
+    if (!idUsuario) {
+        exibirFeedbackModal("erro", "Usuário não autenticado. Por favor, realize o login novamente para abrir um chamado.");
+        return;
+    }
+
+    var btn = document.getElementById("btn_enviar_chamado");
+    var txtBtn = document.getElementById("btn_chamado_texto");
+    var spBtn = document.getElementById("btn_chamado_spinner");
+    var feedback = document.getElementById("modal_feedback");
+
+    if (feedback) feedback.style.display = "none";
+    if (btn) btn.disabled = true;
+    if (txtBtn) txtBtn.innerText = "Criando chamado...";
+    if (spBtn) spBtn.style.display = "inline-block";
+
+    var apiBase = window.location.protocol === "file:" ? "http://localhost:3333" : "";
+
+    fetch(apiBase + "/chamados/abrir", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            servidor: servidorTexto,
+            fkServidor: idServidor,
+            fkUsuario: idUsuario,
+            motivo: motivo,
+            resumo: resumo,
+            descricao: descricao
+        })
+    })
+    .then(function (res) {
+        return res.json().then(function (dados) {
+            return { ok: res.ok, status: res.status, dados: dados };
+        });
+    })
+    .then(function (resultado) {
+        if (btn) btn.disabled = false;
+        if (txtBtn) txtBtn.innerText = "Criar Chamado no Jira";
+        if (spBtn) spBtn.style.display = "none";
+
+        if (resultado.ok && resultado.dados.sucesso) {
+            var chave = resultado.dados.chave;
+            var link = resultado.dados.link;
+            var msgSucesso = "Chamado <strong>" + chave + "</strong> aberto com sucesso no Jira e salvo no banco!<br>" +
+                '<a href="' + link + '" target="_blank" rel="noopener noreferrer" class="link-jira">' +
+                'Acessar chamado no Jira &rarr;</a>';
+
+            if (resultado.dados.aviso) {
+                msgSucesso = "Chamado <strong>" + chave + "</strong> aberto no Jira!<br>" +
+                    '<small style="color: #f39c12;">(' + resultado.dados.aviso + ')</small><br>' +
+                    '<a href="' + link + '" target="_blank" rel="noopener noreferrer" class="link-jira">' +
+                    'Acessar chamado no Jira &rarr;</a>';
+            }
+
+            exibirFeedbackModal("sucesso", msgSucesso);
+
+            var form = document.getElementById("form_chamado");
+            if (form) form.reset();
+            if (sltServidor) sltServidor.value = "";
+            if (sltMotivo) sltMotivo.value = "";
+        } else {
+            var msg = (resultado.dados && resultado.dados.mensagem) ? resultado.dados.mensagem : "Não foi possível abrir o chamado.";
+            exibirFeedbackModal("erro", msg);
+        }
+    })
+    .catch(function (erro) {
+        if (btn) btn.disabled = false;
+        if (txtBtn) txtBtn.innerText = "Criar Chamado no Jira";
+        if (spBtn) spBtn.style.display = "none";
+        console.error("Erro na comunicação:", erro);
+        exibirFeedbackModal("erro", "Erro de conexão ao tentar enviar o chamado. Verifique se o servidor backend está rodando.");
+    });
+}
+
+// Exportar no escopo global para garantir compatibilidade
+window.abrirModalChamado = abrirModalChamado;
+window.fecharModalChamado = fecharModalChamado;
+window.fecharModalChamadoPorOverlay = fecharModalChamadoPorOverlay;
+window.enviarChamado = enviarChamado;
+
+// Aliases para prevenir variações de chamada
+window.abrirChamadoModal = abrirModalChamado;
+window.abrirChamadoModel = abrirModalChamado;
+window.abrirChamado = abrirModalChamado;
