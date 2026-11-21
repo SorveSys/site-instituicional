@@ -20,6 +20,7 @@ var usuarioRouter = require("./src/routes/usuarios");
 var empresasRouter = require("./src/routes/empresas");
 var servidoresRouter = require("./src/routes/servidores");
 var chamadosRouter = require("./src/routes/chamados");
+var concessionariaRouter = require("./src/routes/concessionaria");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -34,6 +35,8 @@ var paginas = {
     "/cadastro-servidor": "cadastro-servidor.html",
     "/cadastro-empresa": "cadastro-empresa.html",
     "/cadastro-usuario": "cadastro-usuario.html",
+    "/cadastro-concessionaria": "cadastro-concessionaria.html",
+    "/concessionarias": "concessionarias.html",
     "/overview": "overview.html",
     "/dashboard": "dashboard.html",
 };
@@ -49,6 +52,7 @@ app.use("/usuarios", usuarioRouter);
 app.use("/empresas", empresasRouter);
 app.use("/servidores", servidoresRouter);
 app.use("/chamados", chamadosRouter);
+app.use("/concessionarias", concessionariaRouter);
 
 app.listen(PORTA_APP, "0.0.0.0", function () {
     console.log(`

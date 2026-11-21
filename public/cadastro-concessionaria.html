@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -38,6 +37,14 @@
         </div>
 
         <div class="topbar-right">
+            <a href="concessionarias.html" class="topbar-voltar-link" title="Voltar para a listagem">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Voltar para Concessionárias
+            </a>
+
             <div class="status-badge">
                 <span class="dot"></span>
                 SISTEMA TELEMÉTRICO ATIVO
@@ -214,11 +221,12 @@
                                     name="uf"
                                     placeholder="Ex: SP"
                                     maxlength="2"
+                                    oninput="this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 2);"
                                     required>
                             </div>
 
                             <p class="input-help">
-                                Sigla do estado.
+                                Sigla do estado (2 letras).
                             </p>
                         </div>
 
@@ -292,6 +300,142 @@
 
         </div>
     </main>
+
+    <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
+    <script>
+        function mostrarMensagem(texto, tipo) {
+            var alerta = document.getElementById("alerta_mensagem");
+            if (!alerta) return;
+
+            alerta.className = tipo === "sucesso" ? "alert-feedback sucesso" : "alert-feedback erro";
+            alerta.innerHTML = texto;
+            alerta.style.display = "block";
+            alerta.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+
+        function limparMensagem() {
+            var alerta = document.getElementById("alerta_mensagem");
+            if (!alerta) return;
+            alerta.style.display = "none";
+            alerta.innerHTML = "";
+        }
+
+        function cadastrarConcessionaria(event) {
+            if (event) {
+                event.preventDefault();
+            }
+
+            limparMensagem();
+
+            var inputNomePraca = document.getElementById("ipt_nome_praca");
+            var inputRodovia = document.getElementById("ipt_rodovia");
+            var inputKm = document.getElementById("ipt_km");
+            var inputCidade = document.getElementById("ipt_cidade");
+            var inputUf = document.getElementById("ipt_uf");
+            var btnCadastrar = document.getElementById("btn_cadastrar");
+
+            var nomePracaVar = inputNomePraca.value.trim();
+            var rodoviaVar = inputRodovia.value.trim();
+            var kmVar = inputKm.value.trim();
+            var cidadeVar = inputCidade.value.trim();
+            var ufVar = inputUf.value.trim().toUpperCase();
+            var empresaVar = sessionStorage.getItem("FK_EMPRESA") || sessionStorage.getItem("EMPRESA_CADASTRADA_ID");
+
+            // Validações no cliente
+            if (!empresaVar) {
+                mostrarMensagem("Nenhuma empresa identificada na sua sessão. Por favor, faça login novamente.", "erro");
+                return false;
+            }
+
+            if (!nomePracaVar) {
+                mostrarMensagem("Por favor, informe o Nome da Praça de Pedágio.", "erro");
+                inputNomePraca.focus();
+                return false;
+            }
+
+            if (nomePracaVar.length < 3) {
+                mostrarMensagem("O nome da praça deve conter ao menos 3 caracteres.", "erro");
+                inputNomePraca.focus();
+                return false;
+            }
+
+            if (!rodoviaVar) {
+                mostrarMensagem("Por favor, informe a Rodovia (Ex: SP-330).", "erro");
+                inputRodovia.focus();
+                return false;
+            }
+
+            if (kmVar === "" || isNaN(Number(kmVar)) || Number(kmVar) < 0) {
+                mostrarMensagem("Por favor, informe uma Quilometragem (Km) válida e positiva.", "erro");
+                inputKm.focus();
+                return false;
+            }
+
+            if (!cidadeVar) {
+                mostrarMensagem("Por favor, informe a Cidade.", "erro");
+                inputCidade.focus();
+                return false;
+            }
+
+            if (!ufVar || ufVar.length !== 2) {
+                mostrarMensagem("Por favor, informe uma UF válida com 2 letras (Ex: SP, RJ, MG).", "erro");
+                inputUf.focus();
+                return false;
+            }
+
+            // Desabilita botão enquanto envia requisição
+            var textoOriginalBtn = btnCadastrar.innerHTML;
+            btnCadastrar.disabled = true;
+            btnCadastrar.style.opacity = "0.7";
+            btnCadastrar.innerHTML = "Cadastrando praça de pedágio...";
+
+            fetch("/concessionarias/cadastrar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nomePracaServer: nomePracaVar,
+                    rodoviaServer: rodoviaVar,
+                    kmServer: Number(kmVar),
+                    cidadeServer: cidadeVar,
+                    ufServer: ufVar,
+                    empresaServer: Number(empresaVar)
+                })
+            })
+            .then(function (resposta) {
+                if (resposta.ok) {
+                    mostrarMensagem("Praça de pedágio cadastrada com sucesso! Redirecionando...", "sucesso");
+
+                    inputNomePraca.value = "";
+                    inputRodovia.value = "";
+                    inputKm.value = "";
+                    inputCidade.value = "";
+                    inputUf.value = "";
+
+                    setTimeout(function () {
+                        window.location.href = "concessionarias.html";
+                    }, 1800);
+                } else {
+                    resposta.text().then(function (mensagemErro) {
+                        mostrarMensagem("Erro ao cadastrar: " + mensagemErro, "erro");
+                    });
+                    btnCadastrar.disabled = false;
+                    btnCadastrar.style.opacity = "1";
+                    btnCadastrar.innerHTML = textoOriginalBtn;
+                }
+            })
+            .catch(function (erro) {
+                console.error("Erro na requisição:", erro);
+                mostrarMensagem("Erro ao tentar conectar ao servidor. Verifique sua conexão.", "erro");
+                btnCadastrar.disabled = false;
+                btnCadastrar.style.opacity = "1";
+                btnCadastrar.innerHTML = textoOriginalBtn;
+            });
+
+            return false;
+        }
+    </script>
 
 </body>
 

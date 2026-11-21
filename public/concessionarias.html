@@ -36,7 +36,7 @@
 
         <div class="topbar-user">
             <div class="user-pill">
-                <span id="nome_usuario_header">Danilo Vrena</span>
+                <span id="nome_usuario_header">Usuário</span>
                 <div class="user-avatar" title="Perfil do Usuário">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="kpi-value-row">
-                    <span class="kpi-number" id="kpi_total">6</span>
+                    <span class="kpi-number" id="kpi_total">0</span>
                     <span class="kpi-unit">Cadastradas</span>
                 </div>
                 <span class="kpi-badge">sorvesys_db • Concessões</span>
@@ -103,7 +103,7 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="ipt_busca" placeholder="Buscar por nome da concessionária" oninput="filtrarTabela()">
+                <input type="text" id="ipt_busca" placeholder="Buscar por nome da concessionária ou cidade" oninput="filtrarTabela()">
             </div>
 
             <div class="filter-actions">
@@ -111,10 +111,6 @@
                     <span class="filter-label">RODOVIA:</span>
                     <select id="slt_rodovia" class="select-pill" onchange="filtrarTabela()">
                         <option value="">Todas as Rodovias</option>
-                        <option value="SP-348">SP-348 (Rod. Bandeirantes)</option>
-                        <option value="BR-116">BR-116 (Dutra)</option>
-                        <option value="SP-330">SP-330 (Anhanguera)</option>
-                        <option value="SP-280">SP-280 (Castello Branco)</option>
                     </select>
                 </div>
 
@@ -143,288 +139,10 @@
                         </tr>
                     </thead>
                     <tbody id="lista_concessionarias">
-                        <!-- Linha 1 -->
-                        <tr data-nome="CCR DANILO" data-rodovia="SP-348">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <path d="M8 12a4 4 0 0 0 8 0"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <div class="item-title-row">
-                                            <span class="item-title">CCR DANILO</span>
-                                            <span class="id-badge">ID: 100</span>
-                                        </div>
-                                        <span class="item-subtitle">Concessão Pista Expressa &amp; Borda</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    45.123.090/0001-12
-                                    <button class="copy-btn" onclick="copiarTexto('45.123.090/0001-12')" title="Copiar CNPJ">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-road">
-                                    <strong>SP-348</strong> (Rod. Bandeirantes)
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-km">Km 142.0</span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerConcessionaria(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'CCR DANILO')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Linha 2 -->
-                        <tr data-nome="ViaPaulista Infra" data-rodovia="BR-116">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="11" width="18" height="9" rx="2"></rect>
-                                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <div class="item-title-row">
-                                            <span class="item-title">ViaPaulista Infra</span>
-                                            <span class="id-badge">ID: 102</span>
-                                        </div>
-                                        <span class="item-subtitle">Pórticos Free-Flow Integrados</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    20.941.502/0001-24
-                                    <button class="copy-btn" onclick="copiarTexto('20.941.502/0001-24')" title="Copiar CNPJ">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-road">
-                                    <strong>BR-116</strong> (Rod. Pres. Dutra)
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-km">Km 88.5</span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerConcessionaria(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'ViaPaulista Infra')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Linha 3 -->
-                        <tr data-nome="AutoBandeirantes S.A." data-rodovia="SP-330">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="3"></circle>
-                                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <div class="item-title-row">
-                                            <span class="item-title">AutoBandeirantes S.A.</span>
-                                            <span class="id-badge">ID: 103</span>
-                                        </div>
-                                        <span class="item-subtitle">Data Hub Central &amp; Telemetria</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    19.382.611/0001-56
-                                    <button class="copy-btn" onclick="copiarTexto('19.382.611/0001-56')" title="Copiar CNPJ">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-road">
-                                    <strong>SP-330</strong> (Anhanguera)
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-km">Km 38.0</span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerConcessionaria(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'AutoBandeirantes S.A.')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Linha 4 -->
-                        <tr data-nome="Roda das Colinas" data-rodovia="BR-116">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M18 20V10"></path>
-                                            <path d="M12 20V4"></path>
-                                            <path d="M6 20v-6"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <div class="item-title-row">
-                                            <span class="item-title">Roda das Colinas</span>
-                                            <span class="id-badge">ID: 104</span>
-                                        </div>
-                                        <span class="item-subtitle">CCR &amp; Câmeras LPR Rodoviárias</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    33.712.905/0001-78
-                                    <button class="copy-btn" onclick="copiarTexto('33.712.905/0001-78')" title="Copiar CNPJ">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-road">
-                                    <strong>BR-116</strong> (Dutra)
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-km">Km 162.0</span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerConcessionaria(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Roda das Colinas')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Linha 5 -->
-                        <tr data-nome="EcoRodovias Norte" data-rodovia="SP-330">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="9" cy="7" r="4"></circle>
-                                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <div class="item-title-row">
-                                            <span class="item-title">EcoRodovias Norte</span>
-                                            <span class="id-badge">ID: 105</span>
-                                        </div>
-                                        <span class="item-subtitle">Cabines de Cobrança 01 a 06</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    50.844.119/0001-02
-                                    <button class="copy-btn" onclick="copiarTexto('50.844.119/0001-02')" title="Copiar CNPJ">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-road">
-                                    <strong>SP-330</strong> (Anhanguera)
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-km">Km 64.0</span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerConcessionaria(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'EcoRodovias Norte')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Linha 6 -->
-                        <tr data-nome="Rota do Oeste Malha" data-rodovia="SP-280">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                            <path d="M2 17l10 5 10-5"></path>
-                                            <path d="M2 12l10 5 10-5"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <div class="item-title-row">
-                                            <span class="item-title">Rota do Oeste Malha</span>
-                                            <span class="id-badge">ID: 106</span>
-                                        </div>
-                                        <span class="item-subtitle">Subestação e Controladores</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    61.229.403/0001-59
-                                    <button class="copy-btn" onclick="copiarTexto('61.229.403/0001-59')" title="Copiar CNPJ">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-road">
-                                    <strong>SP-280</strong> (Castello Branco)
-                                </span>
-                            </td>
-                            <td>
-                                <span class="badge-km">Km 135.0</span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerConcessionaria(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Rota do Oeste Malha')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 48px; color: #94A3B8;">
+                                <div style="display: inline-flex; align-items: center; gap: 10px; font-weight: 500;">
+                                    Carregando dados das concessionárias...
                                 </div>
                             </td>
                         </tr>
@@ -435,7 +153,7 @@
             <!-- Paginação do Rodapé -->
             <div class="table-footer">
                 <span class="table-info">
-                    Mostrando <strong id="contador_mostrados">6</strong> de <strong id="contador_total">6</strong> Concessionárias cadastradas
+                    Mostrando <strong id="contador_mostrados">0</strong> de <strong id="contador_total">0</strong> Concessionárias cadastradas
                 </span>
 
                 <div class="pagination">
@@ -462,7 +180,7 @@
                 </div>
                 <div class="drawer-title-group">
                     <h3 class="drawer-title">Configurar Concessionária</h3>
-                    <span class="drawer-subtitle" id="drawer_conc_subtitulo">ID 101 - CCR DANILO (ANTT Res. 5.862)</span>
+                    <span class="drawer-subtitle" id="drawer_conc_subtitulo">Editar dados da praça</span>
                 </div>
             </div>
             <button type="button" class="btn-close-drawer" onclick="fecharDrawer()" aria-label="Fechar">
@@ -474,57 +192,76 @@
         </div>
 
         <form class="drawer-body" id="form_drawer_conc" onsubmit="return salvarDrawerConcessionaria(event)">
+            <input type="hidden" id="drawer_conc_id">
+
             <!-- Seção 1: Identificação Básica -->
             <div class="drawer-section">
                 <div class="drawer-section-header">
                     <span class="drawer-section-title">1. IDENTIFICAÇÃO BÁSICA</span>
-                    <span class="badge-dev">id INT AUTO_INCREMENT</span>
+                    <span class="badge-dev">Campos da Concessão</span>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_conc_nome" class="drawer-label">Nome da Concessionária *</label>
-                    <input type="text" id="drawer_conc_nome" class="drawer-input" required>
+                    <label for="drawer_conc_nome" class="drawer-label">Nome da Praça / Concessionária *</label>
+                    <input type="text" id="drawer_conc_nome" class="drawer-input" placeholder="Ex: Praça de Pedágio Campinas" required>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_conc_cnpj" class="drawer-label">CNPJ Corporativo *</label>
-                    <input type="text" id="drawer_conc_cnpj" class="drawer-input" maxlength="18" oninput="mascararCnpj(this)" required>
-                    <p class="drawer-help">Formato estrito conforme cadastro da Receita Federal e ANTT.</p>
+                    <label for="drawer_conc_empresa" class="drawer-label">Empresa Concessionária</label>
+                    <input type="text" id="drawer_conc_empresa" class="drawer-input" readonly disabled style="opacity: 0.75; cursor: not-allowed; background-color: #f1f5f9;">
+                    <p class="drawer-help">Empresa titular vinculada à praça (somente leitura).</p>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_conc_cnpj" class="drawer-label">CNPJ Corporativo</label>
+                    <input type="text" id="drawer_conc_cnpj" class="drawer-input" readonly disabled style="opacity: 0.75; cursor: not-allowed; background-color: #f1f5f9;">
+                    <p class="drawer-help">CNPJ registrado na Receita Federal / ANTT.</p>
                 </div>
             </div>
 
             <!-- Seção 2: Marco Geográfico & Rodovia -->
             <div class="drawer-section">
                 <div class="drawer-section-header">
-                    <span class="drawer-section-title">2. MARCO GEOGRÁFICO &amp; RODOVIA</span>
+                    <span class="drawer-section-title">2. MARCO GEOGRÁFICO &amp; LOCALIZAÇÃO</span>
                     <span class="badge-antt">Campos Obrigatórios ANTT</span>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_conc_rodovia" class="drawer-label">Rodovia *</label>
-                    <input type="text" id="drawer_conc_rodovia" class="drawer-input" required>
+                    <label for="drawer_conc_rodovia" class="drawer-label">Rodovia Concedida *</label>
+                    <input type="text" id="drawer_conc_rodovia" class="drawer-input" placeholder="Ex: SP-330" required>
                 </div>
 
                 <div class="drawer-field">
                     <label for="drawer_conc_km" class="drawer-label">Quilometragem (Km) *</label>
                     <div class="drawer-input-with-suffix">
-                        <input type="text" id="drawer_conc_km" class="drawer-input" required>
+                        <input type="number" step="0.01" min="0" id="drawer_conc_km" class="drawer-input" placeholder="Ex: 88.5" required>
                         <span class="drawer-suffix">KM</span>
                     </div>
-                    <p class="drawer-help">Indicação exata do ponto quilométrico da concessão ou praça de cobrança.</p>
+                    <p class="drawer-help">Indicação exata do ponto quilométrico da praça.</p>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_conc_cidade" class="drawer-label">Cidade / Município *</label>
+                    <input type="text" id="drawer_conc_cidade" class="drawer-input" placeholder="Ex: Campinas" required>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_conc_uf" class="drawer-label">UF (Estado) *</label>
+                    <input type="text" id="drawer_conc_uf" class="drawer-input" maxlength="2" placeholder="Ex: SP" oninput="this.value = this.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 2);" required>
                 </div>
             </div>
         </form>
 
         <div class="drawer-footer">
             <button type="button" class="btn-drawer-cancel" onclick="fecharDrawer()">Cancelar</button>
-            <button type="submit" form="form_drawer_conc" class="btn-drawer-save">Salvar Alterações</button>
+            <button type="submit" form="form_drawer_conc" id="btn_salvar_drawer" class="btn-drawer-save">Salvar Alterações</button>
         </div>
     </aside>
 
     <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
     <script>
         var linhaEmEdicao = null;
+        var listaConcessionariasCache = [];
 
         document.addEventListener("DOMContentLoaded", function () {
             var nomeSession = sessionStorage.getItem("NOME_USUARIO");
@@ -532,33 +269,182 @@
                 var el = document.getElementById("nome_usuario_header");
                 if (el) el.innerText = nomeSession;
             }
-            atualizarContadores();
+            carregarConcessionarias();
         });
+
+        function formatarCnpjTabela(cnpj) {
+            if (!cnpj) return "";
+            var v = String(cnpj).replace(/\D/g, "");
+            if (v.length === 14) {
+                return v.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, "$1.$2.$3/$4-$5");
+            }
+            return cnpj;
+        }
+
+            function carregarConcessionarias() {
+                var idEmpresa = sessionStorage.getItem("FK_EMPRESA");
+                var url = idEmpresa ? ("/concessionarias/empresa/" + idEmpresa) : "/concessionarias/listar";
+
+                fetch(url)
+                    .then(function (res) {
+                        if (!res.ok) throw new Error("Erro status " + res.status);
+                        return res.json();
+                    })
+                    .then(function (lista) {
+                        listaConcessionariasCache = Array.isArray(lista) ? lista : [];
+                        renderizarTabela(listaConcessionariasCache);
+                        atualizarSelectRodovias(listaConcessionariasCache);
+                    })
+                    .catch(function (err) {
+                       console.error("Falha em", url, "->", err.message);
+                        var tbody = document.getElementById("lista_concessionarias");
+                        if (tbody) {
+                            tbody.innerHTML = `
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 40px; color: #DC2626;">
+                                        Não foi possível carregar as concessionárias.<br>
+                                        <small style="color: #64748B;">${err.message} (${url})</small>
+                                    </td>
+                                </tr>`;
+                        }
+                        atualizarContadores(0);
+                    });
+            }
+
+        function renderizarTabela(lista) {
+            var tbody = document.getElementById("lista_concessionarias");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 48px; color: #64748B;">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                <strong style="color: #1E293B; font-size: 15px;">Nenhuma concessionária encontrada</strong>
+                                <span>Cadastre uma praça de pedágio clicando em "+ Adicionar Nova Concessionária".</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                atualizarContadores(0);
+                return;
+            }
+
+            lista.forEach(function (c) {
+                var cnpjFormatado = formatarCnpjTabela(c.cnpj);
+                var tr = document.createElement("tr");
+
+                tr.setAttribute("data-id", c.id);
+                tr.setAttribute("data-nome", c.nome_praca || "");
+                tr.setAttribute("data-rodovia", c.rodovia || "");
+                tr.setAttribute("data-km", c.km != null ? c.km : "");
+                tr.setAttribute("data-cidade", c.cidade || "");
+                tr.setAttribute("data-uf", c.uf || "");
+                tr.setAttribute("data-empresa", c.nome_fantasia || c.razao_social || "");
+                tr.setAttribute("data-cnpj", cnpjFormatado);
+
+                var nomeEmpresa = c.nome_fantasia || c.razao_social || "Empresa Titular";
+                var localizacao = (c.cidade && c.uf) ? (c.cidade + "/" + c.uf) : (c.cidade || c.uf || "");
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="cell-identificacao">
+                            <div class="item-icon-box">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M8 12a4 4 0 0 0 8 0"></path>
+                                </svg>
+                            </div>
+                            <div class="item-text-group">
+                                <div class="item-title-row">
+                                    <span class="item-title">${c.nome_praca}</span>
+                                    <span class="id-badge">ID: ${c.id}</span>
+                                </div>
+                                <span class="item-subtitle">${nomeEmpresa}${localizacao ? ' • ' + localizacao : ''}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-code">
+                            ${cnpjFormatado || 'Sem CNPJ'}
+                            ${cnpjFormatado ? `
+                            <button class="copy-btn" onclick="copiarTexto('${cnpjFormatado}')" title="Copiar CNPJ">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>` : ''}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge-road">
+                            <strong>${c.rodovia}</strong>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge-km">Km ${c.km != null ? Number(c.km).toFixed(1) : '0.0'}</span>
+                    </td>
+                    <td style="text-align: right; padding-right: 24px;">
+                        <div class="action-buttons" style="justify-content: flex-end;">
+                            <button class="btn-icon-action" onclick="abrirDrawerConcessionaria(this)" title="Editar Concessionária">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                            <button class="btn-icon-action delete" onclick="excluirConcessionaria(${c.id}, '${(c.nome_praca || '').replace(/'/g, "\\'")}')" title="Excluir Concessionária">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            atualizarContadores();
+            filtrarTabela();
+        }
+
+        function atualizarSelectRodovias(lista) {
+            var select = document.getElementById("slt_rodovia");
+            if (!select) return;
+
+            var rodoviaSelecionada = select.value;
+            var rodovias = [];
+            lista.forEach(function (c) {
+                if (c.rodovia && !rodovias.includes(c.rodovia)) {
+                    rodovias.push(c.rodovia);
+                }
+            });
+
+            select.innerHTML = '<option value="">Todas as Rodovias</option>';
+            rodovias.sort().forEach(function (rod) {
+                var opt = document.createElement("option");
+                opt.value = rod;
+                opt.textContent = rod;
+                if (rod === rodoviaSelecionada) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
 
         function abrirDrawerConcessionaria(btn) {
             var tr = btn.closest("tr");
             if (!tr) return;
             linhaEmEdicao = tr;
 
-            var titleEl = tr.querySelector(".item-title");
-            var idEl = tr.querySelector(".id-badge");
-            var cnpjEl = tr.querySelector(".badge-code");
-            var roadEl = tr.querySelector(".badge-road");
-            var kmEl = tr.querySelector(".badge-km");
+            var id = tr.getAttribute("data-id") || "";
+            var nome = tr.getAttribute("data-nome") || "";
+            var rodovia = tr.getAttribute("data-rodovia") || "";
+            var km = tr.getAttribute("data-km") || "";
+            var cidade = tr.getAttribute("data-cidade") || "";
+            var uf = tr.getAttribute("data-uf") || "";
+            var empresa = tr.getAttribute("data-empresa") || "Empresa Titular";
+            var cnpj = tr.getAttribute("data-cnpj") || "";
 
-            var nome = titleEl ? titleEl.innerText.trim() : "";
-            var id = idEl ? idEl.innerText.trim() : "ID: --";
-            var cnpj = cnpjEl ? cnpjEl.innerText.replace(/[\r\n\t]+/g, ' ').trim() : "";
-            // Remove botão copy do texto do cnpj se houver
-            cnpj = cnpj.split(" ")[0] || cnpj;
-            var rodovia = roadEl ? roadEl.innerText.trim() : "";
-            var km = kmEl ? kmEl.innerText.replace(/[^\d.]/g, '').trim() : "";
-
-            document.getElementById("drawer_conc_subtitulo").innerText = id + " - " + nome + " (ANTT Res. 5.862)";
+            document.getElementById("drawer_conc_id").value = id;
+            document.getElementById("drawer_conc_subtitulo").innerText = "ID " + id + " - " + nome + " (ANTT Res. 5.862)";
             document.getElementById("drawer_conc_nome").value = nome;
+            document.getElementById("drawer_conc_empresa").value = empresa;
             document.getElementById("drawer_conc_cnpj").value = cnpj;
             document.getElementById("drawer_conc_rodovia").value = rodovia;
             document.getElementById("drawer_conc_km").value = km;
+            document.getElementById("drawer_conc_cidade").value = cidade;
+            document.getElementById("drawer_conc_uf").value = uf;
 
             document.getElementById("drawer_overlay").classList.add("ativo");
             document.getElementById("drawer_panel").classList.add("ativo");
@@ -574,43 +460,93 @@
 
         function salvarDrawerConcessionaria(event) {
             if (event) event.preventDefault();
-            if (!linhaEmEdicao) return false;
 
+            var id = document.getElementById("drawer_conc_id").value;
             var novoNome = document.getElementById("drawer_conc_nome").value.trim();
-            var novoCnpj = document.getElementById("drawer_conc_cnpj").value.trim();
             var novaRodovia = document.getElementById("drawer_conc_rodovia").value.trim();
             var novoKm = document.getElementById("drawer_conc_km").value.trim();
+            var novaCidade = document.getElementById("drawer_conc_cidade").value.trim();
+            var novaUf = document.getElementById("drawer_conc_uf").value.trim().toUpperCase();
 
-            if (!novoNome || !novoCnpj || !novaRodovia || !novoKm) {
-                alert("Por favor, preencha todos os campos obrigatórios.");
+            if (!id) {
+                alert("Identificador da concessionária não encontrado.");
                 return false;
             }
 
-            var titleEl = linhaEmEdicao.querySelector(".item-title");
-            if (titleEl) titleEl.innerText = novoNome;
-            linhaEmEdicao.setAttribute("data-nome", novoNome);
-
-            var codeEl = linhaEmEdicao.querySelector(".badge-code");
-            if (codeEl) {
-                codeEl.innerHTML = novoCnpj + 
-                    '<button class="copy-btn" onclick="copiarTexto(\'' + novoCnpj + '\')" title="Copiar CNPJ">' +
-                    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' +
-                    '</button>';
+            if (!novoNome || !novaRodovia || novoKm === "" || !novaCidade || !novaUf) {
+                alert("Por favor, preencha todos os campos obrigatórios (*).");
+                return false;
             }
 
-            var roadEl = linhaEmEdicao.querySelector(".badge-road");
-            if (roadEl) {
-                roadEl.innerHTML = '<strong>' + novaRodovia.split(' ')[0] + '</strong> ' + (novaRodovia.includes(' ') ? novaRodovia.substring(novaRodovia.indexOf(' ')) : '');
+            if (novaUf.length !== 2) {
+                alert("O campo UF deve conter exatamente 2 letras.");
+                return false;
             }
-            linhaEmEdicao.setAttribute("data-rodovia", novaRodovia);
 
-            var kmEl = linhaEmEdicao.querySelector(".badge-km");
-            if (kmEl) kmEl.innerText = "Km " + novoKm;
+            var btnSalvar = document.getElementById("btn_salvar_drawer");
+            if (btnSalvar) {
+                btnSalvar.disabled = true;
+                btnSalvar.innerText = "Salvando alterações...";
+            }
 
-            fecharDrawer();
-            filtrarTabela();
+            fetch("/concessionarias/editar/" + id, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nomePracaServer: novoNome,
+                    rodoviaServer: novaRodovia,
+                    kmServer: Number(novoKm),
+                    cidadeServer: novaCidade,
+                    ufServer: novaUf
+                })
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    return res.text().then(function (t) { throw new Error(t); });
+                }
+                return res.json();
+            })
+            .then(function () {
+                fecharDrawer();
+                carregarConcessionarias();
+            })
+            .catch(function (err) {
+                console.error("Erro ao salvar concessionária:", err);
+                alert("Erro ao salvar alterações: " + err.message);
+            })
+            .finally(function () {
+                if (btnSalvar) {
+                    btnSalvar.disabled = false;
+                    btnSalvar.innerText = "Salvar Alterações";
+                }
+            });
 
             return false;
+        }
+
+        function excluirConcessionaria(id, nome) {
+            if (!confirm("Deseja realmente excluir a concessionária '" + nome + "'?\n\nEsta ação removerá a praça de pedágio do banco de dados.")) {
+                return;
+            }
+
+            fetch("/concessionarias/excluir/" + id, {
+                method: "DELETE"
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    return res.text().then(function (msg) { throw new Error(msg); });
+                }
+                return res.json();
+            })
+            .then(function () {
+                carregarConcessionarias();
+            })
+            .catch(function (err) {
+                console.error("Erro ao excluir concessionária:", err);
+                alert("Não foi possível excluir:\n" + err.message);
+            });
         }
 
         function mascararCnpj(campo) {
@@ -640,9 +576,10 @@
             linhas.forEach(function (linha) {
                 var nome = (linha.getAttribute("data-nome") || "").toLowerCase();
                 var rodovia = (linha.getAttribute("data-rodovia") || "").toLowerCase();
+                var cidade = (linha.getAttribute("data-cidade") || "").toLowerCase();
                 var conteudoLinha = linha.innerText.toLowerCase();
 
-                var matchBusca = !textoBusca || conteudoLinha.includes(textoBusca) || nome.includes(textoBusca);
+                var matchBusca = !textoBusca || conteudoLinha.includes(textoBusca) || nome.includes(textoBusca) || cidade.includes(textoBusca);
                 var matchRodovia = !rodoviaFiltro || rodovia.includes(rodoviaFiltro);
 
                 if (matchBusca && matchRodovia) {
@@ -653,15 +590,19 @@
                 }
             });
 
-            document.getElementById("contador_mostrados").innerText = visiveis;
+            var elMostrados = document.getElementById("contador_mostrados");
+            if (elMostrados) elMostrados.innerText = visiveis;
         }
 
-        function atualizarContadores() {
-            var linhas = document.querySelectorAll("#lista_concessionarias tr");
-            var total = linhas.length;
-            document.getElementById("kpi_total").innerText = total;
-            document.getElementById("contador_total").innerText = total;
-            document.getElementById("contador_mostrados").innerText = total;
+        function atualizarContadores(totalForcado) {
+            var total = totalForcado !== undefined ? totalForcado : document.querySelectorAll("#lista_concessionarias tr[data-id]").length;
+            var elKpi = document.getElementById("kpi_total");
+            var elTotal = document.getElementById("contador_total");
+            var elMostrados = document.getElementById("contador_mostrados");
+
+            if (elKpi) elKpi.innerText = total;
+            if (elTotal) elTotal.innerText = total;
+            if (elMostrados) elMostrados.innerText = total;
         }
 
         function copiarTexto(texto) {
@@ -672,31 +613,21 @@
             });
         }
 
-        function excluirLinha(btn, nome) {
-            if (confirm("Deseja realmente remover a concessionária '" + nome + "' do sistema?")) {
-                var tr = btn.closest("tr");
-                if (tr) {
-                    tr.remove();
-                    atualizarContadores();
-                    filtrarTabela();
-                }
-            }
-        }
-
         function exportarDados() {
-            var linhas = document.querySelectorAll("#lista_concessionarias tr");
-            var csv = "Nome,CNPJ,Rodovia,KM\n";
+            var linhas = document.querySelectorAll("#lista_concessionarias tr[data-id]");
+            var csv = "ID,Nome,CNPJ,Rodovia,KM,Cidade,UF\n";
 
             linhas.forEach(function (linha) {
                 if (linha.style.display !== "none") {
-                    var cols = linha.querySelectorAll("td");
-                    if (cols.length >= 4) {
-                        var nome = cols[0].querySelector(".item-title") ? cols[0].querySelector(".item-title").innerText.trim() : "";
-                        var cnpj = cols[1].querySelector(".badge-code") ? cols[1].querySelector(".badge-code").innerText.trim().replace(/\s+/g, ' ') : "";
-                        var rodovia = cols[2].innerText.trim();
-                        var km = cols[3].innerText.trim();
-                        csv += '"' + nome + '","' + cnpj + '","' + rodovia + '","' + km + '"\n';
-                    }
+                    var id = linha.getAttribute("data-id") || "";
+                    var nome = linha.getAttribute("data-nome") || "";
+                    var cnpj = linha.getAttribute("data-cnpj") || "";
+                    var rodovia = linha.getAttribute("data-rodovia") || "";
+                    var km = linha.getAttribute("data-km") || "";
+                    var cidade = linha.getAttribute("data-cidade") || "";
+                    var uf = linha.getAttribute("data-uf") || "";
+
+                    csv += `"${id}","${nome}","${cnpj}","${rodovia}","${km}","${cidade}","${uf}"\n`;
                 }
             });
 
