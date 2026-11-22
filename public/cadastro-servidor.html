@@ -225,10 +225,32 @@
             var selectEmpresa = document.getElementById("slt_empresa");
             if (!selectEmpresa) return;
 
-            var idEmpresa = sessionStorage.getItem("FK_EMPRESA");
+            var idEmpresa = sessionStorage.getItem("FK_EMPRESA") || sessionStorage.getItem("EMPRESA_CADASTRADA_ID");
             var url = (idEmpresa && idEmpresa !== "null" && idEmpresa !== "undefined" && !isNaN(Number(idEmpresa)))
                 ? ("/concessionarias/empresa/" + idEmpresa)
                 : "/concessionarias/listar";
+
+            function popularSelect(concessionarias) {
+                selectEmpresa.innerHTML = '<option value="">Selecione a praça / concessionária...</option>';
+
+                if (!Array.isArray(concessionarias) || concessionarias.length === 0) {
+                    selectEmpresa.innerHTML = '<option value="">Nenhuma praça encontrada. Cadastre uma concessionária primeiro.</option>';
+                    return;
+                }
+
+                concessionarias.forEach(function (c) {
+                    var opcao = document.createElement("option");
+                    opcao.value = c.id;
+                    var detalhes = [];
+                    if (c.rodovia) detalhes.push(c.rodovia + (c.km != null ? " Km " + Number(c.km).toFixed(1) : ""));
+                    if (c.cidade) detalhes.push(c.cidade);
+                    if (c.uf) detalhes.push(c.uf);
+
+                    var nomeExibicao = c.nome_praca + (detalhes.length > 0 ? " (" + detalhes.join(" • ") + ")" : "");
+                    opcao.textContent = nomeExibicao;
+                    selectEmpresa.appendChild(opcao);
+                });
+            }
 
             fetch(url)
                 .then(function (resposta) {
@@ -238,24 +260,27 @@
                     return resposta.json();
                 })
                 .then(function (concessionarias) {
-                    selectEmpresa.innerHTML = '<option value="">Selecione a praça / concessionária...</option>';
-
-                    if (!Array.isArray(concessionarias) || concessionarias.length === 0) {
-                        selectEmpresa.innerHTML = '<option value="">Nenhuma praça encontrada. Cadastre uma concessionária primeiro.</option>';
-                        return;
+                    if ((!Array.isArray(concessionarias) || concessionarias.length === 0) && url !== "/concessionarias/listar") {
+                        return fetch("/concessionarias/listar")
+                            .then(function (r) { return r.json(); })
+                            .then(function (todas) {
+                                popularSelect(todas);
+                            });
                     }
-
-                    concessionarias.forEach(function (c) {
-                        var opcao = document.createElement("option");
-                        opcao.value = c.id;
-                        var nomeExibicao = c.nome_praca + " (" + c.rodovia + (c.km != null ? " Km " + Number(c.km).toFixed(1) : "") + (c.cidade ? " • " + c.cidade : "") + ")";
-                        opcao.textContent = nomeExibicao;
-                        selectEmpresa.appendChild(opcao);
-                    });
+                    popularSelect(concessionarias);
                 })
                 .catch(function (erro) {
                     console.error("Aviso ao carregar concessionárias:", erro);
-                    selectEmpresa.innerHTML = '<option value="">Erro ao carregar praças de pedágio</option>';
+                    // Tentativa de fallback direto em caso de falha de rota
+                    fetch("/concessionarias/listar")
+                        .then(function (r) { return r.json(); })
+                        .then(function (todas) {
+                            popularSelect(todas);
+                        })
+                        .catch(function (errFinal) {
+                            console.error("Erro final ao carregar concessionárias:", errFinal);
+                            selectEmpresa.innerHTML = '<option value="">Erro ao carregar praças de pedágio</option>';
+                        });
                 });
         }
 
@@ -323,10 +348,6 @@
                 .catch(function (erro) {
                     console.error(erro);
                     mostrarMensagem("Erro ao tentar cadastrar o servidor!", false);
-                });
-
-            return false;
-        }
                 });
 
             return false;
