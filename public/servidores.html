@@ -36,7 +36,7 @@
 
         <div class="topbar-user">
             <div class="user-pill">
-                <span id="nome_usuario_header">Danilo Vrena</span>
+                <span id="nome_usuario_header">Usuário</span>
                 <div class="user-avatar" title="Perfil do Usuário">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -67,23 +67,63 @@
             </a>
         </div>
 
-        <!-- Barra de Filtros e Busca (conforme layout da imagem 3) -->
-        <div class="filter-bar" style="margin-top: 10px;">
+        <!-- KPI Resumo -->
+        <div class="kpi-row">
+            <!-- Card 1: Total de Servidores -->
+            <div class="kpi-card" style="min-width: 260px;">
+                <div class="kpi-card-header">
+                    <span class="kpi-label">TOTAL DE SERVIDORES</span>
+                    <div class="kpi-icon-box blue">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number" id="kpi_servidores">0</span>
+                    <span class="kpi-unit">hosts monitorados</span>
+                </div>
+            </div>
+
+            <!-- Card 2: Praças de Pedágio -->
+            <div class="kpi-card" style="min-width: 260px;">
+                <div class="kpi-card-header">
+                    <span class="kpi-label">PRAÇAS COM SERVIDORES</span>
+                    <div class="kpi-icon-box purple">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M8 12a4 4 0 0 0 8 0"></path>
+                        </svg>
+                    </div>
+                </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number" id="kpi_pracas">0</span>
+                    <span class="kpi-unit">praças ativas</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra de Filtros e Busca -->
+        <div class="filter-bar">
             <div class="search-box">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="ipt_busca" placeholder="Buscar por hostname" oninput="filtrarServidores()">
+                <input type="text" id="ipt_busca" placeholder="Buscar por host, IP, praça ou rodovia..." oninput="filtrarServidores()">
             </div>
 
             <div class="filter-actions">
                 <div class="filter-group">
-                    <span class="filter-label">STATUS:</span>
-                    <select id="slt_status" class="select-pill" onchange="filtrarServidores()">
-                        <option value="">Todos os Estados</option>
-                        <option value="Operacional">Operacional</option>
-                        <option value="Atenção">Atenção</option>
+                    <span class="filter-label">TIPO:</span>
+                    <select id="slt_tipo" class="select-pill" onchange="filtrarServidores()">
+                        <option value="">Todos os Tipos</option>
+                        <option value="transito">Trânsito</option>
+                        <option value="pagamento">Pagamento</option>
+                        <option value="auditoria">Auditoria</option>
                     </select>
                 </div>
 
@@ -91,11 +131,17 @@
                     <span class="filter-label">RODOVIA:</span>
                     <select id="slt_rodovia" class="select-pill" onchange="filtrarServidores()">
                         <option value="">Todas as Rodovias</option>
-                        <option value="SP-348">SP-348 (Rod. Bandeirantes)</option>
-                        <option value="BR-116">BR-116 (Dutra)</option>
-                        <option value="SP-330">SP-330 (Anhanguera)</option>
                     </select>
                 </div>
+
+                <button type="button" class="btn-export" onclick="exportarRelatorio()">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Exportar
+                </button>
             </div>
         </div>
 
@@ -106,304 +152,17 @@
                     <thead>
                         <tr>
                             <th>IDENTIFICAÇÃO DO SERVIDOR</th>
-                            <th>ENDEREÇO IP / PORTA</th>
-                            <th>LOCALIZAÇÃO / PRAÇA</th>
-                            <th>STATUS</th>
+                            <th>ENDEREÇO IP</th>
+                            <th>LOCALIZAÇÃO / PRAÇA DE PEDÁGIO</th>
+                            <th>TIPO OPERACIONAL</th>
                             <th style="text-align: right; padding-right: 30px;">AÇÕES DE GERENCIAMENTO</th>
                         </tr>
                     </thead>
                     <tbody id="lista_servidores">
-                        <!-- Servidor 1 -->
-                        <tr data-host="SRV-AU01" data-status="Operacional" data-rodovia="SP-348">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
-                                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
-                                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
-                                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <span class="item-title">SRV-AU01</span>
-                                        <span class="item-subtitle">Edge Rack Pista Expressa</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    192.168.10.45:8080
-                                    <button class="copy-btn" onclick="copiarTexto('192.168.10.45:8080')" title="Copiar IP e porta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">Praça Km 142 • Norte</span>
-                                    <span class="item-subtitle">SP-348 (Rod. Bandeirantes)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-pill operacional">
-                                    <span class="status-dot"></span>
-                                    Operacional
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU01')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Servidor 2 (Destaque Atenção com fundo pêssego) -->
-                        <tr class="row-warning" data-host="SRV-AU02" data-status="Atenção" data-rodovia="BR-116">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box orange-accent">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="8" x2="12" y2="12"></line>
-                                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <span class="item-title warning">SRV-AU02</span>
-                                        <span class="item-subtitle" style="color: #B45309;">Free-Flow Gateway 01</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code" style="border-color: #FCD34D;">
-                                    192.168.12.30:9100
-                                    <button class="copy-btn" onclick="copiarTexto('192.168.12.30:9100')" title="Copiar IP e porta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">Pórtico 04 - Km 88</span>
-                                    <span class="item-subtitle">BR-116 (Rod. Pres. Dutra)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-pill atencao">
-                                    <span class="status-dot"></span>
-                                    Atenção
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU02')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Servidor 3 -->
-                        <tr data-host="SRV-AU03" data-status="Operacional" data-rodovia="SP-330">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <circle cx="12" cy="12" r="4"></circle>
-                                            <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <span class="item-title">SRV-AU03</span>
-                                        <span class="item-subtitle">Telemetria ANTT Res. 5.862</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    192.168.10.99:443
-                                    <button class="copy-btn" onclick="copiarTexto('192.168.10.99:443')" title="Copiar IP e porta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">Data Hub Central • Km 38</span>
-                                    <span class="item-subtitle">SP-330 (Anhanguera)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-pill operacional">
-                                    <span class="status-dot"></span>
-                                    Operacional
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU03')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Servidor 4 -->
-                        <tr data-host="SRV-AU04" data-status="Operacional" data-rodovia="BR-116">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
-                                            <circle cx="12" cy="13" r="4"></circle>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <span class="item-title">SRV-AU04</span>
-                                        <span class="item-subtitle">OCR &amp; Reconhecimento LPR</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    192.168.14.22:5000
-                                    <button class="copy-btn" onclick="copiarTexto('192.168.14.22:5000')" title="Copiar IP e porta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">Praça Sul • Km 162</span>
-                                    <span class="item-subtitle">BR-116 (Dutra)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-pill operacional">
-                                    <span class="status-dot"></span>
-                                    Operacional
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU04')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Servidor 5 -->
-                        <tr data-host="SRV-AU05" data-status="Operacional" data-rodovia="SP-330">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
-                                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
-                                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
-                                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <span class="item-title">SRV-AU05</span>
-                                        <span class="item-subtitle">Controlador Pista Cobrança</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    192.168.18.11:8000
-                                    <button class="copy-btn" onclick="copiarTexto('192.168.18.11:8000')" title="Copiar IP e porta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">Cabines 01 a 06 - Km 64</span>
-                                    <span class="item-subtitle">SP-330 (Anhanguera)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-pill operacional">
-                                    <span class="status-dot"></span>
-                                    Operacional
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU05')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Servidor 6 -->
-                        <tr data-host="SRV-AU06" data-status="Operacional" data-rodovia="SP-348">
-                            <td>
-                                <div class="cell-identificacao">
-                                    <div class="item-icon-box">
-                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
-                                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
-                                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
-                                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
-                                        </svg>
-                                    </div>
-                                    <div class="item-text-group">
-                                        <span class="item-title">SRV-AU06</span>
-                                        <span class="item-subtitle">Backup Local &amp; Failover</span>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    192.168.10.250:22
-                                    <button class="copy-btn" onclick="copiarTexto('192.168.10.250:22')" title="Copiar IP e porta">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">Praça Km 142 • Subestação</span>
-                                    <span class="item-subtitle">SP-348 (Bandeirantes)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="status-pill operacional">
-                                    <span class="status-dot"></span>
-                                    Operacional
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'SRV-AU06')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 48px; color: #94A3B8;">
+                                <div style="display: inline-flex; align-items: center; gap: 10px; font-weight: 500;">
+                                    Carregando dados dos servidores...
                                 </div>
                             </td>
                         </tr>
@@ -414,7 +173,7 @@
             <!-- Paginação do Rodapé -->
             <div class="table-footer">
                 <span class="table-info">
-                    Mostrando <strong id="contador_mostrados">6</strong> de <strong id="contador_total">6</strong> Servidores da Concessionária
+                    Mostrando <strong id="contador_mostrados">0</strong> de <strong id="contador_total">0</strong> Servidores cadastrados
                 </span>
 
                 <div class="pagination">
@@ -443,7 +202,7 @@
                 </div>
                 <div class="drawer-title-group">
                     <h3 class="drawer-title">Configurar Servidor</h3>
-                    <span class="drawer-subtitle" id="drawer_srv_subtitulo">SRV-AU03 (Telemetria ANTT)</span>
+                    <span class="drawer-subtitle" id="drawer_srv_subtitulo">Editar parâmetros do host</span>
                 </div>
             </div>
             <button type="button" class="btn-close-drawer" onclick="fecharDrawer()" aria-label="Fechar">
@@ -455,47 +214,52 @@
         </div>
 
         <form class="drawer-body" id="form_drawer_srv" onsubmit="return salvarDrawerServidor(event)">
+            <input type="hidden" id="drawer_srv_id">
+
             <!-- Seção 1: Identificação Básica -->
             <div class="drawer-section">
                 <div class="drawer-section-header">
                     <span class="drawer-section-title">1. IDENTIFICAÇÃO BÁSICA</span>
+                    <span class="badge-dev">Host de Borda</span>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_srv_proprietaria" class="drawer-label">Concessionária Proprietária</label>
-                    <input type="text" id="drawer_srv_proprietaria" class="drawer-input" value="CCR DANILO">
+                    <label for="drawer_srv_host" class="drawer-label">Rótulo / Hostname</label>
+                    <input type="text" id="drawer_srv_host" class="drawer-input" readonly disabled style="opacity: 0.75; cursor: not-allowed; background-color: #f1f5f9;">
+                    <p class="drawer-help">Identificador gerado pelo sistema com base no tipo e ID.</p>
+                </div>
+
+                <div class="drawer-field">
+                    <label for="drawer_srv_empresa" class="drawer-label">Empresa Titular</label>
+                    <input type="text" id="drawer_srv_empresa" class="drawer-input" readonly disabled style="opacity: 0.75; cursor: not-allowed; background-color: #f1f5f9;">
                 </div>
             </div>
 
             <!-- Seção 2: Dados Servidor -->
             <div class="drawer-section">
                 <div class="drawer-section-header">
-                    <span class="drawer-section-title">DADOS SERVIDOR</span>
+                    <span class="drawer-section-title">2. DADOS DO SERVIDOR</span>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_srv_ip" class="drawer-label">Endereço IP</label>
-                    <input type="text" id="drawer_srv_ip" class="drawer-input" style="font-family: var(--font-mono);" required>
+                    <label for="drawer_srv_ip" class="drawer-label">Endereço IPv4</label>
+                    <input type="text" id="drawer_srv_ip" class="drawer-input" placeholder="Ex: 192.168.10.45" style="font-family: var(--font-mono);" required>
+                    <p class="drawer-help">IP privado da praça de pedágio.</p>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_srv_tipo" class="drawer-label">Tipo Servidor</label>
-                    <select id="drawer_srv_tipo" class="drawer-select">
-                        <option value="PAGAMENTO">PAGAMENTO</option>
-                        <option value="TRANSITO">TRANSITO</option>
-                        <option value="AUDITORIA">AUDITORIA</option>
+                    <label for="drawer_srv_tipo" class="drawer-label">Tipo do Servidor *</label>
+                    <select id="drawer_srv_tipo" class="drawer-select" required>
+                        <option value="transito">Trânsito (Pistas Automáticas / OCR)</option>
+                        <option value="pagamento">Pagamento (TEF / TAG / Cabines)</option>
+                        <option value="auditoria">Auditoria (Fiscalização ANTT / CCO)</option>
                     </select>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_srv_concessionaria" class="drawer-label">Concessionaria</label>
-                    <select id="drawer_srv_concessionaria" class="drawer-select">
-                        <option value="CCR DANILO">CCR DANILO</option>
-                        <option value="VIAPAULISTA INFRA">VIAPAULISTA INFRA</option>
-                        <option value="AUTOBANDEIRANTES S.A.">AUTOBANDEIRANTES S.A.</option>
-                        <option value="RODA DAS COLINAS">RODA DAS COLINAS</option>
-                        <option value="ECORODOVIAS NORTE">ECORODOVIAS NORTE</option>
-                        <option value="ROTA DO OESTE MALHA">ROTA DO OESTE MALHA</option>
+                    <label for="drawer_srv_concessionaria" class="drawer-label">Praça de Pedágio / Concessionária *</label>
+                    <select id="drawer_srv_concessionaria" class="drawer-select" required>
+                        <option value="">Carregando praças...</option>
                     </select>
                 </div>
             </div>
@@ -503,13 +267,15 @@
 
         <div class="drawer-footer">
             <button type="button" class="btn-drawer-cancel" onclick="fecharDrawer()">Cancelar</button>
-            <button type="submit" form="form_drawer_srv" class="btn-drawer-save">Salvar Alterações</button>
+            <button type="submit" form="form_drawer_srv" id="btn_salvar_drawer" class="btn-drawer-save">Salvar Alterações</button>
         </div>
     </aside>
 
     <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
     <script>
         var linhaEmEdicao = null;
+        var listaServidoresCache = [];
+        var concessionariasCache = [];
 
         document.addEventListener("DOMContentLoaded", function () {
             var nomeSession = sessionStorage.getItem("NOME_USUARIO");
@@ -517,26 +283,225 @@
                 var el = document.getElementById("nome_usuario_header");
                 if (el) el.innerText = nomeSession;
             }
-            atualizarContadores();
+
+            carregarConcessionariasDropdown();
+            carregarServidores();
         });
+
+        function formatarTipoServidor(tipo) {
+            tipo = String(tipo || "").toLowerCase();
+            if (tipo === "transito") return { nome: "Trânsito", tag: "SRV-TR", badge: "laranja" };
+            if (tipo === "pagamento") return { nome: "Pagamento", tag: "SRV-PG", badge: "azul" };
+            if (tipo === "auditoria") return { nome: "Auditoria", tag: "SRV-AU", badge: "auditoria" };
+            return { nome: tipo, tag: "SRV", badge: "analista" };
+        }
+
+        function carregarConcessionariasDropdown() {
+            fetch("/concessionarias/listar")
+                .then(function (res) {
+                    if (!res.ok) throw new Error("Erro ao carregar concessionárias");
+                    return res.json();
+                })
+                .then(function (lista) {
+                    concessionariasCache = Array.isArray(lista) ? lista : [];
+                    var sltDrawer = document.getElementById("drawer_srv_concessionaria");
+                    if (sltDrawer) {
+                        sltDrawer.innerHTML = '<option value="">Selecione a praça de pedágio...</option>';
+                        concessionariasCache.forEach(function (c) {
+                            var opt = document.createElement("option");
+                            opt.value = c.id;
+                            var info = c.nome_praca + " (" + (c.rodovia || "") + (c.km != null ? " Km " + Number(c.km).toFixed(1) : "") + ")";
+                            opt.textContent = info;
+                            sltDrawer.appendChild(opt);
+                        });
+                    }
+                })
+                .catch(function (err) {
+                    console.warn("Aviso ao carregar concessionárias:", err);
+                });
+        }
+
+        function carregarServidores() {
+            var idEmpresa = sessionStorage.getItem("FK_EMPRESA");
+            var url = (idEmpresa && idEmpresa !== "null" && idEmpresa !== "undefined" && !isNaN(Number(idEmpresa)))
+                ? ("/servidores/listar/" + idEmpresa)
+                : "/servidores/listar";
+
+            fetch(url)
+                .then(function (res) {
+                    if (!res.ok) throw new Error("Erro status " + res.status);
+                    return res.json();
+                })
+                .then(function (lista) {
+                    listaServidoresCache = Array.isArray(lista) ? lista : [];
+                    renderizarTabela(listaServidoresCache);
+                    atualizarSelectRodovias(listaServidoresCache);
+                    atualizarContadores();
+                })
+                .catch(function (err) {
+                    console.error("Erro ao carregar servidores do backend:", err);
+                    var tbody = document.getElementById("lista_servidores");
+                    if (tbody) {
+                        tbody.innerHTML = `
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 40px; color: #DC2626;">
+                                    Não foi possível carregar os servidores do banco de dados.<br>
+                                    <small style="color: #64748B;">Verifique se o backend está em execução.</small>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                    atualizarContadores(0, 0);
+                });
+        }
+
+        function renderizarTabela(lista) {
+            var tbody = document.getElementById("lista_servidores");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+
+            if (!lista || lista.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 48px; color: #64748B;">
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                <strong style="color: #1E293B; font-size: 15px;">Nenhum servidor encontrado</strong>
+                                <span>Cadastre uma nova instância clicando no botão "+ Adicionar Novo Servidor".</span>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                atualizarContadores(0, 0);
+                return;
+            }
+
+            lista.forEach(function (s) {
+                var tr = document.createElement("tr");
+
+                var tInfo = formatarTipoServidor(s.tipo);
+                var hostname = tInfo.tag + String(s.id).padStart(2, '0');
+                var ipExibicao = s.ip || "IP Dinâmico";
+                var nomePraca = s.nome_praca || "Praça de Pedágio";
+                var rodovia = s.rodovia || "";
+                var kmStr = s.km != null ? ("Km " + Number(s.km).toFixed(1)) : "";
+                var localizacao = (rodovia && kmStr) ? (rodovia + " • " + kmStr) : (rodovia || kmStr || "");
+                var nomeEmpresa = s.nome_fantasia || s.razao_social || "Empresa Titular";
+
+                tr.setAttribute("data-id", s.id);
+                tr.setAttribute("data-host", hostname);
+                tr.setAttribute("data-ip", s.ip || "");
+                tr.setAttribute("data-tipo", s.tipo || "");
+                tr.setAttribute("data-conc-id", s.fk_concessionaria || "");
+                tr.setAttribute("data-conc-nome", nomePraca);
+                tr.setAttribute("data-rodovia", rodovia);
+                tr.setAttribute("data-empresa", nomeEmpresa);
+
+                var badgeClass = "analista";
+                if (s.tipo === "transito") badgeClass = "operador";
+                else if (s.tipo === "pagamento") badgeClass = "gestor";
+                else if (s.tipo === "auditoria") badgeClass = "auditoria";
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="cell-identificacao">
+                            <div class="item-icon-box">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                                    <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                                    <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                                    <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                                </svg>
+                            </div>
+                            <div class="item-text-group">
+                                <div class="item-title-row">
+                                    <span class="item-title">${hostname}</span>
+                                    <span class="id-badge">ID: ${s.id}</span>
+                                </div>
+                                <span class="item-subtitle">${nomeEmpresa}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-code">
+                            ${ipExibicao}
+                            ${s.ip ? `
+                            <button class="copy-btn" onclick="copiarTexto('${s.ip}')" title="Copiar endereço IP">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            </button>` : ''}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="item-text-group">
+                            <span style="font-weight: 600; font-size: 13px;">${nomePraca}</span>
+                            <span class="item-subtitle">${localizacao || 'Malha Concedida'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="role-badge ${badgeClass}">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            ${tInfo.nome}
+                        </span>
+                    </td>
+                    <td style="text-align: right; padding-right: 24px;">
+                        <div class="action-buttons" style="justify-content: flex-end;">
+                            <button class="btn-icon-action" onclick="abrirDrawerServidor(this)" title="Editar Servidor">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                            <button class="btn-icon-action delete" onclick="excluirServidor(${s.id}, '${hostname}')" title="Excluir Servidor">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
+                        </div>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            atualizarContadores();
+            filtrarServidores();
+        }
+
+        function atualizarSelectRodovias(lista) {
+            var select = document.getElementById("slt_rodovia");
+            if (!select) return;
+
+            var rodoviaSelecionada = select.value;
+            var rodovias = [];
+            lista.forEach(function (s) {
+                if (s.rodovia && !rodovias.includes(s.rodovia)) {
+                    rodovias.push(s.rodovia);
+                }
+            });
+
+            select.innerHTML = '<option value="">Todas as Rodovias</option>';
+            rodovias.sort().forEach(function (rod) {
+                var opt = document.createElement("option");
+                opt.value = rod;
+                opt.textContent = rod;
+                if (rod === rodoviaSelecionada) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
 
         function abrirDrawerServidor(btn) {
             var tr = btn.closest("tr");
             if (!tr) return;
             linhaEmEdicao = tr;
 
-            var hostEl = tr.querySelector(".item-title");
-            var subEl = tr.querySelector(".item-subtitle");
-            var ipEl = tr.querySelector(".badge-code");
+            var id = tr.getAttribute("data-id") || "";
+            var host = tr.getAttribute("data-host") || "";
+            var ip = tr.getAttribute("data-ip") || "";
+            var tipo = (tr.getAttribute("data-tipo") || "").toLowerCase();
+            var concId = tr.getAttribute("data-conc-id") || "";
+            var empresa = tr.getAttribute("data-empresa") || "Empresa Titular";
 
-            var host = hostEl ? hostEl.innerText.trim() : "";
-            var sub = subEl ? subEl.innerText.trim() : "";
-            var ipCompleto = ipEl ? ipEl.innerText.replace(/[\r\n\t]+/g, ' ').trim() : "";
-            ipCompleto = ipCompleto.split(" ")[0] || ipCompleto;
-            var ipApenas = ipCompleto.split(":")[0] || ipCompleto;
-
-            document.getElementById("drawer_srv_subtitulo").innerText = host + " (" + sub + ")";
-            document.getElementById("drawer_srv_ip").value = ipApenas;
+            document.getElementById("drawer_srv_id").value = id;
+            document.getElementById("drawer_srv_subtitulo").innerText = host + " (ID: #" + id + ")";
+            document.getElementById("drawer_srv_host").value = host;
+            document.getElementById("drawer_srv_empresa").value = empresa;
+            document.getElementById("drawer_srv_ip").value = ip;
+            document.getElementById("drawer_srv_tipo").value = tipo;
+            document.getElementById("drawer_srv_concessionaria").value = concId;
 
             document.getElementById("drawer_overlay").classList.add("ativo");
             document.getElementById("drawer_panel").classList.add("ativo");
@@ -552,55 +517,118 @@
 
         function salvarDrawerServidor(event) {
             if (event) event.preventDefault();
-            if (!linhaEmEdicao) return false;
 
+            var id = document.getElementById("drawer_srv_id").value;
             var novoIp = document.getElementById("drawer_srv_ip").value.trim();
-            var proprietaria = document.getElementById("drawer_srv_proprietaria").value.trim();
+            var novoTipo = document.getElementById("drawer_srv_tipo").value.trim().toLowerCase();
+            var novaConc = document.getElementById("drawer_srv_concessionaria").value;
 
-            if (!novoIp) {
-                alert("Por favor, preencha o endereço IP.");
+            if (!id) {
+                alert("Identificador do servidor não encontrado.");
                 return false;
             }
 
-            var ipEl = linhaEmEdicao.querySelector(".badge-code");
-            if (ipEl) {
-                var porta = "8080";
-                var textoAtual = ipEl.innerText.split(" ")[0];
-                if (textoAtual.includes(":")) {
-                    porta = textoAtual.split(":")[1];
-                }
-                var ipComPorta = novoIp + (porta ? ":" + porta : "");
-
-                ipEl.innerHTML = ipComPorta + 
-                    '<button class="copy-btn" onclick="copiarTexto(\'' + ipComPorta + '\')" title="Copiar IP e porta">' +
-                    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' +
-                    '</button>';
+            if (!novoTipo || !novaConc) {
+                alert("Por favor, preencha todos os campos obrigatórios (*).");
+                return false;
             }
 
-            fecharDrawer();
-            filtrarServidores();
+            if (novoIp !== "") {
+                var partes = novoIp.split(".");
+                var ipValido = partes.length === 4 && partes.every(function (p) {
+                    return /^\d{1,3}$/.test(p) && Number(p) <= 255;
+                });
+                if (!ipValido) {
+                    alert("Por favor, informe um endereço IPv4 válido (ex: 192.168.10.45).");
+                    return false;
+                }
+            }
+
+            var btnSalvar = document.getElementById("btn_salvar_drawer");
+            if (btnSalvar) {
+                btnSalvar.disabled = true;
+                btnSalvar.innerText = "Salvando alterações...";
+            }
+
+            fetch("/servidores/editar/" + id, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    tipoServer: novoTipo,
+                    ipServer: novoIp,
+                    concessionariaServer: Number(novaConc)
+                })
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    return res.text().then(function (msg) { throw new Error(msg); });
+                }
+                return res.json();
+            })
+            .then(function () {
+                fecharDrawer();
+                carregarServidores();
+            })
+            .catch(function (err) {
+                console.error("Erro ao salvar servidor:", err);
+                alert("Não foi possível salvar as alterações:\n" + err.message);
+            })
+            .finally(function () {
+                if (btnSalvar) {
+                    btnSalvar.disabled = false;
+                    btnSalvar.innerText = "Salvar Alterações";
+                }
+            });
+
             return false;
+        }
+
+        function excluirServidor(id, host) {
+            if (!confirm("Deseja realmente remover o servidor '" + host + "' da malha de telemetria?\n\nEsta ação removerá o servidor do banco de dados.")) {
+                return;
+            }
+
+            fetch("/servidores/excluir/" + id, {
+                method: "DELETE"
+            })
+            .then(function (res) {
+                if (!res.ok) {
+                    return res.text().then(function (msg) { throw new Error(msg); });
+                }
+                return res.json();
+            })
+            .then(function () {
+                carregarServidores();
+            })
+            .catch(function (err) {
+                console.error("Erro ao excluir servidor:", err);
+                alert("Não foi possível excluir o servidor:\n" + err.message);
+            });
         }
 
         function filtrarServidores() {
             var textoBusca = document.getElementById("ipt_busca").value.toLowerCase().trim();
-            var statusFiltro = document.getElementById("slt_status").value.toLowerCase().trim();
+            var tipoFiltro = document.getElementById("slt_tipo").value.toLowerCase().trim();
             var rodoviaFiltro = document.getElementById("slt_rodovia").value.toLowerCase().trim();
 
-            var linhas = document.querySelectorAll("#lista_servidores tr");
+            var linhas = document.querySelectorAll("#lista_servidores tr[data-id]");
             var visiveis = 0;
 
             linhas.forEach(function (linha) {
                 var host = (linha.getAttribute("data-host") || "").toLowerCase();
-                var status = (linha.getAttribute("data-status") || "").toLowerCase();
+                var ip = (linha.getAttribute("data-ip") || "").toLowerCase();
+                var tipo = (linha.getAttribute("data-tipo") || "").toLowerCase();
+                var conc = (linha.getAttribute("data-conc-nome") || "").toLowerCase();
                 var rodovia = (linha.getAttribute("data-rodovia") || "").toLowerCase();
                 var conteudoLinha = linha.innerText.toLowerCase();
 
-                var matchBusca = !textoBusca || conteudoLinha.includes(textoBusca) || host.includes(textoBusca);
-                var matchStatus = !statusFiltro || status.includes(statusFiltro);
+                var matchBusca = !textoBusca || conteudoLinha.includes(textoBusca) || host.includes(textoBusca) || ip.includes(textoBusca) || conc.includes(textoBusca) || rodovia.includes(textoBusca);
+                var matchTipo = !tipoFiltro || tipo === tipoFiltro;
                 var matchRodovia = !rodoviaFiltro || rodovia.includes(rodoviaFiltro);
 
-                if (matchBusca && matchStatus && matchRodovia) {
+                if (matchBusca && matchTipo && matchRodovia) {
                     linha.style.display = "";
                     visiveis++;
                 } else {
@@ -608,33 +636,72 @@
                 }
             });
 
-            document.getElementById("contador_mostrados").innerText = visiveis;
+            var elMostrados = document.getElementById("contador_mostrados");
+            if (elMostrados) elMostrados.innerText = visiveis;
         }
 
-        function atualizarContadores() {
-            var linhas = document.querySelectorAll("#lista_servidores tr");
-            var total = linhas.length;
-            document.getElementById("contador_total").innerText = total;
-            document.getElementById("contador_mostrados").innerText = total;
+        function atualizarContadores(totalForcado, pracasForcado) {
+            var linhas = document.querySelectorAll("#lista_servidores tr[data-id]");
+            var total = totalForcado !== undefined ? totalForcado : linhas.length;
+
+            var elKpiSrv = document.getElementById("kpi_servidores");
+            var elKpiPracas = document.getElementById("kpi_pracas");
+            var elTotal = document.getElementById("contador_total");
+            var elMostrados = document.getElementById("contador_mostrados");
+
+            if (elKpiSrv) elKpiSrv.innerText = total;
+            if (elTotal) elTotal.innerText = total;
+            if (elMostrados) elMostrados.innerText = total;
+
+            if (pracasForcado !== undefined) {
+                if (elKpiPracas) elKpiPracas.innerText = pracasForcado;
+            } else {
+                var pracas = [];
+                linhas.forEach(function (linha) {
+                    var c = linha.getAttribute("data-conc-id") || linha.getAttribute("data-conc-nome");
+                    if (c && !pracas.includes(c)) pracas.push(c);
+                });
+                if (elKpiPracas) elKpiPracas.innerText = pracas.length;
+            }
         }
 
         function copiarTexto(texto) {
-            navigator.clipboard.writeText(texto).then(function () {
-                alert("IP copiado: " + texto);
-            }).catch(function () {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(texto).then(function () {
+                    alert("IP copiado para a área de transferência: " + texto);
+                }).catch(function () {
+                    prompt("Copie o endereço IP abaixo:", texto);
+                });
+            } else {
                 prompt("Copie o endereço IP abaixo:", texto);
-            });
+            }
         }
 
-        function excluirLinha(btn, host) {
-            if (confirm("Deseja realmente remover o servidor '" + host + "' da malha de telemetria?")) {
-                var tr = btn.closest("tr");
-                if (tr) {
-                    tr.remove();
-                    atualizarContadores();
-                    filtrarServidores();
+        function exportarRelatorio() {
+            var linhas = document.querySelectorAll("#lista_servidores tr[data-id]");
+            var csv = "ID,Hostname,IP,Tipo,Praca,Rodovia,Empresa\n";
+
+            linhas.forEach(function (linha) {
+                if (linha.style.display !== "none") {
+                    var id = linha.getAttribute("data-id") || "";
+                    var host = linha.getAttribute("data-host") || "";
+                    var ip = linha.getAttribute("data-ip") || "";
+                    var tipo = linha.getAttribute("data-tipo") || "";
+                    var conc = linha.getAttribute("data-conc-nome") || "";
+                    var rodovia = linha.getAttribute("data-rodovia") || "";
+                    var empresa = linha.getAttribute("data-empresa") || "";
+
+                    csv += `"${id}","${host}","${ip}","${tipo}","${conc}","${rodovia}","${empresa}"\n`;
                 }
-            }
+            });
+
+            var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "servidores_sorvesys.csv";
+            a.click();
+            URL.revokeObjectURL(url);
         }
     </script>
 

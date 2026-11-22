@@ -97,12 +97,12 @@
 
                 <div class="campo-grupo">
                     <div class="linha-label">
-                        <label for="slt_empresa">Empresa Proprietária <b>*</b></label>
+                        <label for="slt_empresa">Praça de Pedágio / Concessionária <b>*</b></label>
                     </div>
-                    <p class="ajuda">Concessionária administradora responsável pelo lote rodoviário.</p>
+                    <p class="ajuda">Selecione a praça onde o servidor de borda está instalado.</p>
                     <div class="campo-input">
                         <select id="slt_empresa">
-                            <option value="">Vincular a uma concessionária ativa...</option>
+                            <option value="">Carregando praças disponíveis...</option>
                         </select>
                     </div>
                 </div>
@@ -226,40 +226,36 @@
             if (!selectEmpresa) return;
 
             var idEmpresa = sessionStorage.getItem("FK_EMPRESA");
+            var url = (idEmpresa && idEmpresa !== "null" && idEmpresa !== "undefined" && !isNaN(Number(idEmpresa)))
+                ? ("/concessionarias/empresa/" + idEmpresa)
+                : "/concessionarias/listar";
 
-            if (!idEmpresa) {
-                selectEmpresa.innerHTML = '<option value="">Nenhuma empresa vinculada ao usuário</option>';
-                return;
-            }
-
-            fetch("/empresas/buscar/" + idEmpresa)
+            fetch(url)
                 .then(function (resposta) {
                     if (!resposta.ok) {
-                        throw new Error("Erro na resposta do servidor: " + resposta.status);
+                        return fetch("/concessionarias/listar").then(function (r) { return r.json(); });
                     }
                     return resposta.json();
                 })
-                .then(function (empresa) {
-                    selectEmpresa.innerHTML = '';
+                .then(function (concessionarias) {
+                    selectEmpresa.innerHTML = '<option value="">Selecione a praça / concessionária...</option>';
 
-                    if (!empresa || !empresa.id) {
-                        selectEmpresa.innerHTML = '<option value="">Empresa não encontrada</option>';
+                    if (!Array.isArray(concessionarias) || concessionarias.length === 0) {
+                        selectEmpresa.innerHTML = '<option value="">Nenhuma praça encontrada. Cadastre uma concessionária primeiro.</option>';
                         return;
                     }
 
-                    var opcao = document.createElement("option");
-                    opcao.value = empresa.id;
-                    var nomeExibicao = empresa.nome_fantasia || empresa.razao_social || ("Concessionária " + empresa.id);
-                    if (empresa.cnpj) {
-                        nomeExibicao += " (" + empresa.cnpj + ")";
-                    }
-                    opcao.textContent = nomeExibicao;
-                    opcao.selected = true;
-                    selectEmpresa.appendChild(opcao);
+                    concessionarias.forEach(function (c) {
+                        var opcao = document.createElement("option");
+                        opcao.value = c.id;
+                        var nomeExibicao = c.nome_praca + " (" + c.rodovia + (c.km != null ? " Km " + Number(c.km).toFixed(1) : "") + (c.cidade ? " • " + c.cidade : "") + ")";
+                        opcao.textContent = nomeExibicao;
+                        selectEmpresa.appendChild(opcao);
+                    });
                 })
                 .catch(function (erro) {
-                    console.error("Aviso ao carregar empresa:", erro);
-                    selectEmpresa.innerHTML = '<option value="">Erro ao carregar empresa</option>';
+                    console.error("Aviso ao carregar concessionárias:", erro);
+                    selectEmpresa.innerHTML = '<option value="">Erro ao carregar praças de pedágio</option>';
                 });
         }
 
@@ -280,10 +276,10 @@
 
             var tipoVar = selectTipo.value.toLowerCase();
             var ipVar = inputIp.value.trim();
-            var empresaVar = selectEmpresa.value;
+            var concessionariaVar = selectEmpresa.value;
 
-            if (tipoVar == "" || empresaVar == "") {
-                mostrarMensagem("Preencha todos os campos obrigatórios (Tipo e Concessionária)!", false);
+            if (tipoVar == "" || concessionariaVar == "") {
+                mostrarMensagem("Preencha todos os campos obrigatórios (Tipo e Praça / Concessionária)!", false);
                 return false;
             }
 
@@ -300,19 +296,23 @@
                 body: JSON.stringify({
                     tipoServer: tipoVar,
                     ipServer: ipVar,
-                    empresaServer: empresaVar
+                    concessionariaServer: concessionariaVar
                 }),
             })
                 .then(function (resposta) {
                     if (resposta.ok) {
-                        mostrarMensagem("Servidor cadastrado com sucesso!", true);
+                        mostrarMensagem("Servidor cadastrado com sucesso! Redirecionando...", true);
 
                         selectTipo.value = "";
                         inputIp.value = "";
 
+                        setTimeout(function () {
+                            window.location.href = "servidores.html";
+                        }, 1600);
+
                     } else {
                         resposta.text().then(function (texto) {
-                            if (texto.includes("Duplicate entry")) {
+                            if (texto.includes("Duplicate entry") || texto.includes("já foi cadastrado")) {
                                 mostrarMensagem("Esse endereço IP já foi cadastrado!", false);
                             } else {
                                 mostrarMensagem("Erro ao realizar cadastro: " + texto, false);
@@ -323,6 +323,10 @@
                 .catch(function (erro) {
                     console.error(erro);
                     mostrarMensagem("Erro ao tentar cadastrar o servidor!", false);
+                });
+
+            return false;
+        }
                 });
 
             return false;
