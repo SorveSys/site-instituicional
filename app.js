@@ -37,6 +37,7 @@ var paginas = {
     "/cadastro-usuario": "cadastro-usuario.html",
     "/cadastro-concessionaria": "cadastro-concessionaria.html",
     "/concessionarias": "concessionarias.html",
+    "/usuarios": "usuarios.html",
     "/overview": "overview.html",
     "/dashboard": "dashboard.html",
 };

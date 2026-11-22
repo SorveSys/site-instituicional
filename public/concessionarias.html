@@ -283,7 +283,9 @@
 
             function carregarConcessionarias() {
                 var idEmpresa = sessionStorage.getItem("FK_EMPRESA");
-                var url = idEmpresa ? ("/concessionarias/empresa/" + idEmpresa) : "/concessionarias/listar";
+                var url = (idEmpresa && idEmpresa !== "null" && idEmpresa !== "undefined" && !isNaN(Number(idEmpresa)))
+                    ? ("/concessionarias/empresa/" + idEmpresa)
+                    : "/concessionarias/listar";
 
                 fetch(url)
                     .then(function (res) {
