@@ -19,9 +19,11 @@ function autenticar(req, res) {
                     nome: usuario.nome,
                     email: usuario.email,
                     fk_empresa: usuario.fk_empresa,
+                    fk_concessionaria: usuario.fk_concessionaria,
                     fk_tipo_usuario: usuario.fk_tipo_usuario,
                     perfil: usuario.perfil,
-                    empresa: usuario.nome_fantasia || usuario.razao_social
+                    empresa: usuario.nome_fantasia || usuario.razao_social,
+                    nome_praca: usuario.nome_praca || null
                 });
             }
 

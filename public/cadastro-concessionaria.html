@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Praça de Pedágio | SorveSys</title>
+
+    <link rel="icon" href="./assets/LOGO_SORVESYS.png">
+    <link rel="stylesheet" href="./css/cadastro-concessionaria.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script src="./js/sessao.js"></script>
+</head>
+
+<body>
+
+    <!-- ==================== TOPO / HEADER ==================== -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <a href="index.html" class="brand-logo" title="SorveSys - Página Inicial">
+                <img src="./assets/icons/home/LOGO.svg"
+                    alt="SorveSys – Monitoramento de Sistemas Rodoviários">
+            </a>
+
+            <div class="brand-divider"></div>
+
+            <div class="header-titles">
+                <span class="header-category">SORVESYS CORE • GESTÃO DE ATIVOS</span>
+                <h1 class="header-title">Cadastro de Praça de Pedágio</h1>
+            </div>
+        </div>
+
+        <div class="topbar-right">
+            <div class="status-badge">
+                <span class="dot"></span>
+                SISTEMA TELEMÉTRICO ATIVO
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== CONTEÚDO PRINCIPAL ==================== -->
+    <main class="main-wrapper">
+        <div class="split-grid">
+
+            <!-- CARD FORMULÁRIO (ESQUERDA) -->
+            <section class="form-card">
+                <span class="step-indicator">ETAPA 01 DE 01</span>
+
+                <h2 class="card-heading">Identificação da Praça de Pedágio</h2>
+
+                <p class="card-lead">
+                    Informe os dados de identificação e localização da praça de pedágio
+                    para cadastrá-la no sistema SorveSys.
+                </p>
+
+                <form id="form_concessionaria"
+                    class="form-content"
+                    onsubmit="return cadastrarConcessionaria(event)"
+                    novalidate>
+
+                    <!-- Campo 1: Nome da Praça -->
+                    <div class="form-group">
+                        <div class="label-row">
+                            <label for="ipt_nome_praca">Nome da Praça</label>
+                            <span class="badge-required">Obrigatório</span>
+                        </div>
+
+                        <div class="input-box">
+                            <span class="input-icon">
+                                <svg width="15" height="14" viewBox="0 0 15 14" fill="none">
+                                    <path
+                                        d="M0 13.5V0H7.5V3H15V13.5H0ZM1.5 12H6V10.5H1.5V12ZM1.5 9H6V7.5H1.5V9ZM1.5 6H6V4.5H1.5V6ZM1.5 3H6V1.5H1.5V3ZM7.5 12H13.5V4.5H7.5V12ZM9 7.5V6H12V7.5H9ZM9 10.5V9H12V10.5H9Z"
+                                        fill="#94A3B8" />
+                                </svg>
+                            </span>
+
+                            <input type="text"
+                                id="ipt_nome_praca"
+                                name="nome_praca"
+                                placeholder="Ex: Praça de Pedágio de Jundiaí"
+                                required>
+                        </div>
+
+                        <p class="input-help">
+                            Nome de identificação da praça de pedágio.
+                        </p>
+                    </div>
+
+                    <!-- Linha dupla: Rodovia + Km -->
+                    <div class="form-row">
+
+                        <!-- Campo 2: Rodovia -->
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="ipt_rodovia">Rodovia</label>
+                                <span class="badge-required">Obrigatório</span>
+                            </div>
+
+                            <div class="input-box">
+                                <span class="input-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="#94A3B8"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M4 19L8 5"></path>
+                                        <path d="M20 19L16 5"></path>
+                                        <line x1="12" y1="6" x2="12" y2="8"></line>
+                                        <line x1="12" y1="12" x2="12" y2="14"></line>
+                                        <line x1="12" y1="18" x2="12" y2="20"></line>
+                                    </svg>
+                                </span>
+
+                                <input type="text"
+                                    id="ipt_rodovia"
+                                    name="rodovia"
+                                    placeholder="Ex: SP-330"
+                                    required>
+                            </div>
+
+                            <p class="input-help">
+                                Identificação da rodovia.
+                            </p>
+                        </div>
+
+                        <!-- Campo 3: Km -->
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="ipt_km">Km</label>
+                                <span class="badge-required">Obrigatório</span>
+                            </div>
+
+                            <div class="input-box">
+                                <span class="input-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="#94A3B8"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                        <circle cx="12" cy="10" r="3"></circle>
+                                    </svg>
+                                </span>
+
+                                <input type="number"
+                                    id="ipt_km"
+                                    name="km"
+                                    placeholder="Ex: 72.50"
+                                    step="0.01"
+                                    min="0"
+                                    required>
+                            </div>
+
+                            <p class="input-help">
+                                Quilômetro de localização da praça.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Linha dupla: Cidade + UF -->
+                    <div class="form-row">
+
+                        <!-- Campo 4: Cidade -->
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="ipt_cidade">Cidade</label>
+                                <span class="badge-required">Obrigatório</span>
+                            </div>
+
+                            <div class="input-box">
+                                <span class="input-icon">
+                                    <svg width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="#94A3B8"
+                                        stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M3 21h18"></path>
+                                        <path d="M5 21V7l8-4v18"></path>
+                                        <path d="M19 21V11l-6-4"></path>
+                                        <path d="M9 9v.01"></path>
+                                        <path d="M9 12v.01"></path>
+                                        <path d="M9 15v.01"></path>
+                                        <path d="M9 18v.01"></path>
+                                    </svg>
+                                </span>
+
+                                <input type="text"
+                                    id="ipt_cidade"
+                                    name="cidade"
+                                    placeholder="Ex: Jundiaí"
+                                    required>
+                            </div>
+
+                            <p class="input-help">
+                                Município onde a praça está localizada.
+                            </p>
+                        </div>
+
+                        <!-- Campo 5: UF -->
+                        <div class="form-group">
+                            <div class="label-row">
+                                <label for="ipt_uf">UF</label>
+                                <span class="badge-required">Obrigatório</span>
+                            </div>
+
+                            <div class="input-box">
+                                <input type="text"
+                                    id="ipt_uf"
+                                    name="uf"
+                                    placeholder="Ex: SP"
+                                    maxlength="2"
+                                    required>
+                            </div>
+
+                            <p class="input-help">
+                                Sigla do estado.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Botão de Ação -->
+                    <div class="form-actions">
+                        <button type="submit" id="btn_cadastrar" class="btn-submit">
+                            <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                                <circle cx="10" cy="10" r="9"
+                                    stroke="white" stroke-width="2" />
+                                <path d="M6 10.3L8.8 13.1L14 7.5"
+                                    stroke="white" stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+
+                            Cadastrar Praça de Pedágio
+                        </button>
+                    </div>
+
+                    <!-- Notificações de Alerta -->
+                    <div id="alerta_mensagem" class="alert-feedback"></div>
+
+                </form>
+            </section>
+
+            <!-- CARD HERO / VISUAL (DIREITA) -->
+            <aside class="hero-card">
+
+                <!-- Badges Superiores -->
+                <div class="hero-top-badges">
+                    <span class="hero-badge-item">
+                        <span class="green-dot"></span>
+                        MONITORAMENTO ATIVO
+                    </span>
+
+                    <span class="hero-badge-item">
+                        VIA LIVRE / FREE-FLOW
+                    </span>
+                </div>
+
+                <!-- Conteúdo Textual Sobreposto -->
+                <div class="hero-main-content">
+                    <h2 class="hero-card-title">
+                        Monitoramento de Praças &amp; Malha Viária
+                    </h2>
+
+                    <p class="hero-card-desc">
+                        Sincronização telemétrica contínua com sensores de pista,
+                        leitura de pórticos OCR/RFID e monitoramento da infraestrutura
+                        das praças de pedágio.
+                    </p>
+
+                    <div class="hero-infra-tag">
+                        <svg width="15" height="15" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor"
+                            stroke-width="2.3" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M4.93 4.93a10 10 0 0 1 14.14 0"></path>
+                            <path d="M7.76 7.76a6 6 0 0 1 8.48 0"></path>
+                            <circle cx="12" cy="12" r="2"></circle>
+                            <path d="M12 14v7"></path>
+                        </svg>
+
+                        INFRAESTRUTURA INTELIGENTE
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

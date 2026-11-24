@@ -1,92 +1,55 @@
-// ===== DADOS DEMONSTRATIVOS (trocar por fetch na API quando o back-end estiver pronto) =====
-// cpu / ram / disco em %, temp em °C, lat em ms
-var SERVIDORES = {
-    "SRV-AU03": { desc: "Auditoria & Logs ANTT", ip: "192.168.10.47", cpu: 78.4, temp: 74.5, ram: 68.2, disco: 87.4, lat: 4.2, link: "Fibra Óptica" },
-    "SRV-AU04": { desc: "Auditoria & Arquivo ANTT", ip: "192.168.10.99", cpu: 19.8, temp: 45.3, ram: 33.5, disco: 58.2, lat: 3.9, link: "Fibra Óptica" },
-    "SRV-GW04": { desc: "Gateway Edge ANTT", ip: "192.168.10.48", cpu: 96.2, temp: 81.4, ram: 91.5, disco: 79.0, lat: 18.6, link: "Link Redundante" },
-    "SRV-PG01": { desc: "TEF & Validador de TAGs", ip: "192.168.10.20", cpu: 28.5, temp: 48.9, ram: 44.0, disco: 31.8, lat: 2.8, link: "Fibra Óptica" },
-    "SRV-PG02": { desc: "Pagamento • Cabines Manuais", ip: "192.168.10.22", cpu: 34.0, temp: 50.6, ram: 51.3, disco: 18.9, lat: 3.1, link: "Fibra Óptica" },
-    "SRV-PG03": { desc: "Pagamento • TAG", ip: "192.168.10.25", cpu: 31.7, temp: 49.7, ram: 48.2, disco: 36.5, lat: 3.4, link: "Fibra Óptica" },
-    "SRV-TR01": { desc: "Pista Free-Flow Pórtico 01", ip: "192.168.10.12", cpu: 41.2, temp: 53.2, ram: 38.6, disco: 22.4, lat: 4.6, link: "Fibra Óptica" },
-    "SRV-TR02": { desc: "Pista Free-Flow Pórtico 09", ip: "192.168.10.14", cpu: 78.9, temp: 67.1, ram: 64.2, disco: 45.1, lat: 5.2, link: "Fibra Óptica" },
-    "SRV-TR03": { desc: "Pista Free-Flow Pórtico 03", ip: "192.168.10.15", cpu: 22.1, temp: 46.8, ram: 29.4, disco: 15.0, lat: 3.7, link: "Fibra Óptica" }
-};
+var API_BASE = window.location.protocol === "file:" ? "http://localhost:3333" : "";
 
-var HORARIOS = ["13:15", "13:20", "13:25", "13:30", "13:35", "13:40", "13:45", "13:50", "13:55", "14:00", "14:05", "14:10", "14:15", "14:20"];
-var HORARIOS_LAT = ["13:15", "13:30", "13:45", "14:00", "14:10", "14:15", "14:20"];
-
-var RAM_TOTAL_GB = 16;
-var NVME_TOTAL_GB = 512;
-var LIMITE_CPU = 85;
-var LIMITE_LATENCIA = 20;
+var LIMITE_CPU_PADRAO = 85;
+var LIMITE_LATENCIA_PADRAO = 20;
 
 var COR_LARANJA = "#ff9a1a";
 var COR_TRILHA = "#e5e9f0";
 
-var params = new URLSearchParams(window.location.search);
-var nomeServidor = (params.get("srv") || "SRV-AU03").toUpperCase();
+var dadosDashboardAtual = null;
+var chartsGauges = [];
+var chartCpu = null;
+var chartRam = null;
+var chartLatencia = null;
+var carregandoDashboard = false;
 
-if (!SERVIDORES[nomeServidor]) {
-    nomeServidor = "SRV-AU03";
+function escaparHtml(texto) {
+    if (texto === null || texto === undefined) return "";
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
 }
 
-var srv = SERVIDORES[nomeServidor];
-
-var ramUsadaGb = srv.ram / 100 * RAM_TOTAL_GB;
-var nvmeUsadoGb = srv.disco / 100 * NVME_TOTAL_GB;
-var nvmeLivreGb = NVME_TOTAL_GB - nvmeUsadoGb;
-
-function ruido(i, semente) {
-    return Math.sin(i * 1.7 + semente);
+function numeroValido(v) {
+    return v !== null && v !== undefined && !isNaN(Number(v));
 }
 
-function semente() {
-    var s = 0;
-    for (var i = 0; i < nomeServidor.length; i++) s += nomeServidor.charCodeAt(i);
-    return s;
+function formatarNumero(v, casas) {
+    if (!numeroValido(v)) return "--";
+    return Number(v).toFixed(casas);
 }
-
-function arred(v, casas) {
-    var f = Math.pow(10, casas);
-    return Math.round(v * f) / f;
-}
-
-function gerarSerieCpu() {
-    if (nomeServidor == "SRV-AU03") {
-        return [27, 31, 34, 36, 41, 45, 50, 55, 60, 82, 75, 70, 68, 69];
-    }
-    var sm = semente();
-    return HORARIOS.map(function (h, i) {
-        var v = srv.cpu * (0.7 + 0.3 * i / 13) + 5 * ruido(i, sm);
-        return arred(Math.max(5, Math.min(99, v)), 1);
-    });
-}
-
-function gerarSerieRam() {
-    var sm = semente();
-    return HORARIOS.map(function (h, i) {
-        var v = ramUsadaGb * (0.93 + 0.07 * i / 13) + 0.05 * ruido(i, sm);
-        if (i == 13) v = ramUsadaGb;
-        return arred(v, 1);
-    });
-}
-
-function gerarSerieLatencia() {
-    var l = srv.lat;
-    if (nomeServidor == "SRV-AU03") {
-        return [5, 5.5, 6, 22.4, 5, 5, 4.2];
-    }
-    return [l + 0.8, l + 1.0, l + 1.3, l + 0.5, l + 0.9, l + 0.6, l].map(function (v) { return arred(v, 1); });
-}
-
-var serieCpu = gerarSerieCpu();
-var serieRam = gerarSerieRam();
-var serieLat = gerarSerieLatencia();
 
 function indiceMaximo(lista) {
-    var idx = 0;
-    lista.forEach(function (v, i) { if (v > lista[idx]) idx = i; });
+    var idx = -1;
+    var maior = -Infinity;
+    lista.forEach(function (v, i) {
+        if (numeroValido(v) && Number(v) > maior) {
+            maior = Number(v);
+            idx = i;
+        }
+    });
     return idx;
+}
+
+function corPorPercentual(valor, corPadrao) {
+    if (!numeroValido(valor)) return "#94a3b8";
+    var num = Number(valor);
+    if (num >= 85) return "#dc2626";
+    if (num >= 70) return "#ea580c";
+    return corPadrao || COR_LARANJA;
 }
 
 var pluginTextoCentro = {
@@ -112,6 +75,8 @@ var pluginLimite = {
         var ctx = chart.ctx;
         var a = chart.chartArea;
         var y = chart.scales.y.getPixelForValue(opcoes.valor);
+
+        if (y < a.top || y > a.bottom) return;
 
         ctx.save();
         ctx.setLineDash([5, 4]);
@@ -139,48 +104,208 @@ Chart.register(pluginTextoCentro, pluginLimite);
 Chart.defaults.font.family = "'JetBrains Mono', monospace";
 Chart.defaults.color = "#64748b";
 
-document.title = "SorveSys | " + nomeServidor;
-document.getElementById("bc_nome").innerHTML = nomeServidor;
-document.getElementById("titulo_nome").innerHTML = nomeServidor;
-document.getElementById("titulo_desc").innerHTML = srv.desc;
-document.getElementById("titulo_ip").innerHTML = srv.ip;
-document.getElementById("legenda_ram").innerHTML = "Ativa (" + arred(ramUsadaGb, 1) + " GB)";
-document.getElementById("selo_latencia").innerHTML = "Média: " + srv.lat + " ms";
+function preencherDadosOperador() {
+    try {
+        var nome = sessionStorage.NOME_USUARIO;
+        var perfil = sessionStorage.PERFIL_USUARIO;
+        var empresa = sessionStorage.EMPRESA_USUARIO;
+        var praca = sessionStorage.NOME_PRACA;
 
-var mediaCpu = Math.round(srv.cpu * 0.54);
-var picoCpu = Math.round(Math.min(100, srv.cpu * 1.046));
+        if (nome) {
+            document.getElementById("nome_operador").textContent = nome;
+            var partes = nome.trim().split(/\s+/);
+            var iniciais = partes.length >= 2
+                ? (partes[0][0] + partes[partes.length - 1][0]).toUpperCase()
+                : nome.slice(0, 2).toUpperCase();
+            var elAvatar = document.getElementById("avatar_operador");
+            if (elAvatar) elAvatar.textContent = iniciais;
+        }
 
-var gauges = [
-    {
-        id: "cpu", titulo: "CPU Total", badge: srv.cpu + "%", cor: COR_LARANJA,
-        valor: srv.cpu, max: 100, centro: Math.round(srv.cpu) + "%",
-        esq: "Média: " + mediaCpu + "%", dir: "<b>Pico: " + picoCpu + "%</b>"
-    },
-    {
-        id: "temp", titulo: "Temp CPU", badge: srv.temp + "°C", cor: "#d97706",
-        valor: srv.temp, max: 100, centro: Math.round(srv.temp) + "°C",
-        esq: "Média: " + Math.round(srv.temp - 16.5) + "°C", dir: "<b>Máx: " + arred(srv.temp + 1.7, 1) + "°C</b>"
-    },
-    {
-        id: "ram", titulo: "RAM Utilizada", badge: srv.ram + "%", cor: COR_LARANJA,
-        valor: ramUsadaGb, max: RAM_TOTAL_GB, centro: arred(ramUsadaGb, 1) + "G",
-        esq: "Livre: " + arred(RAM_TOTAL_GB - ramUsadaGb, 1) + " GB", dir: "<b>Total: " + RAM_TOTAL_GB + " GB</b>"
-    },
-    {
-        id: "nvme", titulo: "NVMe Logs", badge: srv.disco + "%", cor: "#ea580c",
-        valor: nvmeUsadoGb, max: NVME_TOTAL_GB, centro: Math.round(nvmeUsadoGb) + "G",
-        esq: "Livre: " + arred(nvmeLivreGb, 1) + "G", dir: "<b>" + NVME_TOTAL_GB + " GB SSD</b>"
-    },
-    {
-        id: "lat", titulo: "Latência CCO", badge: srv.lat + " ms", verde: true, cor: "#059669",
-        valor: srv.lat, max: LIMITE_LATENCIA, centro: srv.lat + "ms", corCentro: "#059669",
-        esq: "Jitter:<br>±0.8ms", dir: '<span class="verde">' + srv.link.replace(" ", "<br>") + "</span>"
+        var elPerfil = document.getElementById("perfil_operador");
+        if (elPerfil && (perfil || empresa || praca)) {
+            var detalhe = praca || empresa || "";
+            elPerfil.textContent = perfil ? (detalhe ? perfil + " • " + detalhe : perfil) : detalhe;
+        }
+    } catch (e) { }
+}
+
+function obterParametrosEscopo() {
+    var params = new URLSearchParams();
+    try {
+        if (sessionStorage.FK_CONCESSIONARIA) {
+            params.set("idConcessionaria", sessionStorage.FK_CONCESSIONARIA);
+        } else if (sessionStorage.FK_EMPRESA) {
+            params.set("idEmpresa", sessionStorage.FK_EMPRESA);
+        }
+    } catch (e) { }
+    return params;
+}
+
+function montarUrlDashboard() {
+    var urlParams = new URLSearchParams(window.location.search);
+    var idParam = urlParams.get("id");
+    var srvParam = urlParams.get("srv");
+    var identificador = idParam || srvParam;
+
+    var query = obterParametrosEscopo();
+    query.set("limite", "20");
+
+    var caminho = identificador
+        ? "/monitoramento/dashboard/" + encodeURIComponent(identificador)
+        : "/monitoramento/dashboard";
+
+    return API_BASE + caminho + "?" + query.toString();
+}
+
+function destruirGraficos() {
+    chartsGauges.forEach(function (c) {
+        if (c) c.destroy();
+    });
+    chartsGauges = [];
+
+    if (chartCpu) { chartCpu.destroy(); chartCpu = null; }
+    if (chartRam) { chartRam.destroy(); chartRam = null; }
+    if (chartLatencia) { chartLatencia.destroy(); chartLatencia = null; }
+}
+
+function garantirCanvas(idCanvas) {
+    var canvas = document.getElementById(idCanvas);
+    if (canvas) {
+        canvas.style.display = "block";
+        var aviso = canvas.parentElement.querySelector(".grafico-vazio");
+        if (aviso) aviso.remove();
     }
-];
+    return canvas;
+}
 
-function montarGauges() {
+function mostrarEstadoVazioGrafico(idCanvas, mensagem) {
+    var canvas = document.getElementById(idCanvas);
+    if (!canvas) return;
+    canvas.style.display = "none";
+
+    var container = canvas.parentElement;
+    var aviso = container.querySelector(".grafico-vazio");
+    if (!aviso) {
+        aviso = document.createElement("div");
+        aviso.className = "grafico-vazio";
+        aviso.style.cssText = "display:flex;align-items:center;justify-content:center;height:100%;color:#64748b;font-family:'Inter',sans-serif;font-size:13px;text-align:center;padding:16px;";
+        container.appendChild(aviso);
+    }
+    aviso.textContent = mensagem;
+}
+
+function atualizarCabecalho(srv, totalServidores) {
+    var descricao = srv.tipo_descricao || srv.tipo || "Servidor monitorado";
+    if (srv.nome_praca) {
+        descricao += " • " + srv.nome_praca;
+    }
+    if (srv.rodovia) {
+        descricao += " (" + srv.rodovia + (numeroValido(srv.km) ? ", km " + Number(srv.km).toFixed(1) : "") + ")";
+    }
+
+    document.title = "SorveSys | " + srv.nome;
+    document.getElementById("bc_nome").textContent = srv.nome;
+    document.getElementById("titulo_nome").textContent = srv.nome;
+    document.getElementById("titulo_desc").textContent = descricao;
+    document.getElementById("titulo_ip").textContent = srv.ip || "Sem IP";
+
+    var elNavTotal = document.getElementById("nav_total");
+    if (elNavTotal && numeroValido(totalServidores)) {
+        elNavTotal.textContent = totalServidores;
+    }
+
+    document.getElementById("legenda_ram").textContent = numeroValido(srv.ram)
+        ? "Ativa (" + Number(srv.ram).toFixed(1) + "%)"
+        : "Sem leituras";
+
+    document.getElementById("selo_latencia").textContent = numeroValido(srv.latencia_media)
+        ? "Média: " + Number(srv.latencia_media).toFixed(1) + " ms"
+        : (numeroValido(srv.latencia) ? "Atual: " + Number(srv.latencia).toFixed(1) + " ms" : "Sem leituras");
+}
+
+function montarGauges(srv, animar) {
+    var cpuAtual = numeroValido(srv.cpu) ? Number(srv.cpu) : null;
+    var tempAtual = numeroValido(srv.temp) ? Number(srv.temp) : null;
+    var ramAtual = numeroValido(srv.ram) ? Number(srv.ram) : null;
+    var discoAtual = numeroValido(srv.disco) ? Number(srv.disco) : null;
+    var discoLivre = numeroValido(srv.disco_livre)
+        ? Number(srv.disco_livre)
+        : (discoAtual !== null ? Math.max(0, 100 - discoAtual) : null);
+    var ramLivre = ramAtual !== null ? Math.max(0, 100 - ramAtual) : null;
+    var latAtual = numeroValido(srv.latencia) ? Number(srv.latencia) : null;
+
+    var statusRedeTexto = "Aguardando<br>telemetria";
+    if (numeroValido(srv.status_conectividade)) {
+        statusRedeTexto = Number(srv.status_conectividade) > 0 ? "Conectado" : "Offline";
+    } else if (latAtual !== null) {
+        statusRedeTexto = latAtual >= LIMITE_LATENCIA_PADRAO ? "Latência<br>Alta" : "Link<br>Estável";
+    }
+
+    var latCritica = latAtual !== null && latAtual >= LIMITE_LATENCIA_PADRAO;
+
+    var gauges = [
+        {
+            id: "cpu",
+            titulo: "CPU Total",
+            badge: cpuAtual !== null ? cpuAtual.toFixed(1) + "%" : "--",
+            cor: corPorPercentual(cpuAtual, COR_LARANJA),
+            valor: cpuAtual !== null ? cpuAtual : 0,
+            max: 100,
+            centro: cpuAtual !== null ? Math.round(cpuAtual) + "%" : "--",
+            esq: "Média: " + (numeroValido(srv.cpu_media) ? Number(srv.cpu_media).toFixed(1) + "%" : "--"),
+            dir: "<b>Pico: " + (numeroValido(srv.cpu_pico) ? Number(srv.cpu_pico).toFixed(1) + "%" : "--") + "</b>"
+        },
+        {
+            id: "temp",
+            titulo: "Temp CPU",
+            badge: tempAtual !== null ? tempAtual.toFixed(1) + "°C" : "--",
+            cor: corPorPercentual(tempAtual, "#d97706"),
+            valor: tempAtual !== null ? tempAtual : 0,
+            max: 100,
+            centro: tempAtual !== null ? Math.round(tempAtual) + "°C" : "--",
+            esq: "Média: " + (numeroValido(srv.temp_media) ? Number(srv.temp_media).toFixed(1) + "°C" : "--"),
+            dir: "<b>Máx: " + (numeroValido(srv.temp_max) ? Number(srv.temp_max).toFixed(1) + "°C" : "--") + "</b>"
+        },
+        {
+            id: "ram",
+            titulo: "RAM Utilizada",
+            badge: ramAtual !== null ? ramAtual.toFixed(1) + "%" : "--",
+            cor: corPorPercentual(ramAtual, COR_LARANJA),
+            valor: ramAtual !== null ? ramAtual : 0,
+            max: 100,
+            centro: ramAtual !== null ? Math.round(ramAtual) + "%" : "--",
+            esq: "Livre: " + (ramLivre !== null ? ramLivre.toFixed(1) + "%" : "--"),
+            dir: "<b>Pico: " + (numeroValido(srv.ram_pico) ? Number(srv.ram_pico).toFixed(1) + "%" : "--") + "</b>"
+        },
+        {
+            id: "nvme",
+            titulo: "Uso de Disco",
+            badge: discoAtual !== null ? discoAtual.toFixed(1) + "%" : "--",
+            cor: corPorPercentual(discoAtual, "#ea580c"),
+            valor: discoAtual !== null ? discoAtual : 0,
+            max: 100,
+            centro: discoAtual !== null ? Math.round(discoAtual) + "%" : "--",
+            esq: "Livre: " + (discoLivre !== null ? discoLivre.toFixed(1) + "%" : "--"),
+            dir: "<b>Uso: " + (discoAtual !== null ? discoAtual.toFixed(1) + "%" : "--") + "</b>"
+        },
+        {
+            id: "lat",
+            titulo: "Latência CCO",
+            badge: latAtual !== null ? latAtual.toFixed(1) + " ms" : "Sem dados",
+            verde: latAtual !== null && !latCritica,
+            cor: latAtual === null ? "#94a3b8" : (latCritica ? "#dc2626" : "#059669"),
+            valor: latAtual !== null ? latAtual : 0,
+            max: Math.max(LIMITE_LATENCIA_PADRAO, latAtual || 0),
+            centro: latAtual !== null ? latAtual.toFixed(1) + "ms" : "--",
+            corCentro: latAtual === null ? "#64748b" : (latCritica ? "#dc2626" : "#059669"),
+            esq: numeroValido(srv.latencia_jitter)
+                ? "Jitter:<br>±" + Number(srv.latencia_jitter).toFixed(1) + "ms"
+                : "Média:<br>" + (numeroValido(srv.latencia_media) ? Number(srv.latencia_media).toFixed(1) + "ms" : "--"),
+            dir: '<span class="' + (latCritica ? "" : "verde") + '">' + statusRedeTexto + "</span>"
+        }
+    ];
+
     var html = "";
-
     gauges.forEach(function (g) {
         html += '<article class="gauge">' +
             '<div class="gauge-topo">' +
@@ -195,13 +320,14 @@ function montarGauges() {
     document.getElementById("gauges").innerHTML = html;
 
     gauges.forEach(function (g) {
-        var restante = Math.max(0, g.max - g.valor);
+        var preenchido = Math.max(0, Math.min(g.valor, g.max));
+        var restante = Math.max(0, g.max - preenchido);
 
-        new Chart(document.getElementById("gauge_" + g.id), {
+        var instancia = new Chart(document.getElementById("gauge_" + g.id), {
             type: "doughnut",
             data: {
                 datasets: [{
-                    data: [Math.min(g.valor, g.max), restante],
+                    data: [preenchido, restante],
                     backgroundColor: [g.cor, COR_TRILHA],
                     borderWidth: 0
                 }]
@@ -210,7 +336,7 @@ function montarGauges() {
                 responsive: true,
                 maintainAspectRatio: false,
                 cutout: "76%",
-                animation: { duration: 900 },
+                animation: { duration: animar ? 900 : 0 },
                 plugins: {
                     legend: { display: false },
                     tooltip: { enabled: false },
@@ -218,12 +344,16 @@ function montarGauges() {
                 }
             }
         });
+        chartsGauges.push(instancia);
     });
 }
 
 function fixarTooltip(grafico, indice) {
+    if (indice < 0) return;
+    var meta = grafico.getDatasetMeta(0);
+    if (!meta || !meta.data || !meta.data[indice]) return;
     grafico.setActiveElements([{ datasetIndex: 0, index: indice }]);
-    var ponto = grafico.getDatasetMeta(0).data[indice];
+    var ponto = meta.data[indice];
     grafico.tooltip.setActiveElements([{ datasetIndex: 0, index: indice }], { x: ponto.x, y: ponto.y });
     grafico.update();
 }
@@ -263,22 +393,32 @@ function opcoesEixos(yMax, passo, sufixo) {
     };
 }
 
-function graficoCpu() {
-    var idxPico = indiceMaximo(serieCpu);
+function renderizarGraficoCpu(historico, animar) {
+    var pontos = historico.filter(function (h) { return numeroValido(h.cpu_uso_percent); });
+    if (pontos.length === 0) {
+        mostrarEstadoVazioGrafico("grafico_cpu", "Sem leituras históricas de CPU registradas para este servidor.");
+        return;
+    }
 
-    var g = new Chart(document.getElementById("grafico_cpu"), {
+    var canvas = garantirCanvas("grafico_cpu");
+    var labels = pontos.map(function (h) { return h.horario_label || "--"; });
+    var valores = pontos.map(function (h) { return Number(h.cpu_uso_percent); });
+    var limite = numeroValido(pontos[0].limite_critico_cpu) ? Number(pontos[0].limite_critico_cpu) : LIMITE_CPU_PADRAO;
+    var idxPico = indiceMaximo(valores);
+
+    chartCpu = new Chart(canvas, {
         type: "line",
         data: {
-            labels: HORARIOS,
+            labels: labels,
             datasets: [{
                 label: "CPU",
-                data: serieCpu,
+                data: valores,
                 borderColor: COR_LARANJA,
                 backgroundColor: "rgba(255, 154, 26, .16)",
                 borderWidth: 2,
                 fill: true,
                 tension: 0.25,
-                pointRadius: serieCpu.map(function (v, i) { return i == idxPico ? 4 : 2.5; }),
+                pointRadius: valores.map(function (v, i) { return i === idxPico || valores.length === 1 ? 4 : 2.5; }),
                 pointBackgroundColor: COR_LARANJA,
                 pointHoverRadius: 5
             }]
@@ -288,7 +428,7 @@ function graficoCpu() {
             maintainAspectRatio: false,
             interaction: { mode: "nearest", intersect: false },
             animation: {
-                duration: 700,
+                duration: animar ? 700 : 0,
                 onComplete: function (e) {
                     if (e.chart._fixou) return;
                     e.chart._fixou = true;
@@ -298,36 +438,45 @@ function graficoCpu() {
             scales: opcoesEixos(100, 25, "%"),
             plugins: {
                 legend: { display: false },
-                linhaLimite: { valor: LIMITE_CPU },
+                linhaLimite: { valor: limite },
                 tooltip: Object.assign(estiloTooltip(), {
                     callbacks: {
                         title: function (itens) {
                             var i = itens[0].dataIndex;
-                            return itens[0].label + (i == idxPico ? " (Pico)" : "");
+                            return itens[0].label + (i === idxPico ? " (Pico)" : "");
                         },
-                        label: function (item) { return "CPU: " + item.parsed.y + "%"; }
+                        label: function (item) { return "CPU: " + item.parsed.y.toFixed(1) + "%"; }
                     }
                 })
             }
         }
     });
-    return g;
 }
 
-function graficoRam() {
-    return new Chart(document.getElementById("grafico_ram"), {
+function renderizarGraficoRam(historico, animar) {
+    var pontos = historico.filter(function (h) { return numeroValido(h.ram_uso_percent); });
+    if (pontos.length === 0) {
+        mostrarEstadoVazioGrafico("grafico_ram", "Sem leituras históricas de memória RAM registradas para este servidor.");
+        return;
+    }
+
+    var canvas = garantirCanvas("grafico_ram");
+    var labels = pontos.map(function (h) { return h.horario_label || "--"; });
+    var valores = pontos.map(function (h) { return Number(h.ram_uso_percent); });
+
+    chartRam = new Chart(canvas, {
         type: "line",
         data: {
-            labels: HORARIOS,
+            labels: labels,
             datasets: [{
                 label: "RAM ativa",
-                data: serieRam,
+                data: valores,
                 borderColor: COR_LARANJA,
                 backgroundColor: "rgba(255, 154, 26, .16)",
                 borderWidth: 2,
                 fill: true,
                 tension: 0.2,
-                pointRadius: serieRam.map(function (v, i) { return i == serieRam.length - 1 ? 3.5 : 0; }),
+                pointRadius: valores.map(function (v, i) { return i === valores.length - 1 ? 4 : 2; }),
                 pointBackgroundColor: COR_LARANJA,
                 pointHoverRadius: 5
             }]
@@ -336,12 +485,13 @@ function graficoRam() {
             responsive: true,
             maintainAspectRatio: false,
             interaction: { mode: "nearest", intersect: false },
-            scales: opcoesEixos(RAM_TOTAL_GB, 4, " GB"),
+            animation: { duration: animar ? 700 : 0 },
+            scales: opcoesEixos(100, 25, "%"),
             plugins: {
                 legend: { display: false },
                 tooltip: Object.assign(estiloTooltip(), {
                     callbacks: {
-                        label: function (item) { return "RAM: " + item.parsed.y + " GB"; }
+                        label: function (item) { return "RAM: " + item.parsed.y.toFixed(1) + "%"; }
                     }
                 })
             }
@@ -349,29 +499,41 @@ function graficoRam() {
     });
 }
 
-function graficoLatencia() {
-    var idxPico = indiceMaximo(serieLat);
-    var ultimo = serieLat.length - 1;
+function renderizarGraficoLatencia(historico, animar) {
+    var pontos = historico.filter(function (h) { return numeroValido(h.latencia_ms); });
+    if (pontos.length === 0) {
+        mostrarEstadoVazioGrafico("grafico_latencia", "Sem leituras históricas de latência registradas para este servidor.");
+        return;
+    }
 
-    var cores = serieLat.map(function (v, i) {
-        if (v >= LIMITE_LATENCIA) return "#dc2626";
-        if (i == ultimo) return "#059669";
+    var canvas = garantirCanvas("grafico_latencia");
+    var labels = pontos.map(function (h) { return h.horario_label || "--"; });
+    var valores = pontos.map(function (h) { return Number(h.latencia_ms); });
+    var limite = numeroValido(pontos[0].limite_critico_latencia) ? Number(pontos[0].limite_critico_latencia) : LIMITE_LATENCIA_PADRAO;
+    var idxPico = indiceMaximo(valores);
+    var ultimo = valores.length - 1;
+    var maiorValor = idxPico >= 0 ? valores[idxPico] : 0;
+    var yMax = Math.max(30, Math.ceil((maiorValor + 5) / 10) * 10);
+
+    var cores = valores.map(function (v, i) {
+        if (v >= limite) return "#dc2626";
+        if (i === ultimo) return "#059669";
         return COR_LARANJA;
     });
 
-    return new Chart(document.getElementById("grafico_latencia"), {
+    chartLatencia = new Chart(canvas, {
         type: "line",
         data: {
-            labels: HORARIOS_LAT,
+            labels: labels,
             datasets: [{
                 label: "Latência",
-                data: serieLat,
+                data: valores,
                 borderColor: COR_LARANJA,
                 backgroundColor: "rgba(255, 154, 26, .14)",
                 borderWidth: 2,
                 fill: true,
                 tension: 0.3,
-                pointRadius: serieLat.map(function (v) { return v >= LIMITE_LATENCIA ? 4 : 3; }),
+                pointRadius: valores.map(function (v) { return v >= limite ? 4 : 3; }),
                 pointBackgroundColor: cores,
                 pointBorderColor: cores,
                 pointHoverRadius: 5
@@ -382,24 +544,24 @@ function graficoLatencia() {
             maintainAspectRatio: false,
             interaction: { mode: "nearest", intersect: false },
             animation: {
-                duration: 700,
+                duration: animar ? 700 : 0,
                 onComplete: function (e) {
                     if (e.chart._fixou) return;
                     e.chart._fixou = true;
-                    if (serieLat[idxPico] >= LIMITE_LATENCIA) fixarTooltip(e.chart, idxPico);
+                    if (idxPico >= 0 && valores[idxPico] >= limite) fixarTooltip(e.chart, idxPico);
                 }
             },
-            scales: opcoesEixos(30, 10, "ms"),
+            scales: opcoesEixos(yMax, Math.max(10, Math.round(yMax / 3)), "ms"),
             plugins: {
                 legend: { display: false },
-                linhaLimite: { valor: LIMITE_LATENCIA },
+                linhaLimite: { valor: limite },
                 tooltip: Object.assign(estiloTooltip(), {
                     bodyColor: "#fca5a5",
                     callbacks: {
                         title: function () { return ""; },
                         label: function (item) {
-                            var extra = item.parsed.y >= LIMITE_LATENCIA ? " (Rota L3)" : "";
-                            return item.label + " • " + item.parsed.y + " ms" + extra;
+                            var extra = item.parsed.y >= limite ? " (Acima do limite)" : "";
+                            return item.label + " • " + item.parsed.y.toFixed(1) + " ms" + extra;
                         }
                     }
                 })
@@ -408,20 +570,120 @@ function graficoLatencia() {
     });
 }
 
+function carregarDashboard(primeiraCarga) {
+    if (carregandoDashboard) return;
+    carregandoDashboard = true;
 
+    var url = montarUrlDashboard();
+
+    fetch(url)
+        .then(function (res) {
+            return res.json().then(function (json) {
+                return { ok: res.ok, status: res.status, json: json };
+            });
+        })
+        .then(function (resultado) {
+            if (!resultado.ok || !resultado.json || !resultado.json.servidor) {
+                var msg = (resultado.json && resultado.json.mensagem)
+                    ? resultado.json.mensagem
+                    : "Servidor não encontrado no banco de dados.";
+                document.getElementById("bc_nome").textContent = "Não encontrado";
+                document.getElementById("titulo_nome").textContent = "Servidor não encontrado";
+                document.getElementById("titulo_desc").textContent = msg;
+                document.getElementById("titulo_ip").textContent = "--";
+                document.getElementById("gauges").innerHTML = "";
+                mostrarEstadoVazioGrafico("grafico_cpu", msg);
+                mostrarEstadoVazioGrafico("grafico_ram", msg);
+                mostrarEstadoVazioGrafico("grafico_latencia", msg);
+                return;
+            }
+
+            dadosDashboardAtual = resultado.json;
+            var srv = dadosDashboardAtual.servidor;
+            var historico = Array.isArray(dadosDashboardAtual.historico) ? dadosDashboardAtual.historico : [];
+
+            destruirGraficos();
+            atualizarCabecalho(srv, dadosDashboardAtual.totalServidores);
+            montarGauges(srv, primeiraCarga);
+            renderizarGraficoCpu(historico, primeiraCarga);
+            renderizarGraficoRam(historico, primeiraCarga);
+            renderizarGraficoLatencia(historico, primeiraCarga);
+        })
+        .catch(function (erro) {
+            console.error("Erro ao carregar dashboard:", erro);
+            if (!dadosDashboardAtual) {
+                document.getElementById("titulo_nome").textContent = "Erro de conexão";
+                document.getElementById("titulo_desc").textContent = "Não foi possível carregar os dados do banco de dados.";
+            }
+        })
+        .finally(function () {
+            carregandoDashboard = false;
+        });
+}
+
+function exportarDados() {
+    if (!dadosDashboardAtual || !dadosDashboardAtual.servidor) {
+        alert("Aguarde o carregamento dos dados antes de exportar.");
+        return;
+    }
+
+    var srv = dadosDashboardAtual.servidor;
+    var historico = Array.isArray(dadosDashboardAtual.historico) ? dadosDashboardAtual.historico : [];
+
+    var linhas = [
+        "Servidor;Tipo;IP;Praca;Rodovia;Status;CPU_Atual(%);Temp_Atual(C);RAM_Atual(%);Disco_Uso(%);Disco_Livre(%);Latencia_Atual(ms)",
+        [
+            srv.nome,
+            srv.tipo_descricao || srv.tipo,
+            srv.ip,
+            srv.nome_praca || "",
+            srv.rodovia || "",
+            srv.status,
+            formatarNumero(srv.cpu, 1),
+            formatarNumero(srv.temp, 1),
+            formatarNumero(srv.ram, 1),
+            formatarNumero(srv.disco, 1),
+            formatarNumero(srv.disco_livre, 1),
+            formatarNumero(srv.latencia, 1)
+        ].join(";"),
+        "",
+        "Data_Hora;Horario;CPU_Uso(%);RAM_Uso(%);Latencia(ms)"
+    ];
+
+    historico.forEach(function (h) {
+        linhas.push([
+            h.dt_hora || "",
+            h.horario_label || "",
+            formatarNumero(h.cpu_uso_percent, 2),
+            formatarNumero(h.ram_uso_percent, 2),
+            formatarNumero(h.latencia_ms, 2)
+        ].join(";"));
+    });
+
+    var blob = new Blob(["\uFEFF" + linhas.join("\n")], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    var agora = new Date();
+    var carimbo = agora.getFullYear() +
+        String(agora.getMonth() + 1).padStart(2, "0") +
+        String(agora.getDate()).padStart(2, "0") + "-" +
+        String(agora.getHours()).padStart(2, "0") +
+        String(agora.getMinutes()).padStart(2, "0");
+
+    link.href = url;
+    link.download = "sorvesys-" + (srv.nome || "servidor").toLowerCase() + "-" + carimbo + ".csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
 
 function sair() {
     try { sessionStorage.clear(); } catch (e) { }
     window.location = "/login";
 }
 
-try {
-    if (sessionStorage.NOME_USUARIO) {
-        document.getElementById("nome_operador").innerHTML = sessionStorage.NOME_USUARIO;
-    }
-} catch (e) { }
-
-montarGauges();
-graficoCpu();
-graficoRam();
-graficoLatencia();
+// ===== INÍCIO =====
+preencherDadosOperador();
+carregarDashboard(true);
+setInterval(function () { carregarDashboard(false); }, 15000);

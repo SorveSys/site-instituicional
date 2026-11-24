@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -13,11 +12,13 @@
 
     <link rel="icon" href="assets/LOGO SORVESYS.png">
     <link rel="stylesheet" href="/css/login.css">
-    <link rel="stylesheet" href="/css/cadastro-empresa.css">
+    <link rel="stylesheet" href="../public/css/cadastro-empresa.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body class="pagina-cadastro-empresa">
@@ -54,7 +55,7 @@
                     <h2>Infraestrutura Inteligente de Arrecadação &amp; Pedágio</h2>
                     <p>Monitoramento integrado de servidores de pórticos.</p>
 
-                    
+
                 </div>
 
             </div>
@@ -71,19 +72,19 @@
 
                     <a href="cadastro-empresa.html" class="tab ativa">
                         <img src="./assets/icons/login/Icon-cadastrar.svg" alt="" class="ico">
-                        Cadastrar Concessionária
+                        Cadastrar Empresa
                     </a>
                 </div>
 
                 <span class="status-tag">
                     <i class="ponto"></i>
-                    Cadastro de concessionária
+                    Cadastro de Empresa
                 </span>
 
                 <h1>Nova Empresa</h1>
 
                 <p class="subtitulo">
-                    Cadastre sua concessionária para vincular praças,
+                    Cadastre sua Empresa para vincular praças,
                     servidores e monitoramento operacional.
                 </p>
 
@@ -93,17 +94,14 @@
                         <label for="ipt_fantasia">Nome Fantasia</label>
 
                         <p class="ajuda">
-                            Nome comercial utilizado pela concessionária.
+                            Nome comercial utilizado pela empresa.
                         </p>
 
                         <div class="campo-input">
-                            <img src="/assets/icons/cadastro-empresa/Icon-predio.svg"
-                                 alt="" class="ico ico-campo">
+                            <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
 
-                            <input type="text"
-                                   id="ipt_fantasia"
-                                   placeholder="Rodovias do Sul"
-                                   autocomplete="organization">
+                            <input type="text" id="ipt_fantasia" placeholder="Rodovias do Sul"
+                                autocomplete="organization">
                         </div>
                     </div>
 
@@ -115,13 +113,10 @@
                         </p>
 
                         <div class="campo-input">
-                            <img src="/assets/icons/cadastro-empresa/Icon-predio.svg"
-                                 alt="" class="ico ico-campo">
+                            <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
 
-                            <input type="text"
-                                   id="ipt_razao"
-                                   placeholder="Empresa Rodovias do Sul S.A."
-                                   autocomplete="organization">
+                            <input type="text" id="ipt_razao" placeholder="Empresa Rodovias do Sul S.A."
+                                autocomplete="organization">
                         </div>
                     </div>
 
@@ -129,20 +124,14 @@
                         <label for="ipt_cnpj">CNPJ <b>*</b></label>
 
                         <p class="ajuda">
-                            Informe o CNPJ da concessionária.
+                            Informe o CNPJ da empresa.
                         </p>
 
                         <div class="campo-input">
-                            <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg"
-                                 alt="" class="ico ico-campo">
+                            <img src="/assets/icons/cadastro-empresa/Icon-cracha.svg" alt="" class="ico ico-campo">
 
-                            <input type="text"
-                                   id="ipt_cnpj"
-                                   placeholder="00.000.000/0000-00"
-                                   inputmode="numeric"
-                                   maxlength="18"
-                                   oninput="mascararCnpj(this)"
-                                   autocomplete="off">
+                            <input type="text" id="ipt_cnpj" placeholder="00.000.000/0000-00" inputmode="numeric"
+                                maxlength="18" oninput="mascararCnpj(this)" autocomplete="off">
                         </div>
                     </div>
 
@@ -166,8 +155,7 @@
 
                 <div class="status-rodape">
                     <span class="seguranca">
-                        <img src="./assets/icons/login/Icon-escudo.svg"
-                             alt="Sessão protegida" class="ico">
+                        <img src="./assets/icons/login/Icon-escudo.svg" alt="Sessão protegida" class="ico">
                     </span>
 
                     <span class="telemetria">
@@ -256,46 +244,46 @@
                     nomeFantasiaServer: fantasiaVar
                 })
             })
-            .then(function (resposta) {
-                if (resposta.ok) {
-                    resposta.json()
-                    .then(function (dados) {
-                        if (dados && dados.id) {
-                            sessionStorage.setItem(
-                                "EMPRESA_CADASTRADA_ID",
-                                dados.id
-                            );
-                        }
+                .then(function (resposta) {
+                    if (resposta.ok) {
+                        resposta.json()
+                            .then(function (dados) {
+                                if (dados && dados.id) {
+                                    sessionStorage.setItem(
+                                        "EMPRESA_CADASTRADA_ID",
+                                        dados.id
+                                    );
+                                }
 
-                        finalizarCadastro();
-                    })
-                    .catch(function () {
-                        finalizarCadastro();
-                    });
+                                finalizarCadastro();
+                            })
+                            .catch(function () {
+                                finalizarCadastro();
+                            });
 
-                } else {
-                    resposta.text().then(function (texto) {
-                        if (texto.includes("Duplicate entry")) {
-                            mostrarMensagem(
-                                "Esse CNPJ já foi cadastrado!",
-                                false
-                            );
-                        } else {
-                            mostrarMensagem(
-                                "Erro ao realizar cadastro!",
-                                false
-                            );
-                        }
-                    });
-                }
-            })
-            .catch(function (erro) {
-                console.log(erro);
-                mostrarMensagem(
-                    "Erro ao tentar cadastrar a empresa!",
-                    false
-                );
-            });
+                    } else {
+                        resposta.text().then(function (texto) {
+                            if (texto.includes("Duplicate entry")) {
+                                mostrarMensagem(
+                                    "Esse CNPJ já foi cadastrado!",
+                                    false
+                                );
+                            } else {
+                                mostrarMensagem(
+                                    "Erro ao realizar cadastro!",
+                                    false
+                                );
+                            }
+                        });
+                    }
+                })
+                .catch(function (erro) {
+                    console.log(erro);
+                    mostrarMensagem(
+                        "Erro ao tentar cadastrar a empresa!",
+                        false
+                    );
+                });
 
             return false;
         }
@@ -313,4 +301,5 @@
     </script>
 
 </body>
+
 </html>

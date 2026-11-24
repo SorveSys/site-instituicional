@@ -1,3 +1,4 @@
+
 DROP DATABASE IF EXISTS sorvesys_db;
 CREATE DATABASE sorvesys_db;
 USE sorvesys_db;
@@ -100,6 +101,23 @@ CREATE TABLE alerta (
         REFERENCES registro_monitoramento(id),
     CONSTRAINT chk_categoria_alerta
         CHECK (categoria IN ('Normal', 'Moderado', 'Critico'))
+);
+
+CREATE TABLE chamado (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    chave_jira VARCHAR(20) NOT NULL UNIQUE,
+    motivo VARCHAR(50) NOT NULL,
+    descricao TEXT NOT NULL,
+    status_chamado VARCHAR(30) NOT NULL DEFAULT 'TO DO',
+    dt_abertura DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    fk_usuario INT NOT NULL,
+    fk_servidor INT NOT NULL,
+    CONSTRAINT fk_chamado_usuario 
+        FOREIGN KEY (fk_usuario) REFERENCES usuario(id),
+    CONSTRAINT fk_chamado_servidor 
+        FOREIGN KEY (fk_servidor) REFERENCES servidor(id),
+    CONSTRAINT chk_motivo_chamado 
+        CHECK (motivo IN ('Inatividade', 'Solicitar Troca', 'Solicitar Análise'))
 );
 
 INSERT INTO empresa
@@ -283,6 +301,3 @@ JOIN concessionaria con ON s.fk_concessionaria = con.id
 LEFT JOIN config cfg ON cfg.fk_servidor = s.id
 LEFT JOIN registro_monitoramento rm ON rm.fk_config = cfg.id
 GROUP BY s.id, s.tipo, s.ip, con.nome_praca;
-
-
-

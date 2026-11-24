@@ -15,7 +15,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -37,7 +39,7 @@
 
     <main class="split">
 
-      
+
         <section class="hero">
             <div class="hero-card">
                 <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
@@ -50,18 +52,20 @@
                 <div class="hero-texto">
                     <span class="hero-tag">Operação em tempo real</span>
                     <h2>Infraestrutura Inteligente de Arrecadação &amp; Pedágio</h2>
-                    <p>Monitoramento integrado de servidores de pórticos.</p>  
+                    <p>Monitoramento integrado de servidores de pórticos.</p>
                 </div>
             </div>
         </section>
 
-       
+
         <section class="painel">
             <div class="painel-conteudo">
 
                 <div class="tabs">
-                    <a href="login.html" class="tab ativa"><img src="./assets/icons/login/Icon-entrar-conta.svg" alt="" class="ico"> Entrar na Conta</a>
-                    <a href="cadastro-empresa.html" class="tab"><img src="./assets/icons/login/Icon-cadastrar.svg" alt="" class="ico"> Cadastrar Concessionária</a>
+                    <a href="login.html" class="tab ativa"><img src="./assets/icons/login/Icon-entrar-conta.svg" alt=""
+                            class="ico"> Entrar na Conta</a>
+                    <a href="cadastro-empresa.html" class="tab"><img src="./assets/icons/login/Icon-cadastrar.svg"
+                            alt="" class="ico"> Cadastrar Empresa</a>
                 </div>
 
                 <span class="status-tag"><i class="ponto"></i> Terminal homologado</span>
@@ -74,7 +78,8 @@
                         <label for="ipt_email">E-mail corporativo</label>
                         <div class="campo-input">
                             <img src="./assets/icons/login/Icon-email.svg" alt="" class="ico ico-campo">
-                            <input type="email" id="ipt_email" placeholder="ex: operador@concessionaria.com.br" autocomplete="email">
+                            <input type="email" id="ipt_email" placeholder="ex: operador@empresa.com.br"
+                                autocomplete="email">
                         </div>
                     </div>
 
@@ -85,8 +90,10 @@
                         </div>
                         <div class="campo-input">
                             <img src="./assets/icons/login/Icon-chave.svg" alt="" class="ico ico-campo">
-                            <input type="password" id="ipt_senha" placeholder="••••••••••••" autocomplete="current-password">
-                            <button type="button" class="olho" id="btn_olho" onclick="alternarSenha()" aria-label="Mostrar senha">
+                            <input type="password" id="ipt_senha" placeholder="••••••••••••"
+                                autocomplete="current-password">
+                            <button type="button" class="olho" id="btn_olho" onclick="alternarSenha()"
+                                aria-label="Mostrar senha">
                                 <img src="./assets/icons/login/Icon-olho.svg" alt="" class="ico" id="icone_olho">
                             </button>
                         </div>
@@ -102,8 +109,9 @@
                 </form>
 
                 <p class="alternar">
-                    Não possui empresa cadastrada? 
-                    <a href="cadastro-empresa.html">Alternar para Cadastro de Concessionária <img src="./assets/icons/login/Icon-seta.svg" alt="" class="ico ico-mini"></a>
+                    Não possui empresa cadastrada?
+                    <a href="cadastro-empresa.html">Alternar para Cadastro de Empresa <img
+                            src="./assets/icons/login/Icon-seta.svg" alt="" class="ico ico-mini"></a>
                 </p>
 
                 <div class="status-rodape">
@@ -130,7 +138,7 @@
                 : "./assets/icons/login/Icon-olho.svg";
         }
 
-        
+
         window.addEventListener("load", function () {
             try {
                 var salvo = localStorage.getItem("EMAIL_LEMBRADO");
@@ -178,13 +186,16 @@
 
                         resposta.json().then(json => {
 
+                            sessionStorage.clear();
                             sessionStorage.EMAIL_USUARIO = json.email;
                             sessionStorage.NOME_USUARIO = json.nome;
                             sessionStorage.ID_USUARIO = json.id;
                             if (json.fk_empresa) sessionStorage.FK_EMPRESA = json.fk_empresa;
+                            if (json.fk_concessionaria) sessionStorage.FK_CONCESSIONARIA = json.fk_concessionaria;
                             if (json.fk_tipo_usuario) sessionStorage.FK_TIPO_USUARIO = json.fk_tipo_usuario;
                             if (json.perfil) sessionStorage.PERFIL_USUARIO = json.perfil;
                             if (json.empresa) sessionStorage.EMPRESA_USUARIO = json.empresa;
+                            if (json.nome_praca) sessionStorage.NOME_PRACA = json.nome_praca;
 
                             cardErro.className = "card-erro sucesso";
                             cardErro.style.display = "block";
