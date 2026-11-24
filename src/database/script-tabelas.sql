@@ -1,3 +1,4 @@
+
 DROP DATABASE IF EXISTS sorvesys_db;
 CREATE DATABASE sorvesys_db;
 USE sorvesys_db;
@@ -300,6 +301,3 @@ JOIN concessionaria con ON s.fk_concessionaria = con.id
 LEFT JOIN config cfg ON cfg.fk_servidor = s.id
 LEFT JOIN registro_monitoramento rm ON rm.fk_config = cfg.id
 GROUP BY s.id, s.tipo, s.ip, con.nome_praca;
-
-
-
