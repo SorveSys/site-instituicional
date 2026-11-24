@@ -13,7 +13,9 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
 
     <!-- Chart.js 4.4.1 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -26,7 +28,8 @@
         <aside class="sidebar">
             <div class="sidebar-topo">
                 <div class="marca-icone">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
                         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
                     </svg>
                 </div>
@@ -111,7 +114,8 @@
                         <small>Telemetria Rodoviária</small>
                     </div>
                     <button class="btn-sair-sidebar" onclick="window.location.href='/login'" title="Sair do sistema">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                             <polyline points="16 17 21 12 16 7"></polyline>
                             <line x1="21" y1="12" x2="9" y2="12"></line>
@@ -124,95 +128,52 @@
         <!-- MAIN AREA -->
         <main class="main-area">
 
-            <!-- TOP STATUS STRIP -->
-            <header class="top-status-strip">
-                <div class="status-sistema">
-                    <strong>SISTEMA</strong>
-                    <span style="color:#cbd5e1">/</span>
-                    <span>Centro de Operações de Rede</span>
-                    <span style="color:#94a3b8">•</span>
-                    <div class="live-indicator">
-                        <span class="live-dot"></span>
-                        <span>Telemetria Ativa</span>
-                    </div>
+            <!-- PAGE HEADER (padrão simples) -->
+            <header class="page-header">
+                <div class="page-header-titulo">
+                    <h1>Termômetro de Estresse dos Servidores</h1>
+                    <p>Monitoramento de temperatura e utilização da CPU nos servidores Free Flow</p>
                 </div>
-
-                <div class="top-strip-right">
-                    <div class="sync-badge">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="23 4 23 10 17 10"></polyline>
-                            <polyline points="1 20 1 14 7 14"></polyline>
-                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                <div class="page-header-acoes">
+                    <span class="atualizado-label">
+                        Atualizado: <strong id="hora_atualizado" class="mono">--:--</strong>
+                    </span>
+                    <button id="btn_exportar" class="btn-exportar">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
                         </svg>
-                        <span id="hora_sync">SYNC 14:22:18 BRT</span>
-                    </div>
-
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="cursor:pointer">
-                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-                    </svg>
-
-                    <div class="top-avatar">OP</div>
+                        Exportar Relatório
+                    </button>
                 </div>
             </header>
 
             <!-- DASHBOARD WRAPPER -->
             <div class="dashboard-wrapper">
 
-                <!-- BREADCRUMB -->
-                <div class="breadcrumb-bar">
-                    <a href="/overview">Overview</a>
-                    <span class="breadcrumb-sep">/</span>
-                    <a href="/servidores">Servidores</a>
-                    <span class="breadcrumb-sep">/</span>
-                    <span class="breadcrumb-badge">Termômetro de Estresse</span>
-                </div>
-
-                <!-- TITLE ROW -->
-                <div class="header-row">
-                    <div class="header-title-box">
-                        <div class="header-title-left">
-                            <span class="status-dot-critical"></span>
-                            <h1>Estresse Térmico dos Servidores</h1>
-                            <span class="badge-analista">Perfil: Analista NOC</span>
-                        </div>
-
-                        <div class="header-subtext">
-                            <span>Atualizado às <strong id="hora_atualizado" class="mono">14:22:04</strong></span>
-                            <span>•</span>
-                            <span>Polling a cada 5s</span>
+                <!-- SELEÇÃO RÁPIDA DE SERVIDORES (SEM SELECTS) -->
+                <div class="filtros-bar">
+                    <div class="servidores-selector-wrapper">
+                        <span class="servidores-label">Servidor:</span>
+                        <div class="servidores-chips-container" id="servidores_chips">
+                            <button class="chip-servidor ativo" data-id="todos" onclick="selecionarServidorChip('todos')">
+                                <span class="chip-host">Todos os Servidores</span>
+                            </button>
+                            <button class="chip-servidor critico-destaque" data-id="7" data-host="SRV-AU03" onclick="selecionarServidorChip(7, 'SRV-AU03')">
+                                <span class="chip-dot critico"></span>
+                                <span class="chip-host">SRV-AU03</span>
+                                <span class="chip-badge-temp">92.0°C Crítico</span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- CONTROLS & FILTERS BAR -->
-                    <div class="controls-bar">
-                        <div class="controls-left">
-                            <select id="select_praca" class="select-control" title="Filtrar por Praça">
-                                <option value="todas">Praça P1 - Rod. Bandeirantes Km 42</option>
-                            </select>
-
-                            <select id="select_servidor" class="select-control foco-critico" title="Filtrar por Servidor">
-                                <option value="todos">Foco Crítico: SRV-AU03 (Alerta 92°C)</option>
-                            </select>
-                        </div>
-
-                        <div class="controls-right">
-                            <div class="period-toggle">
-                                <button class="period-btn ativo" data-periodo="1h">1h</button>
-                                <button class="period-btn" data-periodo="6h">6h</button>
-                                <button class="period-btn" data-periodo="24h">24h</button>
-                                <button class="period-btn" data-periodo="7d">7d</button>
-                            </div>
-
-                            <button id="btn_exportar" class="btn-exportar">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                                    <polyline points="7 10 12 15 17 10"></polyline>
-                                    <line x1="12" y1="15" x2="12" y2="3"></line>
-                                </svg>
-                                <span>Exportar Relatório</span>
-                            </button>
-                        </div>
+                    <div class="period-toggle">
+                        <button class="period-btn ativo" data-periodo="1h">1h</button>
+                        <button class="period-btn" data-periodo="6h">6h</button>
+                        <button class="period-btn" data-periodo="24h">24h</button>
+                        <button class="period-btn" data-periodo="7d">7d</button>
                     </div>
                 </div>
 
@@ -333,7 +294,8 @@
                             <div class="chart-title-area">
                                 <h3>Histórico de Temperatura (°C)</h3>
                                 <div class="chart-subtitle" id="sub_chart_temp">
-                                    Duração contínua acima de 85°C: <strong class="destaque-red">22 min</strong> • SRV-AU03 Pico: <strong class="destaque-red">92.0°C</strong>
+                                    Duração contínua acima de 85°C: <strong class="destaque-red">22 min</strong> •
+                                    SRV-AU03 Pico: <strong class="destaque-red">92.0°C</strong>
                                 </div>
                             </div>
                         </div>
@@ -348,7 +310,8 @@
                             <div class="chart-title-area">
                                 <h3>Histórico de Utilização da CPU (%)</h3>
                                 <div class="chart-subtitle" id="sub_chart_cpu">
-                                    Pico: <strong style="color:#0284c7">92%</strong> | Média Período: <strong>58%</strong> • Carga Total Buffer ANTT
+                                    Pico: <strong style="color:#0284c7">92%</strong> | Média Período:
+                                    <strong>58%</strong> • Carga Total Buffer ANTT
                                 </div>
                             </div>
                         </div>
@@ -362,7 +325,8 @@
                         <div class="chart-header">
                             <div class="chart-title-area">
                                 <h3>Relação: Temperatura (°C) vs Uso de CPU (%)</h3>
-                                <div class="chart-subtitle">Dispersão multivariada para detecção de anomalia mecânica</div>
+                                <div class="chart-subtitle">Dispersão multivariada para detecção de anomalia mecânica
+                                </div>
                             </div>
                             <div class="chart-header-badges">
                                 <span class="chart-header-badge info" id="disp_r2">R² = +0.89</span>
@@ -375,7 +339,9 @@
                         <div class="diagnostico-box">
                             <div>
                                 <strong>Diagnóstico Preditivo:</strong>
-                                <span id="disp_diagnostico_texto">Ponto isolado SRV-AU03 exibe temperatura desproporcional à curva linear de carga. Indicação provável de obstrução mecânica no fluxo de ar do Rack P1.</span>
+                                <span id="disp_diagnostico_texto">Ponto isolado SRV-AU03 exibe temperatura
+                                    desproporcional à curva linear de carga. Indicação provável de obstrução mecânica no
+                                    fluxo de ar do Rack P1.</span>
                             </div>
                         </div>
                     </div>
@@ -409,8 +375,13 @@
                         </div>
 
                         <div class="table-search-box">
-                            <svg class="table-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                            <input type="text" id="input_busca_tabela" class="table-search-input" placeholder="Filtrar por host, IP ou função...">
+                            <svg class="table-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <input type="text" id="input_busca_tabela" class="table-search-input"
+                                placeholder="Filtrar por host, IP ou função...">
                         </div>
                     </div>
 
@@ -435,7 +406,8 @@
                     </div>
 
                     <div class="table-footer">
-                        <span id="tabela_mostrando_info">Mostrando 5 de 8 hosts monitorados • Cluster ANTT Integrado</span>
+                        <span id="tabela_mostrando_info">Mostrando 5 de 8 hosts monitorados • Cluster ANTT
+                            Integrado</span>
                         <div class="pagination-controls">
                             <button class="page-btn">Anterior</button>
                             <button class="page-btn ativo">Pág 1 de 2</button>
@@ -467,7 +439,8 @@
 
             <div class="modal-body">
                 <p style="font-size:13px;color:#334155;line-height:1.5;">
-                    O servidor selecionado atingiu temperatura superior ao limiar seguro de 85°C. Recomenda-se executar a contenção imediata para evitar thermal throttling nos pórticos Free Flow.
+                    O servidor selecionado atingiu temperatura superior ao limiar seguro de 85°C. Recomenda-se executar
+                    a contenção imediata para evitar thermal throttling nos pórticos Free Flow.
                 </p>
 
                 <div class="modal-info-grid">

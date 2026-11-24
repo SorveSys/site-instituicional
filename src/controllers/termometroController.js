@@ -395,59 +395,58 @@ function processarTabela(resultados, busca, res) {
 }
 
 function obterFiltros(req, res) {
-    Promise.all([
-        termometroModel.buscarListaConcessionarias(),
-        termometroModel.buscarListaServidores()
-    ]).then(function ([concessionarias, servidores]) {
-        var pracasFormatadas = [
-            { id: "todas", nome: "Todas as Praças / Malha Geral" }
-        ];
-        if (concessionarias && concessionarias.length > 0) {
-            concessionarias.forEach(function (c) {
-                pracasFormatadas.push({
-                    id: c.id,
-                    nome: `Praça P${c.id} - ${c.nome}`
-                });
+    termometroModel.buscarServidoresComUltimasMedidas(null, null)
+        .then(function (resultados) {
+            var dados = (resultados && resultados.length > 0) ? resultados : servidoresPadrao;
+            var servidores = dados.map(mapearServidor).map(function (s) {
+                var info = classificarTemperatura(s.temp_atual);
+                return {
+                    id: s.id_servidor,
+                    host: s.host,
+                    funcao: s.funcao,
+                    temp: Number(s.temp_atual),
+                    cpu: Number(s.cpu_atual),
+                    status: info.status,
+                    classeCss: info.classeCss,
+                    badgeClass: info.badgeClass,
+                    isCritico: Number(s.temp_atual) >= 85.0
+                };
             });
-        }
 
-        var servidoresFormatados = [
-            { id: "todos", nome: "Todos os Servidores" }
-        ];
-        if (servidores && servidores.length > 0) {
-            servidores.forEach(function (s) {
-                var mapped = mapearServidor(s);
-                var sufixo = mapped.host === "SRV-AU03" ? " (Foco Crítico: Alerta 92°C)" : "";
-                servidoresFormatados.push({
-                    id: s.id,
-                    nome: `${mapped.host} - ${mapped.funcao}${sufixo}`
-                });
+            // Ordena colocando o crítico em primeiro para máximo destaque visual
+            servidores.sort(function (a, b) {
+                return (b.isCritico ? 1 : 0) - (a.isCritico ? 1 : 0);
             });
-        }
 
-        return res.status(200).json({
-            pracas: pracasFormatadas,
-            servidores: servidoresFormatados
+            return res.status(200).json({
+                servidores: servidores
+            });
+        })
+        .catch(function (erro) {
+            console.error("Aviso filtros:", erro.message || erro);
+            var servidores = servidoresPadrao.map(mapearServidor).map(function (s) {
+                var info = classificarTemperatura(s.temp_atual);
+                return {
+                    id: s.id_servidor,
+                    host: s.host,
+                    funcao: s.funcao,
+                    temp: Number(s.temp_atual),
+                    cpu: Number(s.cpu_atual),
+                    status: info.status,
+                    classeCss: info.classeCss,
+                    badgeClass: info.badgeClass,
+                    isCritico: Number(s.temp_atual) >= 85.0
+                };
+            });
+
+            servidores.sort(function (a, b) {
+                return (b.isCritico ? 1 : 0) - (a.isCritico ? 1 : 0);
+            });
+
+            return res.status(200).json({
+                servidores: servidores
+            });
         });
-    }).catch(function (erro) {
-        console.error("Aviso filtros:", erro.message || erro);
-        return res.status(200).json({
-            pracas: [
-                { id: "todas", nome: "Todas as Praças / Malha Geral" },
-                { id: 1, nome: "Praça P1 - Rod. Bandeirantes Km 42" },
-                { id: 2, nome: "Praça P2 - Rod. Pres. Dutra Km 76" },
-                { id: 3, nome: "Praça P3 - Rod. Anhanguera Km 135" }
-            ],
-            servidores: [
-                { id: "todos", nome: "Todos os Servidores" },
-                { id: 7, nome: "Foco Crítico: SRV-AU03 (Alerta 92°C)" },
-                { id: 8, nome: "SRV-SP01 - Gateway Pedágio FreeFlow" },
-                { id: 9, nome: "SRV-RJ02 - OCR Câmeras LPR" },
-                { id: 10, nome: "SRV-PR04 - Telemetria de Eixos & Balança" },
-                { id: 11, nome: "SRV-MG01 - NTP & Sincronismo Transações" }
-            ]
-        });
-    });
 }
 
 module.exports = {

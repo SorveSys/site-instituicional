@@ -8,7 +8,6 @@ let chartCpuInstance = null;
 let chartDispersaoInstance = null;
 
 let periodoSelecionado = "1h";
-let pracaSelecionada = "todas";
 let servidorSelecionado = "todos";
 let pollingTimer = null;
 let cacheServidoresTabela = [];
@@ -27,24 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function configurarEventos() {
-    // Filtro Praça
-    const selectPraca = document.getElementById("select_praca");
-    if (selectPraca) {
-        selectPraca.addEventListener("change", function (e) {
-            pracaSelecionada = e.target.value;
-            atualizarDashboard();
-        });
-    }
-
-    // Filtro Servidor / Foco Crítico
-    const selectServidor = document.getElementById("select_servidor");
-    if (selectServidor) {
-        selectServidor.addEventListener("change", function (e) {
-            servidorSelecionado = e.target.value;
-            atualizarDashboard();
-        });
-    }
-
     // Toggle Período (1h, 6h, 24h, 7d)
     const botoesPeriodo = document.querySelectorAll(".period-btn");
     botoesPeriodo.forEach(function (btn) {
@@ -74,42 +55,139 @@ function configurarEventos() {
 }
 
 /* ============================================================
-   CARREGAMENTO DE FILTROS DINÂMICOS
+   CARREGAMENTO DE FILTROS DINÂMICOS (CHIPS DE SERVIDORES)
 ============================================================ */
 function carregarFiltros() {
-    fetch("/termometro/filtros")
+    fetch("/termometro/servidores")
         .then(res => res.json())
         .then(data => {
-            const selectPraca = document.getElementById("select_praca");
-            const selectServidor = document.getElementById("select_servidor");
+            const container = document.getElementById("servidores_chips");
+            if (!container) return;
 
-            if (selectPraca && data.pracas) {
-                selectPraca.innerHTML = "";
-                data.pracas.forEach(p => {
-                    const opt = document.createElement("option");
-                    opt.value = p.id;
-                    opt.textContent = p.nome;
-                    selectPraca.appendChild(opt);
-                });
-            }
-
-            if (selectServidor && data.servidores) {
-                selectServidor.innerHTML = "";
-                data.servidores.forEach(s => {
-                    const opt = document.createElement("option");
-                    opt.value = s.id;
-                    opt.textContent = s.nome;
-                    if (s.nome.includes("Foco Crítico")) {
-                        opt.selected = true;
-                        servidorSelecionado = s.id;
-                    }
-                    selectServidor.appendChild(opt);
-                });
-            }
+            const lista = data.servidores || [];
+            renderizarChipsServidores(container, lista);
         })
         .catch(err => {
-            console.error("Erro ao carregar opções de filtros:", err);
+            console.error("Aviso ao buscar /termometro/servidores, buscando /termometro/filtros:", err);
+            fetch("/termometro/filtros")
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById("servidores_chips");
+                    if (!container) return;
+                    renderizarChipsServidores(container, data.servidores || []);
+                })
+                .catch(errFiltros => {
+                    console.error("Erro ao carregar opções de servidores:", errFiltros);
+                });
         });
+}
+
+function extrairHost(s) {
+    if (s.host) return s.host;
+    if (s.nome) {
+        if (s.nome.includes("SRV-AU03")) return "SRV-AU03";
+        if (s.nome.includes("SRV-SP01")) return "SRV-SP01";
+        if (s.nome.includes("SRV-RJ02")) return "SRV-RJ02";
+        if (s.nome.includes("SRV-PR04")) return "SRV-PR04";
+        if (s.nome.includes("SRV-MG01")) return "SRV-MG01";
+        const partes = s.nome.split(" - ");
+        return partes[0].replace("Foco Crítico: ", "").replace(/\(.*\)/, "").trim();
+    }
+    return `SRV-0${s.id}`;
+}
+
+function extrairTemperatura(s) {
+    if (typeof s.tempAtual === "number") return s.tempAtual;
+    if (typeof s.temp === "number") return s.temp;
+    if (s.tempAtual && !isNaN(Number(s.tempAtual))) return Number(s.tempAtual);
+    if (s.temp && !isNaN(Number(s.temp))) return Number(s.temp);
+    if (s.nome && s.nome.includes("92°C")) return 92.0;
+    if (s.nome && s.nome.includes("78°C")) return 78.0;
+    if (s.nome && s.nome.includes("74°C")) return 74.0;
+    if (s.host === "SRV-AU03") return 92.0;
+    if (s.host === "SRV-SP01") return 78.0;
+    if (s.host === "SRV-RJ02") return 74.0;
+    if (s.host === "SRV-PR04") return 64.0;
+    if (s.host === "SRV-MG01") return 58.0;
+    return 60.0;
+}
+
+function renderizarChipsServidores(container, lista) {
+    container.innerHTML = "";
+
+    // 1. Botão "Todos os Servidores"
+    const btnTodos = document.createElement("button");
+    btnTodos.className = "chip-servidor" + (servidorSelecionado === "todos" ? " ativo" : "");
+    btnTodos.setAttribute("data-id", "todos");
+    btnTodos.innerHTML = `<span class="chip-host">Todos os Servidores</span>`;
+    btnTodos.onclick = function () {
+        selecionarServidorChip("todos");
+    };
+    container.appendChild(btnTodos);
+
+    // 2. Filtra e ordena para colocar o servidor CRÍTICO logo ao lado de "Todos os Servidores"
+    const servidoresValidos = lista.filter(s => s && s.id !== "todos");
+    servidoresValidos.sort((a, b) => {
+        const tempA = extrairTemperatura(a);
+        const tempB = extrairTemperatura(b);
+        return tempB - tempA;
+    });
+
+    // 3. Renderiza cada chip
+    servidoresValidos.forEach(s => {
+        const host = extrairHost(s);
+        const temp = extrairTemperatura(s);
+        const isCritico = s.statusTermico === "Crítico" || s.isCritico || temp >= 85.0 || (s.nome && s.nome.includes("Crítico"));
+        const isAtencao = s.statusTermico === "Atenção" || s.status === "Atenção" || (temp >= 70.0 && temp < 85.0);
+
+        const btn = document.createElement("button");
+        let classes = "chip-servidor";
+        if (isCritico) {
+            classes += " critico-destaque";
+        } else if (isAtencao) {
+            classes += " atencao";
+        } else {
+            classes += " normal";
+        }
+
+        if (servidorSelecionado == s.id) {
+            classes += " ativo";
+        }
+
+        btn.className = classes;
+        btn.setAttribute("data-id", s.id);
+        btn.setAttribute("data-host", host);
+
+        const dotClass = isCritico ? "critico" : (isAtencao ? "atencao" : "normal");
+        const badgeOrTemp = isCritico 
+            ? `<span class="chip-badge-temp">${temp > 0 ? temp.toFixed(1) + "°C " : ""}Crítico</span>`
+            : `<span class="chip-temp">${temp > 0 ? temp.toFixed(1) + "°C" : ""}</span>`;
+
+        btn.innerHTML = `
+            <span class="chip-dot ${dotClass}"></span>
+            <span class="chip-host">${host}</span>
+            ${badgeOrTemp}
+        `;
+
+        btn.onclick = function () {
+            selecionarServidorChip(s.id, host);
+        };
+
+        container.appendChild(btn);
+    });
+}
+
+function selecionarServidorChip(id, host) {
+    servidorSelecionado = id;
+    const chips = document.querySelectorAll(".chip-servidor");
+    chips.forEach(c => {
+        if (c.getAttribute("data-id") == id) {
+            c.classList.add("ativo");
+        } else {
+            c.classList.remove("ativo");
+        }
+    });
+    atualizarDashboard();
 }
 
 /* ============================================================
@@ -396,7 +474,6 @@ function atualizarDashboard(silencioso = false) {
 /* 1. ATUALIZAR KPIS E BARRA IET */
 function atualizarKpis() {
     const params = new URLSearchParams({
-        concessionaria: pracaSelecionada,
         servidor: servidorSelecionado
     });
 
@@ -500,11 +577,7 @@ function atualizarHistorico() {
 
 /* 3. ATUALIZAR DISPERSÃO (SCATTER) */
 function atualizarDispersao() {
-    const params = new URLSearchParams({
-        concessionaria: pracaSelecionada
-    });
-
-    fetch(`/termometro/dispersao?${params.toString()}`)
+    fetch(`/termometro/dispersao`)
         .then(res => res.json())
         .then(data => {
             if (chartDispersaoInstance && data.pontos) {
@@ -527,11 +600,7 @@ function atualizarDispersao() {
 
 /* 4. ATUALIZAR RANKING TÉRMICO */
 function atualizarRanking() {
-    const params = new URLSearchParams({
-        concessionaria: pracaSelecionada
-    });
-
-    fetch(`/termometro/ranking?${params.toString()}`)
+    fetch(`/termometro/ranking`)
         .then(res => res.json())
         .then(data => {
             const container = document.getElementById("ranking_container");
@@ -572,11 +641,7 @@ function atualizarRanking() {
 
 /* 5. ATUALIZAR TABELA DE SERVIDORES */
 function atualizarTabelaServidores() {
-    const params = new URLSearchParams({
-        concessionaria: pracaSelecionada
-    });
-
-    fetch(`/termometro/servidores?${params.toString()}`)
+    fetch(`/termometro/servidores`)
         .then(res => res.json())
         .then(data => {
             cacheServidoresTabela = data.servidores || [];
@@ -709,16 +774,13 @@ function executarMitigacao() {
 }
 
 function verTelemetria(host) {
-    const selectServidor = document.getElementById("select_servidor");
-    if (selectServidor) {
-        for (let i = 0; i < selectServidor.options.length; i++) {
-            if (selectServidor.options[i].text.includes(host)) {
-                selectServidor.selectedIndex = i;
-                servidorSelecionado = selectServidor.options[i].value;
-                atualizarHistorico();
-                break;
-            }
+    const chips = document.querySelectorAll(".chip-servidor");
+    let targetId = "todos";
+    chips.forEach(c => {
+        if (c.getAttribute("data-host") === host) {
+            targetId = c.getAttribute("data-id");
         }
-    }
-    window.scrollTo({ top: 380, behavior: 'smooth' });
+    });
+    selecionarServidorChip(targetId, host);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
 }
