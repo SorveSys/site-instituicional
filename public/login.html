@@ -178,13 +178,16 @@
 
                         resposta.json().then(json => {
 
+                            sessionStorage.clear();
                             sessionStorage.EMAIL_USUARIO = json.email;
                             sessionStorage.NOME_USUARIO = json.nome;
                             sessionStorage.ID_USUARIO = json.id;
                             if (json.fk_empresa) sessionStorage.FK_EMPRESA = json.fk_empresa;
+                            if (json.fk_concessionaria) sessionStorage.FK_CONCESSIONARIA = json.fk_concessionaria;
                             if (json.fk_tipo_usuario) sessionStorage.FK_TIPO_USUARIO = json.fk_tipo_usuario;
                             if (json.perfil) sessionStorage.PERFIL_USUARIO = json.perfil;
                             if (json.empresa) sessionStorage.EMPRESA_USUARIO = json.empresa;
+                            if (json.nome_praca) sessionStorage.NOME_PRACA = json.nome_praca;
 
                             cardErro.className = "card-erro sucesso";
                             cardErro.style.display = "block";

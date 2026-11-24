@@ -34,7 +34,7 @@
                 <a href="/overview" class="nav-item ativo">
                     <img src="./assets/icons/overview/ICON-GRID.svg" class="ico" alt="">
                     <span>Overview</span>
-                    <em id="nav_total">9</em>
+                    <em id="nav_total">0</em>
                 </a>
 
                 <a href="#" class="nav-item">
@@ -69,10 +69,10 @@
 
             <div class="sidebar-rodape">
                 <div class="operador">
-                    <div class="operador-avatar">OP</div>
+                    <div class="operador-avatar" id="avatar_operador">OP</div>
                     <div class="operador-info">
-                        <strong id="nome_operador">Operador NOC #409</strong>
-                        <small>Gestor de Infraestrutura</small>
+                        <strong id="nome_operador">Operador NOC</strong>
+                        <small id="perfil_operador">Monitoramento Rodoviário</small>
                     </div>
                     <button class="btn-sair" onclick="sair()" aria-label="Sair">
                         <img src="./assets/icons/overview/ICON-LOGOUT.svg" class="ico" alt="">
@@ -208,9 +208,9 @@
 
                             <select id="slt_tipo" onchange="renderTabela()">
                                 <option value="">Todos os Tipos</option>
-                                <option value="armazenamento">Armazenamento para auditoria</option>
+                                <option value="auditoria">Armazenamento para auditoria</option>
                                 <option value="pagamento">Processamento de pagamentos</option>
-                                <option value="captura">Captura de informações</option>
+                                <option value="transito">Captura de informações</option>
                             </select>
 
                             <select id="slt_status" onchange="renderTabela()">
@@ -261,16 +261,16 @@
                 </section>
 
                 <!-- ALERTAS -->
-                <section class="card alertas">
+                <section class="card alertas" id="secao_alertas">
                     <div class="alertas-topo">
                         <div>
-                            <h2>Alertas Recentes <span class="contador amarelo" id="contador_alertas">4 eventos</span>
+                            <h2>Alertas Recentes <span class="contador amarelo" id="contador_alertas">0 eventos</span>
                             </h2>
                             <p>Últimos eventos de hardware, rede e subsistemas de pista detectados pelo agente</p>
                         </div>
                         <div class="alertas-links">
                             <button onclick="marcarLidos()">Marcar lidos</button>
-                            <a href="#">Ver todos os alertas →</a>
+                            <a href="#secao_alertas" id="btn_ver_todos_alertas" onclick="alternarTodosAlertas(event)">Ver todos os alertas →</a>
                         </div>
                     </div>
                     <div id="lista_alertas"></div>

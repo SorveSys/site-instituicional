@@ -7,14 +7,17 @@ function autenticar(email, senha) {
             u.id,
             u.nome,
             u.email,
-            u.fk_empresa,
+            COALESCE(u.fk_empresa, con.fk_empresa) AS fk_empresa,
+            u.fk_concessionaria,
             u.fk_tipo_usuario,
             p.tipo AS perfil,
             e.razao_social,
-            e.nome_fantasia
+            e.nome_fantasia,
+            con.nome_praca
         FROM usuario AS u
         LEFT JOIN perfil AS p ON u.fk_tipo_usuario = p.id
-        LEFT JOIN empresa AS e ON u.fk_empresa = e.id
+        LEFT JOIN concessionaria AS con ON u.fk_concessionaria = con.id
+        LEFT JOIN empresa AS e ON COALESCE(u.fk_empresa, con.fk_empresa) = e.id
         WHERE u.email = ? AND u.senha = ?;
     `;
 

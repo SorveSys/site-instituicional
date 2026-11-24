@@ -10,7 +10,7 @@
 
     <script src="/js/sessao.js"></script>
 
-    <link rel="icon" href="/assets/LOGO SORVESYS.png">
+    <link rel="icon" href="/assets/LOGO_SORVESYS.png">
     <link rel="stylesheet" href="/css/overview.css">
     <link rel="stylesheet" href="/css/dashboard.css">
 
@@ -39,7 +39,7 @@
                 <a href="/overview" class="nav-item ativo">
                     <img src="/assets/icons/overview/ICON-GRID.svg" alt="" class="ico">
                     <span>Overview</span>
-                    <em>9</em>
+                    <em id="nav_total">0</em>
                 </a>
 
                 <a href="#" class="nav-item"><img src="/assets/icons/overview/ICON-SERVIDORES.svg" alt="" class="ico"><span>Monitoramento Alicia</span></a>
@@ -52,10 +52,10 @@
 
             <div class="sidebar-rodape">
                 <div class="operador">
-                    <div class="operador-avatar">OP</div>
+                    <div class="operador-avatar" id="avatar_operador">OP</div>
                     <div class="operador-info">
-                        <strong id="nome_operador">Operador NOC #409</strong>
-                        <small>Telemetria Rodoviária</small>
+                        <strong id="nome_operador">Operador NOC</strong>
+                        <small id="perfil_operador">Telemetria Rodoviária</small>
                     </div>
                     <button class="btn-sair" onclick="sair()" aria-label="Sair">
                         <img src="/assets/icons/overview/ICON-LOGOUT.svg" alt="" class="ico">
@@ -73,14 +73,14 @@
                         <span>/</span>
                         <a href="/overview#tabela">Servidores</a>
                         <span>/</span>
-                        <b id="bc_nome">SRV-AU03</b>
+                        <b id="bc_nome">Carregando...</b>
                     </nav>
 
                     <div class="titulo-linha">
-                        <h1 id="titulo_nome">SRV-AU03</h1>
+                        <h1 id="titulo_nome">Carregando...</h1>
                         <span class="barra">/</span>
-                        <h2 id="titulo_desc">Auditoria &amp; Logs ANTT</h2>
-                        <span class="ip-chip">IP: <b id="titulo_ip">192.168.10.47</b></span>
+                        <h2 id="titulo_desc">Consultando banco de dados</h2>
+                        <span class="ip-chip">IP: <b id="titulo_ip">--</b></span>
                     </div>
                 </div>
 
@@ -106,8 +106,8 @@
 
                     <article class="card grafico-card">
                         <div class="grafico-topo">
-                            <h3><img src="/assets/icons/overview/ICON-CPU.svg" alt="" class="ico"> Alocação de Memória RAM (GB)</h3>
-                            <span class="legenda"><i style="background:#ff9a1a"></i> <span id="legenda_ram">Ativa (0 GB)</span></span>
+                            <h3><img src="/assets/icons/overview/ICON-CPU.svg" alt="" class="ico"> Alocação de Memória RAM (%)</h3>
+                            <span class="legenda"><i style="background:#ff9a1a"></i> <span id="legenda_ram">Ativa (--)</span></span>
                         </div>
                         <div class="grafico-area"><canvas id="grafico_ram"></canvas></div>
                     </article>
@@ -115,7 +115,7 @@
                     <article class="card grafico-card">
                         <div class="grafico-topo">
                             <h3><img src="/assets/icons/overview/ICON-TRENDING-DOWN.svg" alt="" class="ico"> Latência de Rede (ms)</h3>
-                            <span class="selo-verde" id="selo_latencia">Média: 0 ms</span>
+                            <span class="selo-verde" id="selo_latencia">Média: --</span>
                         </div>
                         <p class="limite-legenda"><i></i> Limite Crítico (20ms)</p>
                         <div class="grafico-area"><canvas id="grafico_latencia"></canvas></div>
