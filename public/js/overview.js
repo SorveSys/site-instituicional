@@ -546,7 +546,14 @@ function popularServidoresModal(servidorSelecionado) {
         return;
     }
 
-    fetch(API_BASE + "/servidores/listar")
+    var headersServidores = {};
+    try {
+        if (sessionStorage.ID_USUARIO) {
+            headersServidores["x-usuario-id"] = sessionStorage.ID_USUARIO;
+        }
+    } catch (e) { }
+
+    fetch(API_BASE + "/servidores/listar", { headers: headersServidores })
         .then(function (res) {
             if (res.ok) return res.json();
             throw new Error("Falha ao buscar servidores do banco");

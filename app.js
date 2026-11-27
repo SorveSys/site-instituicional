@@ -18,6 +18,7 @@ var app = express();
 var indexRouter = require("./src/routes/index");
 var usuarioRouter = require("./src/routes/usuarios");
 var empresasRouter = require("./src/routes/empresas");
+var concessionariaRouter = require("./src/routes/concessionaria");
 var servidoresRouter = require("./src/routes/servidores");
 var chamadosRouter = require("./src/routes/chamados");
 var monitoramentoRouter = require("./src/routes/monitoramento");
@@ -32,6 +33,7 @@ var paginas = {
     "/": "index.html",
     "/login": "login.html",
     "/cadastro": "cadastro-empresa.html",
+    "/cadastro-concessionaria": "cadastro-concessionaria.html",
     "/cadastro-servidor": "cadastro-servidor.html",
     "/cadastro-empresa": "cadastro-empresa.html",
     "/cadastro-usuario": "cadastro-usuario.html",
@@ -48,6 +50,7 @@ Object.keys(paginas).forEach(function (rota) {
 app.use("/", indexRouter);
 app.use("/usuarios", usuarioRouter);
 app.use("/empresas", empresasRouter);
+app.use("/concessionarias", concessionariaRouter);
 app.use("/servidores", servidoresRouter);
 app.use("/chamados", chamadosRouter);
 app.use("/monitoramento", monitoramentoRouter);

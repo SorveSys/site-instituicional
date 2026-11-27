@@ -1119,3 +1119,94 @@ a {
   box-shadow: 0 4px 12px rgba(255, 151, 22, 0.45);
 }
 
+.btn-drawer-save:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Estados adicionais integrados ao banco (Crítico, Readonly, Feedback) */
+.data-table tbody tr.row-critical {
+  background-color: #FEF2F2;
+}
+
+.data-table tbody tr.row-critical:hover {
+  background-color: #FEE2E2;
+}
+
+.item-icon-box.red-accent {
+  background-color: #FEE2E2;
+  color: #DC2626;
+}
+
+.item-title.critical {
+  color: #DC2626;
+}
+
+.status-pill.critico {
+  background-color: #FEE2E2;
+  color: #B91C1C;
+}
+
+.status-pill.critico .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #DC2626;
+}
+
+.drawer-input[readonly] {
+  background-color: #E2E8F0;
+  color: #475569;
+  cursor: not-allowed;
+}
+
+.drawer-feedback {
+  display: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.drawer-feedback.erro {
+  display: block;
+  background-color: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
+}
+
+.drawer-feedback.sucesso {
+  display: block;
+  background-color: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  color: #15803D;
+}
+
+.table-empty {
+  text-align: center;
+  padding: 36px 20px !important;
+  color: var(--text-muted) !important;
+  font-size: 13.5px;
+}
+
+.readonly-tag {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.btn-icon-action:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+

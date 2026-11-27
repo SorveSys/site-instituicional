@@ -12,7 +12,7 @@
 
     <link rel="icon" href="assets/LOGO SORVESYS.png">
     <link rel="stylesheet" href="/css/login.css">
-    <link rel="stylesheet" href="../public/css/cadastro-empresa.css">
+    <link rel="stylesheet" href="/css/cadastro-empresa.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,7 +101,7 @@
                             <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
 
                             <input type="text" id="ipt_fantasia" placeholder="Rodovias do Sul"
-                                autocomplete="organization">
+                                maxlength="200" autocomplete="organization">
                         </div>
                     </div>
 
@@ -116,7 +116,7 @@
                             <img src="/assets/icons/cadastro-empresa/Icon-predio.svg" alt="" class="ico ico-campo">
 
                             <input type="text" id="ipt_razao" placeholder="Empresa Rodovias do Sul S.A."
-                                autocomplete="organization">
+                                maxlength="100" autocomplete="organization">
                         </div>
                     </div>
 
@@ -212,7 +212,27 @@
 
         function cnpjValido(valor) {
             var c = String(valor || "").replace(/\D/g, "");
-            return c.length === 14;
+            if (c.length !== 14) return false;
+            if (/^(\d)\1{13}$/.test(c)) return false;
+
+            var pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+            var soma1 = 0;
+            for (var i = 0; i < 12; i++) {
+                soma1 += Number(c.charAt(i)) * pesos1[i];
+            }
+            var resto1 = soma1 % 11;
+            var dv1 = resto1 < 2 ? 0 : 11 - resto1;
+            if (dv1 !== Number(c.charAt(12))) return false;
+
+            var pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+            var soma2 = 0;
+            for (var j = 0; j < 13; j++) {
+                soma2 += Number(c.charAt(j)) * pesos2[j];
+            }
+            var resto2 = soma2 % 11;
+            var dv2 = resto2 < 2 ? 0 : 11 - resto2;
+
+            return dv2 === Number(c.charAt(13));
         }
 
         function cadastrar() {
@@ -228,8 +248,16 @@
                 return false;
             }
 
+            if (razaoVar.length > 100 || fantasiaVar.length > 200) {
+                mostrarMensagem(
+                    "Razão social (máx. 100) ou Nome Fantasia (máx. 200) ultrapassa o limite permitido.",
+                    false
+                );
+                return false;
+            }
+
             if (!cnpjValido(cnpjVar)) {
-                mostrarMensagem("CNPJ inválido!", false);
+                mostrarMensagem("CNPJ inválido! Verifique os 14 dígitos e os dígitos verificadores.", false);
                 return false;
             }
 
@@ -248,6 +276,7 @@
                     if (resposta.ok) {
                         resposta.json()
                             .then(function (dados) {
+                                sessionStorage.clear();
                                 if (dados && dados.id) {
                                     sessionStorage.setItem(
                                         "EMPRESA_CADASTRADA_ID",
@@ -263,17 +292,22 @@
 
                     } else {
                         resposta.text().then(function (texto) {
-                            if (texto.includes("Duplicate entry")) {
-                                mostrarMensagem(
-                                    "Esse CNPJ já foi cadastrado!",
-                                    false
-                                );
-                            } else {
-                                mostrarMensagem(
-                                    "Erro ao realizar cadastro!",
-                                    false
-                                );
+                            var mensagem = "Erro ao realizar cadastro!";
+                            if (texto) {
+                                try {
+                                    var jsonErro = JSON.parse(texto);
+                                    if (jsonErro && jsonErro.mensagem) {
+                                        mensagem = jsonErro.mensagem;
+                                    }
+                                } catch (e) {
+                                    if (texto.includes("Duplicate entry")) {
+                                        mensagem = "Esse CNPJ já foi cadastrado!";
+                                    } else {
+                                        mensagem = texto;
+                                    }
+                                }
                             }
+                            mostrarMensagem(mensagem, false);
                         });
                     }
                 })

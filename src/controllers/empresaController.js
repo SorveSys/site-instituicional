@@ -1,5 +1,38 @@
 var empresaModel = require("../models/empresaModel");
 
+function cnpjValidoReceita(cnpj) {
+    var limpo = String(cnpj || "").replace(/\D/g, "");
+    if (limpo.length !== 14) {
+        return false;
+    }
+
+    // Rejeita sequências repetidas (ex.: 00000000000000, 11111111111111)
+    if (/^(\d)\1{13}$/.test(limpo)) {
+        return false;
+    }
+
+    var pesos1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    var soma1 = 0;
+    for (var i = 0; i < 12; i++) {
+        soma1 += Number(limpo.charAt(i)) * pesos1[i];
+    }
+    var resto1 = soma1 % 11;
+    var dv1 = resto1 < 2 ? 0 : 11 - resto1;
+    if (dv1 !== Number(limpo.charAt(12))) {
+        return false;
+    }
+
+    var pesos2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    var soma2 = 0;
+    for (var j = 0; j < 13; j++) {
+        soma2 += Number(limpo.charAt(j)) * pesos2[j];
+    }
+    var resto2 = soma2 % 11;
+    var dv2 = resto2 < 2 ? 0 : 11 - resto2;
+
+    return dv2 === Number(limpo.charAt(13));
+}
+
 function buscarPorCnpj(req, res) {
     var cnpj = req.query.cnpj;
 
@@ -85,9 +118,9 @@ function cadastrar(req, res) {
         });
     }
 
-    if (cnpj.length !== 14) {
+    if (!cnpjValidoReceita(cnpj)) {
         return res.status(400).json({
-            mensagem: "CNPJ inválido. O CNPJ deve conter exatamente 14 dígitos numéricos."
+            mensagem: "CNPJ inválido. Verifique os 14 dígitos e os dígitos verificadores."
         });
     }
 

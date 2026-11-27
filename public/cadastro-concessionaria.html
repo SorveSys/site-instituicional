@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 
@@ -17,6 +16,7 @@
         rel="stylesheet">
 
     <script src="./js/sessao.js"></script>
+    <script src="./js/gerenciamento-comum.js"></script>
 </head>
 
 <body>
@@ -24,7 +24,7 @@
     <!-- ==================== TOPO / HEADER ==================== -->
     <header class="topbar">
         <div class="topbar-left">
-            <a href="index.html" class="brand-logo" title="SorveSys - Página Inicial">
+            <a href="concessionarias.html" class="brand-logo" title="SorveSys - Voltar para Concessionárias">
                 <img src="./assets/icons/home/LOGO.svg"
                     alt="SorveSys – Monitoramento de Sistemas Rodoviários">
             </a>
@@ -84,6 +84,7 @@
                             <input type="text"
                                 id="ipt_nome_praca"
                                 name="nome_praca"
+                                maxlength="150"
                                 placeholder="Ex: Praça de Pedágio de Jundiaí"
                                 required>
                         </div>
@@ -120,6 +121,7 @@
                                 <input type="text"
                                     id="ipt_rodovia"
                                     name="rodovia"
+                                    maxlength="100"
                                     placeholder="Ex: SP-330"
                                     required>
                             </div>
@@ -153,6 +155,7 @@
                                     placeholder="Ex: 72.50"
                                     step="0.01"
                                     min="0"
+                                    max="9999.99"
                                     required>
                             </div>
 
@@ -192,6 +195,7 @@
                                 <input type="text"
                                     id="ipt_cidade"
                                     name="cidade"
+                                    maxlength="100"
                                     placeholder="Ex: Jundiaí"
                                     required>
                             </div>
@@ -214,6 +218,7 @@
                                     name="uf"
                                     placeholder="Ex: SP"
                                     maxlength="2"
+                                    style="text-transform: uppercase;"
                                     required>
                             </div>
 
@@ -292,6 +297,102 @@
 
         </div>
     </main>
+
+    <script>
+        var sessaoAtual = null;
+        var UFS_VALIDAS = [
+            "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
+            "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
+            "RS", "RO", "RR", "SC", "SP", "SE", "TO"
+        ];
+
+        function exibirAlerta(texto, sucesso) {
+            var el = document.getElementById("alerta_mensagem");
+            if (!el) return;
+            el.className = "alert-feedback " + (sucesso ? "sucesso" : "erro");
+            el.textContent = texto;
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            sessaoAtual = obterSessaoGerenciamento();
+            if (!sessaoAtual) return;
+
+            var iptUf = document.getElementById("ipt_uf");
+            if (iptUf) {
+                iptUf.addEventListener("input", function () {
+                    this.value = this.value.replace(/[^a-zA-Z]/g, "").toUpperCase().slice(0, 2);
+                });
+            }
+
+            if (!sessaoAtual.ehGestor) {
+                var btn = document.getElementById("btn_cadastrar");
+                if (btn) btn.disabled = true;
+                exibirAlerta("Permissão negada. Apenas usuários com perfil Gestor podem cadastrar praças de pedágio.", false);
+                setTimeout(function () {
+                    window.location.replace("concessionarias.html");
+                }, 1800);
+            }
+        });
+
+        function cadastrarConcessionaria(event) {
+            if (event) event.preventDefault();
+            if (!sessaoAtual || !sessaoAtual.ehGestor) {
+                exibirAlerta("Permissão negada. Apenas usuários com perfil Gestor podem cadastrar praças de pedágio.", false);
+                return false;
+            }
+
+            var nomePraca = document.getElementById("ipt_nome_praca").value.trim();
+            var rodovia = document.getElementById("ipt_rodovia").value.trim();
+            var kmStr = document.getElementById("ipt_km").value.replace(",", ".").trim();
+            var kmNum = kmStr === "" ? NaN : Number(kmStr);
+            var cidade = document.getElementById("ipt_cidade").value.trim();
+            var uf = document.getElementById("ipt_uf").value.trim().toUpperCase();
+
+            if (!nomePraca || !rodovia || kmStr === "" || !cidade || !uf) {
+                exibirAlerta("Preencha todos os campos obrigatórios (Nome da Praça, Rodovia, Km, Cidade e UF).", false);
+                return false;
+            }
+
+            if (isNaN(kmNum) || kmNum < 0 || kmNum > 9999.99) {
+                exibirAlerta("Informe uma quilometragem (Km) válida entre 0 e 9999.99.", false);
+                return false;
+            }
+
+            if (UFS_VALIDAS.indexOf(uf) === -1) {
+                exibirAlerta("Informe uma sigla de UF válida (ex: SP, RJ, MG).", false);
+                return false;
+            }
+
+            var btn = document.getElementById("btn_cadastrar");
+            if (btn) btn.disabled = true;
+
+            apiGerenciamento("/concessionarias/cadastrar", {
+                method: "POST",
+                body: JSON.stringify({
+                    nome_praca: nomePraca,
+                    rodovia: rodovia,
+                    km: Number(kmNum.toFixed(2)),
+                    cidade: cidade,
+                    uf: uf
+                })
+            })
+                .then(function () {
+                    exibirAlerta("Praça de pedágio cadastrada com sucesso! Redirecionando...", true);
+                    var form = document.getElementById("form_concessionaria");
+                    if (form) form.reset();
+
+                    setTimeout(function () {
+                        window.location.href = "concessionarias.html";
+                    }, 1500);
+                })
+                .catch(function (erro) {
+                    exibirAlerta(erro.message || "Erro ao cadastrar praça de pedágio.", false);
+                    if (btn) btn.disabled = false;
+                });
+
+            return false;
+        }
+    </script>
 
 </body>
 

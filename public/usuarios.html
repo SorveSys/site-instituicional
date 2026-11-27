@@ -15,6 +15,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
         rel="stylesheet">
     <script src="./js/sessao.js"></script>
+    <script src="./js/gerenciamento-comum.js"></script>
 </head>
 
 <body>
@@ -36,7 +37,7 @@
 
         <div class="topbar-user">
             <div class="user-pill">
-                <span id="nome_usuario_header">Danilo Vrena</span>
+                <span id="nome_usuario_header">Carregando...</span>
                 <div class="user-avatar" title="Perfil do Usuário">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -58,7 +59,7 @@
                 </p>
             </div>
 
-            <a href="cadastro-usuario.html" class="btn-primary-action">
+            <a href="cadastro-usuario.html" class="btn-primary-action" id="btn_novo_usuario">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -83,8 +84,8 @@
                     </div>
                 </div>
                 <div class="kpi-value-row">
-                    <span class="kpi-number" id="kpi_usuarios">6</span>
-                    <span class="kpi-unit">operadores &amp; analistas</span>
+                    <span class="kpi-number" id="kpi_usuarios">0</span>
+                    <span class="kpi-unit">gestores &amp; analistas</span>
                 </div>
             </div>
 
@@ -99,8 +100,8 @@
                     </div>
                 </div>
                 <div class="kpi-value-row">
-                    <span class="kpi-number" id="kpi_concessoes">4</span>
-                    <span class="kpi-unit">empresas ativas</span>
+                    <span class="kpi-number" id="kpi_concessoes">0</span>
+                    <span class="kpi-unit">praças permitidas</span>
                 </div>
             </div>
         </div>
@@ -112,18 +113,14 @@
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <input type="text" id="ipt_busca" placeholder="Buscar por nome" oninput="filtrarUsuarios()">
+                <input type="text" id="ipt_busca" placeholder="Buscar por nome, e-mail ou concessionária" oninput="aoFiltrar()">
             </div>
 
             <div class="filter-actions">
                 <div class="filter-group">
                     <span class="filter-label">PERFIL:</span>
-                    <select id="slt_perfil" class="select-pill" onchange="filtrarUsuarios()">
+                    <select id="slt_perfil" class="select-pill" onchange="aoFiltrar()">
                         <option value="">Todos os Perfis</option>
-                        <option value="Gestor CCO">1 - Gestor CCO</option>
-                        <option value="Analista NOC">2 - Analista NOC</option>
-                        <option value="Operador de Pista">4 - Operador de Pista</option>
-                        <option value="Auditoria">5 - Auditoria &amp; Compliance</option>
                     </select>
                 </div>
 
@@ -146,250 +143,14 @@
                         <tr>
                             <th>IDENTIFICAÇÃO DO USUÁRIO</th>
                             <th>E-MAIL CORPORATIVO</th>
-                            <th>CONCESSIONÁRIA</th>
+                            <th>EMPRESA / CONCESSIONÁRIA</th>
                             <th>PERFIL (RBAC)</th>
                             <th style="text-align: right; padding-right: 30px;">AÇÕES DE GERENCIAMENTO</th>
                         </tr>
                     </thead>
                     <tbody id="lista_usuarios">
-                        <!-- Usuário 1 -->
-                        <tr data-nome="Carlos Eduardo Mendes" data-perfil="Analista NOC">
-                            <td>
-                                <div class="item-title-row">
-                                    <span class="item-title">Carlos Eduardo Mendes</span>
-                                    <span class="id-badge">#10001</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    analista.mendes@sorvesys.com.br
-                                    <button class="copy-btn" onclick="copiarTexto('analista.mendes@sorvesys.com.br')" title="Copiar e-mail">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">SorveSys Tech S.A. (ID 1)</span>
-                                    <span class="item-subtitle">AutoBandeirantes (SP-348)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="role-badge analista">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                    2 - Analista NOC
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerUsuario(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Carlos Eduardo Mendes')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Usuário 2 -->
-                        <tr data-nome="Danilo Vrena" data-perfil="Gestor CCO">
-                            <td>
-                                <div class="item-title-row">
-                                    <span class="item-title">Danilo Vrena</span>
-                                    <span class="id-badge">#10002</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    danilo.vrena@sorvesys.com.br
-                                    <button class="copy-btn" onclick="copiarTexto('danilo.vrena@sorvesys.com.br')" title="Copiar e-mail">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">SorveSys Tech S.A. (ID 1)</span>
-                                    <span class="item-subtitle">CCR DANILO (SP-348)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="role-badge gestor">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                                    1 - Gestor CCO
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerUsuario(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Danilo Vrena')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Usuário 3 -->
-                        <tr data-nome="Rodrigo Martins" data-perfil="Gestor CCO">
-                            <td>
-                                <div class="item-title-row">
-                                    <span class="item-title">Rodrigo Martins</span>
-                                    <span class="id-badge">#10003</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    rodrigo.martins@viapaulista.com.br
-                                    <button class="copy-btn" onclick="copiarTexto('rodrigo.martins@viapaulista.com.br')" title="Copiar e-mail">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">SorveSys Tech S.A. (ID 1)</span>
-                                    <span class="item-subtitle">ViaPaulista Rodovias (BR-116)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="role-badge gestor">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                                    1 - Gestor CCO
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerUsuario(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Rodrigo Martins')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Usuário 4 -->
-                        <tr data-nome="Larissa Almeida" data-perfil="Analista NOC">
-                            <td>
-                                <div class="item-title-row">
-                                    <span class="item-title">Larissa Almeida</span>
-                                    <span class="id-badge">#10004</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    l.almeida@autorodovias.com.br
-                                    <button class="copy-btn" onclick="copiarTexto('l.almeida@autorodovias.com.br')" title="Copiar e-mail">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">TechWay Monitoramento (ID 3)</span>
-                                    <span class="item-subtitle">AutoBandeirantes (SP-330)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="role-badge analista">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                                    2 - Analista NOC
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerUsuario(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Larissa Almeida')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Usuário 5 -->
-                        <tr data-nome="Fabrício Tavares" data-perfil="Operador de Pista">
-                            <td>
-                                <div class="item-title-row">
-                                    <span class="item-title">Fabrício Tavares</span>
-                                    <span class="id-badge">#10005</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    fabricio.t@rodascolinas.com.br
-                                    <button class="copy-btn" onclick="copiarTexto('fabricio.t@rodascolinas.com.br')" title="Copiar e-mail">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">Roda das Colinas (ID 2)</span>
-                                    <span class="item-subtitle">Roda das Colinas (ID 104)</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="role-badge operador">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                                    4 - Operador de Pista
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerUsuario(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Fabrício Tavares')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- Usuário 6 -->
-                        <tr data-nome="Mariana Becker" data-perfil="Auditoria">
-                            <td>
-                                <div class="item-title-row">
-                                    <span class="item-title">Mariana Becker</span>
-                                    <span class="id-badge">#10006</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge-code">
-                                    m.becker@sorvesys.com.br
-                                    <button class="copy-btn" onclick="copiarTexto('m.becker@sorvesys.com.br')" title="Copiar e-mail">
-                                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                                    </button>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="item-text-group">
-                                    <span style="font-weight: 600; font-size: 13px;">SorveSys Tech S.A. (ID 1)</span>
-                                    <span class="item-subtitle">Matriz Central Rodoviária</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="role-badge auditoria">
-                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                    5 - Auditoria &amp; Compliance
-                                </span>
-                            </td>
-                            <td style="text-align: right; padding-right: 24px;">
-                                <div class="action-buttons" style="justify-content: flex-end;">
-                                    <button class="btn-icon-action" onclick="abrirDrawerUsuario(this)" title="Editar">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
-                                    </button>
-                                    <button class="btn-icon-action delete" onclick="excluirLinha(this, 'Mariana Becker')" title="Excluir">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-                                    </button>
-                                </div>
-                            </td>
+                        <tr>
+                            <td colspan="5" class="table-empty">Carregando usuários do banco de dados...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -398,13 +159,13 @@
             <!-- Paginação do Rodapé -->
             <div class="table-footer">
                 <span class="table-info">
-                    Mostrando <strong id="contador_mostrados">6</strong> de <strong id="contador_total">6</strong> usuários ativos na malha concedida
+                    Mostrando <strong id="contador_mostrados">0</strong> de <strong id="contador_total">0</strong> usuários ativos na malha concedida
                 </span>
 
-                <div class="pagination">
-                    <button class="page-btn" disabled>Anterior</button>
-                    <button class="page-btn active">1</button>
-                    <button class="page-btn" disabled>Próxima</button>
+                <div class="pagination" id="paginacao_usuarios">
+                    <button type="button" class="page-btn" disabled>Anterior</button>
+                    <button type="button" class="page-btn active">1</button>
+                    <button type="button" class="page-btn" disabled>Próxima</button>
                 </div>
             </div>
         </div>
@@ -425,7 +186,7 @@
                 </div>
                 <div class="drawer-title-group">
                     <h3 class="drawer-title">Configurar Usuário</h3>
-                    <span class="drawer-subtitle" id="drawer_usr_subtitulo">USR-10002 (Danilo Vrena)</span>
+                    <span class="drawer-subtitle" id="drawer_usr_subtitulo">USR---</span>
                 </div>
             </div>
             <button type="button" class="btn-close-drawer" onclick="fecharDrawer()" aria-label="Fechar">
@@ -437,48 +198,47 @@
         </div>
 
         <form class="drawer-body" id="form_drawer_usr" onsubmit="return salvarDrawerUsuario(event)">
+            <div id="drawer_usr_feedback" class="drawer-feedback"></div>
+
             <!-- Seção 1: Identificação Básica -->
             <div class="drawer-section">
                 <div class="drawer-section-header">
                     <span class="drawer-section-title">1. IDENTIFICAÇÃO BÁSICA</span>
-                    <span class="badge-dev">id INT AUTO_INCREMENT</span>
+                    <span class="badge-dev">usuario</span>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_usr_nome" class="drawer-label">Nome Completo</label>
-                    <input type="text" id="drawer_usr_nome" class="drawer-input" required>
+                    <label for="drawer_usr_nome" class="drawer-label">Nome Completo *</label>
+                    <input type="text" id="drawer_usr_nome" class="drawer-input" maxlength="200" required>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_usr_email" class="drawer-label">E-mail Corporativo</label>
-                    <input type="email" id="drawer_usr_email" class="drawer-input" required>
+                    <label for="drawer_usr_email" class="drawer-label">E-mail Corporativo *</label>
+                    <input type="email" id="drawer_usr_email" class="drawer-input" maxlength="350" required>
                 </div>
             </div>
 
-            <!-- Seção 2: Relacionamento & Vinculação Fiscal -->
+            <!-- Seção 2: Relacionamento & Vinculação -->
             <div class="drawer-section">
                 <div class="drawer-section-header">
-                    <span class="drawer-section-title">2. RELACIONAMENTO &amp; VINCULAÇÃO FISCAL</span>
+                    <span class="drawer-section-title">2. RELACIONAMENTO &amp; PERFIL</span>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_usr_matriz" class="drawer-label">Empresa Prestadora / Matriz</label>
-                    <input type="text" id="drawer_usr_matriz" class="drawer-input" value="1 - SorveSys Tecnologia S.A. (Matriz)">
+                    <label for="drawer_usr_matriz" class="drawer-label">Empresa Vinculada</label>
+                    <input type="text" id="drawer_usr_matriz" class="drawer-input" readonly>
                 </div>
 
                 <div class="drawer-field">
                     <label for="drawer_usr_concessionaria" class="drawer-label">Concessionária Vinculada</label>
-                    <input type="text" id="drawer_usr_concessionaria" class="drawer-input" required>
+                    <select id="drawer_usr_concessionaria" class="drawer-select">
+                        <option value="">Acesso Global da Empresa (sem praça específica)</option>
+                    </select>
                 </div>
 
                 <div class="drawer-field">
-                    <label for="drawer_usr_perfil" class="drawer-label">Perfil de Acesso (RBAC)</label>
-                    <select id="drawer_usr_perfil" class="drawer-select">
-                        <option value="1 - Gestor CCO">1 - Gestor CCO (Acesso CCO e Configurações)</option>
-                        <option value="2 - Analista NOC">2 - Analista NOC</option>
-                        <option value="4 - Operador de Pista">4 - Operador de Pista</option>
-                        <option value="5 - Auditoria & Compliance">5 - Auditoria &amp; Compliance</option>
-                    </select>
+                    <label for="drawer_usr_perfil" class="drawer-label">Perfil de Acesso (RBAC) *</label>
+                    <select id="drawer_usr_perfil" class="drawer-select" required></select>
                 </div>
             </div>
 
@@ -490,9 +250,9 @@
 
                 <div class="drawer-field-row">
                     <div class="drawer-field">
-                        <label for="drawer_usr_senha" class="drawer-label">Senha de Acesso</label>
+                        <label for="drawer_usr_senha" class="drawer-label">Nova Senha (opcional)</label>
                         <div class="drawer-input-with-icon">
-                            <input type="password" id="drawer_usr_senha" class="drawer-input" value="secret@SorveSys2025">
+                            <input type="password" id="drawer_usr_senha" class="drawer-input" placeholder="Manter atual" autocomplete="new-password">
                             <button type="button" class="drawer-input-icon-btn" onclick="alternarVisibilidadeSenha('drawer_usr_senha')">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                             </button>
@@ -501,61 +261,248 @@
 
                     <div class="drawer-field">
                         <label for="drawer_usr_confirmar" class="drawer-label">Confirmar Senha</label>
-                        <input type="password" id="drawer_usr_confirmar" class="drawer-input" value="secret@SorveSys2025">
+                        <input type="password" id="drawer_usr_confirmar" class="drawer-input" placeholder="Repita a nova senha" autocomplete="new-password">
                     </div>
                 </div>
+                <p class="drawer-help">Deixe em branco para manter a senha atual. Se alterar, use no mínimo 8 caracteres, 1 número e 1 caractere especial.</p>
             </div>
         </form>
 
         <div class="drawer-footer">
             <button type="button" class="btn-drawer-cancel" onclick="fecharDrawer()">Cancelar</button>
-            <button type="submit" form="form_drawer_usr" class="btn-drawer-save">Salvar Alterações</button>
+            <button type="submit" form="form_drawer_usr" id="btn_salvar_usr" class="btn-drawer-save">Salvar Alterações</button>
         </div>
     </aside>
 
     <!-- ==================== LÓGICA JAVASCRIPT ==================== -->
     <script>
-        var linhaEmEdicao = null;
+        var sessaoAtual = null;
+        var usuarios = [];
+        var perfisBanco = [];
+        var concessionariasPermitidas = [];
+        var idEmEdicao = null;
+        var TAMANHO_PAGINA = 10;
+        var paginaAtual = 1;
 
         document.addEventListener("DOMContentLoaded", function () {
-            var nomeSession = sessionStorage.getItem("NOME_USUARIO");
-            if (nomeSession) {
-                var el = document.getElementById("nome_usuario_header");
-                if (el) el.innerText = nomeSession;
+            sessaoAtual = obterSessaoGerenciamento();
+            if (!sessaoAtual) return;
+
+            if (!sessaoAtual.ehGestor) {
+                var btnNovo = document.getElementById("btn_novo_usuario");
+                if (btnNovo) btnNovo.style.display = "none";
             }
-            atualizarContadores();
+
+            carregarDadosIniciais();
         });
 
-        function abrirDrawerUsuario(btn) {
-            var tr = btn.closest("tr");
-            if (!tr) return;
-            linhaEmEdicao = tr;
+        function carregarDadosIniciais() {
+            var tbody = document.getElementById("lista_usuarios");
+            tbody.innerHTML = '<tr><td colspan="5" class="table-empty">Carregando usuários do banco de dados...</td></tr>';
 
-            var titleEl = tr.querySelector(".item-title");
-            var idEl = tr.querySelector(".id-badge");
-            var emailEl = tr.querySelector(".badge-code");
-            var concEl = tr.querySelectorAll("td")[2];
-            var perfilEl = tr.querySelector(".role-badge");
+            Promise.all([
+                apiGerenciamento("/usuarios/listar"),
+                apiGerenciamento("/usuarios/perfis"),
+                apiGerenciamento("/concessionarias/listar")
+            ])
+                .then(function (respostas) {
+                    usuarios = Array.isArray(respostas[0]) ? respostas[0] : [];
+                    perfisBanco = Array.isArray(respostas[1]) ? respostas[1] : [];
+                    concessionariasPermitidas = Array.isArray(respostas[2]) ? respostas[2] : [];
 
-            var nome = titleEl ? titleEl.innerText.trim() : "";
-            var id = idEl ? idEl.innerText.trim() : "#10000";
-            var email = emailEl ? emailEl.innerText.replace(/[\r\n\t]+/g, ' ').trim() : "";
-            email = email.split(" ")[0] || email;
-            var concessionaria = concEl ? concEl.innerText.replace(/\n/g, ' - ').trim() : "";
-            var perfil = perfilEl ? perfilEl.innerText.trim() : "";
+                    popularPerfis();
+                    popularConcessionariasDrawer();
 
-            document.getElementById("drawer_usr_subtitulo").innerText = "USR-" + id.replace('#', '') + " (" + nome + ")";
-            document.getElementById("drawer_usr_nome").value = nome;
-            document.getElementById("drawer_usr_email").value = email;
-            document.getElementById("drawer_usr_concessionaria").value = concessionaria;
+                    document.getElementById("kpi_usuarios").textContent = usuarios.length;
+                    document.getElementById("kpi_concessoes").textContent = concessionariasPermitidas.length;
+                    document.getElementById("contador_total").textContent = usuarios.length;
 
-            var selectPerfil = document.getElementById("drawer_usr_perfil");
-            for (var i = 0; i < selectPerfil.options.length; i++) {
-                if (perfil.includes(selectPerfil.options[i].value) || selectPerfil.options[i].value.includes(perfil)) {
-                    selectPerfil.selectedIndex = i;
-                    break;
-                }
+                    renderizarTabela();
+                })
+                .catch(function (erro) {
+                    console.error("Erro ao carregar usuários:", erro);
+                    tbody.innerHTML = '<tr><td colspan="5" class="table-empty">Erro ao carregar usuários: ' + escaparHtml(erro.message) + '</td></tr>';
+                });
+        }
+
+        function popularPerfis() {
+            var sltFiltro = document.getElementById("slt_perfil");
+            var valorAtual = sltFiltro.value;
+            var htmlFiltro = '<option value="">Todos os Perfis</option>';
+            var htmlDrawer = "";
+
+            perfisBanco.forEach(function (p) {
+                var rotulo = p.id + " - " + p.tipo;
+                htmlFiltro += '<option value="' + Number(p.id) + '">' + escaparHtml(rotulo) + '</option>';
+                htmlDrawer += '<option value="' + Number(p.id) + '">' + escaparHtml(rotulo) + '</option>';
+            });
+
+            sltFiltro.innerHTML = htmlFiltro;
+            if (valorAtual) sltFiltro.value = valorAtual;
+
+            var sltDrawer = document.getElementById("drawer_usr_perfil");
+            if (sltDrawer) sltDrawer.innerHTML = htmlDrawer;
+        }
+
+        function popularConcessionariasDrawer() {
+            var slt = document.getElementById("drawer_usr_concessionaria");
+            if (!slt) return;
+
+            var html = '<option value="">Acesso Global da Empresa (sem praça específica)</option>';
+            concessionariasPermitidas.forEach(function (c) {
+                var texto = c.nome_praca + " (" + c.rodovia + " • Km " + formatarKm(c.km) + ")";
+                html += '<option value="' + Number(c.id) + '">' + escaparHtml(texto) + '</option>';
+            });
+
+            slt.innerHTML = html;
+        }
+
+        function obterListaFiltrada() {
+            var textoBusca = document.getElementById("ipt_busca").value.toLowerCase().trim();
+            var perfilFiltro = document.getElementById("slt_perfil").value;
+
+            return usuarios.filter(function (u) {
+                var textoCompleto = (
+                    (u.nome || "") + " " +
+                    (u.email || "") + " " +
+                    (u.nome_fantasia || "") + " " +
+                    (u.razao_social || "") + " " +
+                    (u.nome_praca || "") + " " +
+                    (u.rodovia || "") + " " +
+                    (u.perfil || "") + " " +
+                    u.id
+                ).toLowerCase();
+
+                var matchBusca = !textoBusca || textoCompleto.indexOf(textoBusca) >= 0;
+                var matchPerfil = !perfilFiltro || String(u.fk_tipo_usuario) === String(perfilFiltro);
+                return matchBusca && matchPerfil;
+            });
+        }
+
+        function aoFiltrar() {
+            paginaAtual = 1;
+            renderizarTabela();
+        }
+
+        function irParaPagina(novaPagina) {
+            paginaAtual = novaPagina;
+            renderizarTabela();
+        }
+
+        function obterBadgePerfil(u) {
+            var tipo = String(u.perfil || "").toLowerCase();
+            var label = u.fk_tipo_usuario + " - " + (u.perfil || "Indefinido");
+
+            if (tipo === "gestor") {
+                return '<span class="role-badge gestor">' +
+                    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>' +
+                    escaparHtml(label) +
+                '</span>';
             }
+
+            return '<span class="role-badge analista">' +
+                '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>' +
+                escaparHtml(label) +
+            '</span>';
+        }
+
+        function renderizarTabela() {
+            var filtrados = obterListaFiltrada();
+            var totalFiltrados = filtrados.length;
+            var totalPaginas = Math.max(1, Math.ceil(totalFiltrados / TAMANHO_PAGINA));
+            if (paginaAtual > totalPaginas) paginaAtual = 1;
+
+            var inicio = (paginaAtual - 1) * TAMANHO_PAGINA;
+            var fatia = filtrados.slice(inicio, inicio + TAMANHO_PAGINA);
+            var tbody = document.getElementById("lista_usuarios");
+
+            document.getElementById("contador_mostrados").textContent = totalFiltrados;
+            document.getElementById("contador_total").textContent = usuarios.length;
+
+            if (fatia.length === 0) {
+                var msg = usuarios.length === 0
+                    ? "Nenhum usuário disponível para o seu escopo de permissão."
+                    : "Nenhum usuário encontrado com os filtros aplicados.";
+                tbody.innerHTML = '<tr><td colspan="5" class="table-empty">' + msg + '</td></tr>';
+                renderizarControlesPaginacao("paginacao_usuarios", 1, 1, "irParaPagina");
+                return;
+            }
+
+            var html = "";
+            fatia.forEach(function (u) {
+                var empresaTexto = (u.nome_fantasia || u.razao_social || "Empresa não vinculada") +
+                    (u.fk_empresa ? " (ID " + Number(u.fk_empresa) + ")" : "");
+                var pracaTexto = u.fk_concessionaria && u.nome_praca
+                    ? u.nome_praca + (u.rodovia ? " (" + u.rodovia + ")" : "")
+                    : "Acesso Global da Empresa";
+
+                var ehProprio = sessaoAtual && Number(u.id) === Number(sessaoAtual.id);
+                var acoesHtml = "";
+
+                if (sessaoAtual && sessaoAtual.ehGestor) {
+                    acoesHtml = '<div class="action-buttons" style="justify-content: flex-end;">' +
+                        '<button type="button" class="btn-icon-action" onclick="abrirDrawerUsuario(' + Number(u.id) + ')" title="Editar">' +
+                            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>' +
+                        '</button>' +
+                        '<button type="button" class="btn-icon-action delete" ' +
+                            (ehProprio ? 'disabled title="Você não pode excluir o próprio usuário"' : 'onclick="excluirUsuario(' + Number(u.id) + ')" title="Excluir"') + '>' +
+                            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>' +
+                        '</button>' +
+                    '</div>';
+                } else {
+                    acoesHtml = '<span class="readonly-tag">Somente visualização</span>';
+                }
+
+                html += '<tr>' +
+                    '<td>' +
+                        '<div class="item-title-row">' +
+                            '<span class="item-title">' + escaparHtml(u.nome) + '</span>' +
+                            '<span class="id-badge">#' + Number(u.id) + '</span>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td>' +
+                        '<span class="badge-code">' +
+                            escaparHtml(u.email) +
+                            '<button type="button" class="copy-btn" onclick="copiarTextoComAviso(\'' + escaparHtml(u.email) + '\', \'E-mail\')" title="Copiar e-mail">' +
+                                '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' +
+                            '</button>' +
+                        '</span>' +
+                    '</td>' +
+                    '<td>' +
+                        '<div class="item-text-group">' +
+                            '<span style="font-weight: 600; font-size: 13px;">' + escaparHtml(empresaTexto) + '</span>' +
+                            '<span class="item-subtitle">' + escaparHtml(pracaTexto) + '</span>' +
+                        '</div>' +
+                    '</td>' +
+                    '<td>' + obterBadgePerfil(u) + '</td>' +
+                    '<td style="text-align: right; padding-right: 24px;">' + acoesHtml + '</td>' +
+                '</tr>';
+            });
+
+            tbody.innerHTML = html;
+            renderizarControlesPaginacao("paginacao_usuarios", paginaAtual, totalPaginas, "irParaPagina");
+        }
+
+        function abrirDrawerUsuario(id) {
+            if (!sessaoAtual || !sessaoAtual.ehGestor) return;
+
+            var usr = usuarios.find(function (u) { return Number(u.id) === Number(id); });
+            if (!usr) return;
+
+            idEmEdicao = Number(usr.id);
+            limparFeedbackDrawer("drawer_usr_feedback");
+
+            var empresaTexto = (usr.fk_empresa ? usr.fk_empresa + " - " : "") +
+                (usr.nome_fantasia || usr.razao_social || sessaoAtual.empresa || "Empresa não informada");
+
+            document.getElementById("drawer_usr_subtitulo").textContent = "USR-" + usr.id + " (" + usr.nome + ")";
+            document.getElementById("drawer_usr_nome").value = usr.nome || "";
+            document.getElementById("drawer_usr_email").value = usr.email || "";
+            document.getElementById("drawer_usr_matriz").value = empresaTexto;
+            document.getElementById("drawer_usr_concessionaria").value = usr.fk_concessionaria ? String(usr.fk_concessionaria) : "";
+            document.getElementById("drawer_usr_perfil").value = usr.fk_tipo_usuario ? String(usr.fk_tipo_usuario) : "";
+            document.getElementById("drawer_usr_senha").value = "";
+            document.getElementById("drawer_usr_confirmar").value = "";
 
             document.getElementById("drawer_overlay").classList.add("ativo");
             document.getElementById("drawer_panel").classList.add("ativo");
@@ -566,67 +513,70 @@
             document.getElementById("drawer_overlay").classList.remove("ativo");
             document.getElementById("drawer_panel").classList.remove("ativo");
             document.body.style.overflow = "";
-            linhaEmEdicao = null;
+            idEmEdicao = null;
+            limparFeedbackDrawer("drawer_usr_feedback");
         }
 
         function salvarDrawerUsuario(event) {
             if (event) event.preventDefault();
-            if (!linhaEmEdicao) return false;
+            if (!idEmEdicao || !sessaoAtual || !sessaoAtual.ehGestor) return false;
 
-            var novoNome = document.getElementById("drawer_usr_nome").value.trim();
-            var novoEmail = document.getElementById("drawer_usr_email").value.trim();
-            var novaConc = document.getElementById("drawer_usr_concessionaria").value.trim();
-            var selectPerfil = document.getElementById("drawer_usr_perfil");
-            var novoPerfil = selectPerfil.options[selectPerfil.selectedIndex].text;
+            var nome = document.getElementById("drawer_usr_nome").value.trim();
+            var email = document.getElementById("drawer_usr_email").value.trim().toLowerCase();
+            var fkConcessionaria = document.getElementById("drawer_usr_concessionaria").value;
+            var fkTipoUsuario = document.getElementById("drawer_usr_perfil").value;
+            var senha = document.getElementById("drawer_usr_senha").value;
+            var confirmar = document.getElementById("drawer_usr_confirmar").value;
 
-            if (!novoNome || !novoEmail) {
-                alert("Por favor, preencha os campos obrigatórios.");
+            if (!nome || !email || !fkTipoUsuario) {
+                exibirFeedbackDrawer("drawer_usr_feedback", "erro", "Preencha Nome, E-mail e Perfil de Acesso.");
                 return false;
             }
 
-            var titleEl = linhaEmEdicao.querySelector(".item-title");
-            if (titleEl) titleEl.innerText = novoNome;
-            linhaEmEdicao.setAttribute("data-nome", novoNome);
-
-            var codeEl = linhaEmEdicao.querySelector(".badge-code");
-            if (codeEl) {
-                codeEl.innerHTML = novoEmail + 
-                    '<button class="copy-btn" onclick="copiarTexto(\'' + novoEmail + '\')" title="Copiar e-mail">' +
-                    '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>' +
-                    '</button>';
-            }
-
-            var concTd = linhaEmEdicao.querySelectorAll("td")[2];
-            if (concTd) {
-                var partes = novaConc.split(' - ');
-                concTd.innerHTML = '<div class="item-text-group">' +
-                    '<span style="font-weight: 600; font-size: 13px;">' + (partes[0] || novaConc) + '</span>' +
-                    '<span class="item-subtitle">' + (partes[1] || '') + '</span>' +
-                    '</div>';
-            }
-
-            var perfilTd = linhaEmEdicao.querySelectorAll("td")[3];
-            if (perfilTd) {
-                var classeRole = "analista";
-                var iconeRole = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>';
-
-                if (novoPerfil.includes("Gestor")) {
-                    classeRole = "gestor";
-                    iconeRole = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>';
-                } else if (novoPerfil.includes("Operador")) {
-                    classeRole = "operador";
-                    iconeRole = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>';
-                } else if (novoPerfil.includes("Auditoria")) {
-                    classeRole = "auditoria";
-                    iconeRole = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>';
+            if (senha || confirmar) {
+                if (senha !== confirmar) {
+                    exibirFeedbackDrawer("drawer_usr_feedback", "erro", "As senhas informadas não coincidem.");
+                    return false;
                 }
-
-                perfilTd.innerHTML = '<span class="role-badge ' + classeRole + '">' + iconeRole + ' ' + novoPerfil.split('(')[0].trim() + '</span>';
-                linhaEmEdicao.setAttribute("data-perfil", novoPerfil);
             }
 
-            fecharDrawer();
-            filtrarUsuarios();
+            var btnSalvar = document.getElementById("btn_salvar_usr");
+            btnSalvar.disabled = true;
+            btnSalvar.textContent = "Salvando...";
+            limparFeedbackDrawer("drawer_usr_feedback");
+
+            var payload = {
+                nome: nome,
+                email: email,
+                fk_concessionaria: fkConcessionaria ? Number(fkConcessionaria) : null,
+                fk_tipo_usuario: Number(fkTipoUsuario)
+            };
+            if (senha) payload.senha = senha;
+
+            var idEditado = idEmEdicao;
+
+            apiGerenciamento("/usuarios/" + idEditado, {
+                method: "PUT",
+                body: JSON.stringify(payload)
+            })
+                .then(function () {
+                    if (Number(idEditado) === Number(sessaoAtual.id)) {
+                        sessionStorage.setItem("NOME_USUARIO", nome);
+                        sessionStorage.setItem("EMAIL_USUARIO", email);
+                        var elHeader = document.getElementById("nome_usuario_header");
+                        if (elHeader) elHeader.textContent = nome;
+                    }
+                    fecharDrawer();
+                    carregarDadosIniciais();
+                })
+                .catch(function (erro) {
+                    exibirFeedbackDrawer("drawer_usr_feedback", "erro", erro.message || "Não foi possível salvar as alterações.");
+                })
+                .finally(function () {
+                    btnSalvar.disabled = false;
+                    btnSalvar.textContent = "Salvar Alterações";
+                });
+
             return false;
         }
 
@@ -637,75 +587,43 @@
             }
         }
 
-        function filtrarUsuarios() {
-            var textoBusca = document.getElementById("ipt_busca").value.toLowerCase().trim();
-            var perfilFiltro = document.getElementById("slt_perfil").value.toLowerCase().trim();
+        function excluirUsuario(id) {
+            if (!sessaoAtual || !sessaoAtual.ehGestor) return;
+            var usr = usuarios.find(function (u) { return Number(u.id) === Number(id); });
+            if (!usr) return;
 
-            var linhas = document.querySelectorAll("#lista_usuarios tr");
-            var visiveis = 0;
-
-            linhas.forEach(function (linha) {
-                var nome = (linha.getAttribute("data-nome") || "").toLowerCase();
-                var perfil = (linha.getAttribute("data-perfil") || "").toLowerCase();
-                var conteudoLinha = linha.innerText.toLowerCase();
-
-                var matchBusca = !textoBusca || conteudoLinha.includes(textoBusca) || nome.includes(textoBusca);
-                var matchPerfil = !perfilFiltro || perfil.includes(perfilFiltro);
-
-                if (matchBusca && matchPerfil) {
-                    linha.style.display = "";
-                    visiveis++;
-                } else {
-                    linha.style.display = "none";
-                }
-            });
-
-            document.getElementById("contador_mostrados").innerText = visiveis;
-        }
-
-        function atualizarContadores() {
-            var linhas = document.querySelectorAll("#lista_usuarios tr");
-            var total = linhas.length;
-            document.getElementById("kpi_usuarios").innerText = total;
-            document.getElementById("contador_total").innerText = total;
-            document.getElementById("contador_mostrados").innerText = total;
-        }
-
-        function copiarTexto(texto) {
-            navigator.clipboard.writeText(texto).then(function () {
-                alert("E-mail copiado: " + texto);
-            }).catch(function () {
-                prompt("Copie o e-mail abaixo:", texto);
-            });
-        }
-
-        function excluirLinha(btn, nome) {
-            if (confirm("Deseja realmente desativar ou remover o usuário '" + nome + "'?")) {
-                var tr = btn.closest("tr");
-                if (tr) {
-                    tr.remove();
-                    atualizarContadores();
-                    filtrarUsuarios();
-                }
+            if (!confirm("Deseja realmente remover o usuário '" + usr.nome + "'?")) {
+                return;
             }
+
+            apiGerenciamento("/usuarios/" + id, { method: "DELETE" })
+                .then(function () {
+                    carregarDadosIniciais();
+                })
+                .catch(function (erro) {
+                    alert(erro.message || "Não foi possível excluir o usuário.");
+                });
         }
 
         function exportarRelatorio() {
-            var linhas = document.querySelectorAll("#lista_usuarios tr");
-            var csv = "Nome,ID,Email,Concessionaria,Perfil\n";
+            var filtrados = obterListaFiltrada();
+            var csv = "ID,Nome,Email,Empresa,Concessionaria,Perfil\n";
 
-            linhas.forEach(function (linha) {
-                if (linha.style.display !== "none") {
-                    var cols = linha.querySelectorAll("td");
-                    if (cols.length >= 4) {
-                        var nome = cols[0].querySelector(".item-title") ? cols[0].querySelector(".item-title").innerText.trim() : "";
-                        var id = cols[0].querySelector(".id-badge") ? cols[0].querySelector(".id-badge").innerText.trim() : "";
-                        var email = cols[1].querySelector(".badge-code") ? cols[1].querySelector(".badge-code").innerText.trim().replace(/\s+/g, ' ') : "";
-                        var concessionaria = cols[2].innerText.replace(/\n/g, ' - ').trim();
-                        var perfil = cols[3].innerText.trim();
-                        csv += '"' + nome + '","' + id + '","' + email + '","' + concessionaria + '","' + perfil + '"\n';
-                    }
-                }
+            filtrados.forEach(function (u) {
+                var praca = u.fk_concessionaria && u.nome_praca
+                    ? u.nome_praca + (u.rodovia ? " (" + u.rodovia + ")" : "")
+                    : "Acesso Global da Empresa";
+                var linha = [
+                    "#" + u.id,
+                    u.nome || "",
+                    u.email || "",
+                    u.nome_fantasia || u.razao_social || "",
+                    praca,
+                    u.fk_tipo_usuario + " - " + (u.perfil || "")
+                ].map(function (v) {
+                    return '"' + String(v).replace(/"/g, '""') + '"';
+                }).join(",");
+                csv += linha + "\n";
             });
 
             var blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
