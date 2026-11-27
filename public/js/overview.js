@@ -515,9 +515,21 @@ function sair() {
 }
 
 // ===== INÍCIO =====
-preencherDadosOperador();
-carregarDadosOverview(true);
-setInterval(function () { carregarDadosOverview(false); }, 15000);
+(function inicializarOverview() {
+    var idUsuario = null;
+    try {
+        idUsuario = sessionStorage.getItem("ID_USUARIO") || sessionStorage.ID_USUARIO;
+    } catch (e) { }
+
+    if (!idUsuario) {
+        window.location.replace("login.html");
+        return;
+    }
+
+    preencherDadosOperador();
+    carregarDadosOverview(true);
+    setInterval(function () { carregarDadosOverview(false); }, 15000);
+})();
 
 // ===== MODAL DE CHAMADOS JIRA =====
 function popularServidoresModal(servidorSelecionado) {
@@ -546,24 +558,17 @@ function popularServidoresModal(servidorSelecionado) {
         return;
     }
 
-    var headersServidores = {};
-    try {
-        if (sessionStorage.ID_USUARIO) {
-            headersServidores["x-usuario-id"] = sessionStorage.ID_USUARIO;
-        }
-    } catch (e) { }
+    var paramsFallback = obterParametrosEscopo();
+    var urlFallback = API_BASE + "/monitoramento/overview" + (paramsFallback.toString() ? "?" + paramsFallback.toString() : "");
 
-    fetch(API_BASE + "/servidores/listar", { headers: headersServidores })
+    fetch(urlFallback)
         .then(function (res) {
             if (res.ok) return res.json();
             throw new Error("Falha ao buscar servidores do banco");
         })
         .then(function (dadosBanco) {
-            if (Array.isArray(dadosBanco) && dadosBanco.length > 0) {
-                renderizarOptions(dadosBanco);
-            } else {
-                renderizarOptions([]);
-            }
+            var lista = dadosBanco && Array.isArray(dadosBanco.servidores) ? dadosBanco.servidores : [];
+            renderizarOptions(lista);
         })
         .catch(function () {
             renderizarOptions([]);

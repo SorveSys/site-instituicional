@@ -280,6 +280,15 @@ function obterDashboard(req, res) {
                 }
 
                 var servidor = normalizarServidor(linhasServidor[0]);
+
+                if (
+                    (filtros.idConcessionaria && servidor.fk_concessionaria !== filtros.idConcessionaria) ||
+                    (!filtros.idConcessionaria && filtros.idEmpresa && servidor.fk_empresa !== filtros.idEmpresa)
+                ) {
+                    return res.status(403).json({
+                        mensagem: "Você não tem permissão para visualizar este servidor."
+                    });
+                }
                 var historico = linhasHistorico.map(function (h) {
                     return {
                         dt_hora: h.dt_hora,

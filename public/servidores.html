@@ -23,13 +23,13 @@
     <!-- ==================== HEADER / NAVBAR ==================== -->
     <header class="topbar">
         <div class="topbar-brand">
-            <a href="overview.html" title="SorveSys - Overview">
+            <a href="concessionarias.html" title="SorveSys - Gestão Empresarial">
                 <img src="./assets/icons/home/LOGO.svg" alt="SorveSys – Monitoramento de Sistemas Rodoviários">
             </a>
         </div>
 
         <nav class="topbar-nav" aria-label="Navegação Principal">
-            <a href="overview.html" class="nav-link">OverView</a>
+            <a href="#" class="nav-link em-desenvolvimento" onclick="return avisarOverviewEmDesenvolvimento(event)" title="Overview do Gestor em desenvolvimento">OverView <span class="nav-dev-tag">Em dev</span></a>
             <a href="concessionarias.html" class="nav-link">Concessionarias</a>
             <a href="usuarios.html" class="nav-link">Usuários</a>
             <a href="servidores.html" class="nav-link ativo" aria-current="page">Servidores</a>
@@ -44,6 +44,7 @@
                     </svg>
                 </div>
             </div>
+            <button type="button" class="btn-logout-topbar" onclick="sairSistema()" title="Sair da conta">Sair</button>
         </div>
     </header>
 
@@ -66,6 +67,27 @@
                 </svg>
                 + Adicionar Novo Servidor
             </a>
+        </div>
+
+        <!-- KPI Resumo -->
+        <div class="kpi-row">
+            <div class="kpi-card" style="min-width: 260px;">
+                <div class="kpi-card-header">
+                    <span class="kpi-label">TOTAL DE SERVIDORES</span>
+                    <div class="kpi-icon-box blue">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div class="kpi-value-row">
+                    <span class="kpi-number" id="kpi_servidores">0</span>
+                    <span class="kpi-unit">instâncias na empresa</span>
+                </div>
+            </div>
         </div>
 
         <!-- Barra de Filtros e Busca -->
@@ -222,13 +244,8 @@
         var paginaAtual = 1;
 
         document.addEventListener("DOMContentLoaded", function () {
-            sessaoAtual = obterSessaoGerenciamento();
+            sessaoAtual = exigirSessaoGestor();
             if (!sessaoAtual) return;
-
-            if (!sessaoAtual.ehGestor) {
-                var btnNovo = document.getElementById("btn_novo_servidor");
-                if (btnNovo) btnNovo.style.display = "none";
-            }
 
             carregarDadosIniciais();
         });
@@ -247,6 +264,8 @@
 
                     popularFiltroRodovias();
                     popularConcessionariasDrawer();
+                    var kpiSrv = document.getElementById("kpi_servidores");
+                    if (kpiSrv) kpiSrv.textContent = servidores.length;
                     document.getElementById("contador_total").textContent = servidores.length;
                     renderizarTabela();
                 })

@@ -9,6 +9,7 @@
     <title>SorveSys | Cadastro de Usuário</title>
 
     <script src="./js/sessao.js"></script>
+    <script src="./js/gerenciamento-comum.js"></script>
 
     <link rel="icon" href="assets/LOGO SORVESYS.png">
     <link rel="stylesheet" href="/css/cadastro-servidor.css">
@@ -25,8 +26,8 @@
             <img src="/assets/icons/login/Logo-SorveSys-Fundo-Escuro.svg" alt="SorveSys Logo">
         </a>
 
-        <a href="overview.html" class="topbar-voltar">
-            <img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Overview
+        <a href="usuarios.html" id="link_voltar_topo" class="topbar-voltar">
+            <img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Usuários
         </a>
 
         <a href="#" class="topbar-noc">
@@ -90,10 +91,24 @@
                     <p class="ajuda">Define o nível de permissão do usuário na plataforma.</p>
 
                     <div class="campo-input">
-                        <select id="slt_perfil">
+                        <select id="slt_perfil" onchange="atualizarVisibilidadeConcessionaria()">
                             <option value="">Selecione o perfil...</option>
                             <option value="2">Analista</option>
                             <option value="1">Gestor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="campo-grupo" id="grupo_concessionaria" style="display: none;">
+                    <div class="linha-label">
+                        <label for="slt_concessionaria">Concessionária / Praça Vinculada <b>*</b></label>
+                    </div>
+
+                    <p class="ajuda">Praça de pedágio que este Analista terá permissão para monitorar.</p>
+
+                    <div class="campo-input">
+                        <select id="slt_concessionaria">
+                            <option value="">Selecione a concessionária...</option>
                         </select>
                     </div>
                 </div>
@@ -294,8 +309,67 @@
                 });
         }
 
-        carregarPerfis();
-        carregarColaboradores();
+        var ehPrimeiroCadastro = Boolean(sessionStorage.getItem("EMPRESA_CADASTRADA_ID"));
+        var sessaoGestor = null;
+
+        function validarAcessoCadastroUsuario() {
+            if (ehPrimeiroCadastro) {
+                var linkVoltar = document.getElementById("link_voltar_topo");
+                if (linkVoltar) {
+                    linkVoltar.href = "login.html";
+                    linkVoltar.innerHTML = '<img src="/assets/icons/login/Icon-seta.svg" alt="" class="ico ico-voltar"> Login';
+                }
+                return true;
+            }
+
+            sessaoGestor = exigirSessaoGestor();
+            return Boolean(sessaoGestor);
+        }
+
+        function carregarConcessionariasEmpresa() {
+            if (!sessaoGestor) return;
+            var slt = document.getElementById("slt_concessionaria");
+            if (!slt) return;
+
+            apiGerenciamento("/concessionarias/listar")
+                .then(function (lista) {
+                    var concessionarias = Array.isArray(lista) ? lista : [];
+                    slt.innerHTML = '<option value="">Selecione a concessionária...</option>';
+
+                    concessionarias.forEach(function (c) {
+                        var opt = document.createElement("option");
+                        opt.value = c.id;
+                        opt.textContent = c.nome_praca + (c.rodovia ? " (" + c.rodovia + " • Km " + formatarKm(c.km) + ")" : "");
+                        slt.appendChild(opt);
+                    });
+                })
+                .catch(function (erro) {
+                    console.log("Aviso ao carregar concessionárias:", erro);
+                });
+        }
+
+        function atualizarVisibilidadeConcessionaria() {
+            var grupo = document.getElementById("grupo_concessionaria");
+            if (!grupo) return;
+
+            var opcaoSelecionada = slt_perfil.options[slt_perfil.selectedIndex];
+            var textoPerfil = opcaoSelecionada ? String(opcaoSelecionada.textContent || "").toLowerCase() : "";
+            var ehAnalista = textoPerfil.indexOf("analista") >= 0;
+
+            if (!ehPrimeiroCadastro && sessaoGestor && ehAnalista) {
+                grupo.style.display = "";
+            } else {
+                grupo.style.display = "none";
+                var sltConc = document.getElementById("slt_concessionaria");
+                if (sltConc) sltConc.value = "";
+            }
+        }
+
+        if (validarAcessoCadastroUsuario()) {
+            carregarPerfis();
+            carregarColaboradores();
+            carregarConcessionariasEmpresa();
+        }
 
         // Cadastra um novo usuário
         function cadastrar() {
@@ -306,6 +380,11 @@
                 || sessionStorage.getItem("FK_EMPRESA");
 
             var perfilVar = slt_perfil.value;
+            var sltConc = document.getElementById("slt_concessionaria");
+            var concessionariaVar = sltConc ? sltConc.value : "";
+            var grupoConc = document.getElementById("grupo_concessionaria");
+            var exigeConcessionaria = grupoConc && grupoConc.style.display !== "none";
+
             var senhaVar = ipt_senha.value;
             var confirmacaoSenhaVar = ipt_confirmar.value;
 
@@ -322,6 +401,14 @@
                     false
                 );
 
+                return false;
+            }
+
+            if (exigeConcessionaria && concessionariaVar === "") {
+                mostrarMensagem(
+                    "Selecione a concessionária/praça que este Analista irá monitorar!",
+                    false
+                );
                 return false;
             }
 
@@ -356,18 +443,21 @@
                 return false;
             }
 
+            var payloadCadastro = {
+                nomeServer: nomeVar,
+                emailServer: emailVar,
+                senhaServer: senhaVar,
+                empresaServer: exigeConcessionaria ? null : empresaVar,
+                concessionariaServer: exigeConcessionaria ? Number(concessionariaVar) : null,
+                perfilServer: perfilVar
+            };
+
             fetch("/usuarios/cadastrar", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({
-                    nomeServer: nomeVar,
-                    emailServer: emailVar,
-                    senhaServer: senhaVar,
-                    empresaServer: empresaVar,
-                    perfilServer: perfilVar
-                })
+                body: JSON.stringify(payloadCadastro)
             })
                 .then(function (resposta) {
                     if (resposta.ok) {
@@ -377,6 +467,8 @@
                         ipt_nome.value = "";
                         ipt_email.value = "";
                         slt_perfil.value = "";
+                        if (sltConc) sltConc.value = "";
+                        atualizarVisibilidadeConcessionaria();
                         ipt_senha.value = "";
                         ipt_confirmar.value = "";
 

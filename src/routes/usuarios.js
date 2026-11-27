@@ -20,7 +20,7 @@ router.get("/listar-perfis", function (req, res) {
     usuarioController.listarPerfis(req, res);
 });
 
-router.get("/listar", escopoUsuario.exigirUsuarioAutenticado, function (req, res) {
+router.get("/listar", escopoUsuario.exigirUsuarioAutenticado, escopoUsuario.exigirGestor, function (req, res) {
     usuarioController.listar(req, res);
 });
 

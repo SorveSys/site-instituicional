@@ -1,5 +1,7 @@
 var https = require("https");
 var chamadoModel = require("../models/chamadoModel");
+var servidorModel = require("../models/servidorModel");
+var escopoUsuario = require("../utils/escopoUsuario");
 
 function enviarRequisicaoJira(caminho, metodo, corpo, callback) {
     var rawDomain = process.env.JIRA_DOMAIN || "https://sptech-team-ogkh9vns.atlassian.net";
@@ -104,77 +106,113 @@ function abrirChamado(req, res) {
         return res.status(400).json({ mensagem: "Informe o identificador do usuário responsável pela abertura do chamado." });
     }
 
-    var projectKey = process.env.JIRA_PROJECT_KEY || "CS";
-    var issueTypeId = process.env.JIRA_ISSUE_TYPE_ID || "10048";
-    var fieldMotivo = process.env.JIRA_FIELD_MOTIVO || "customfield_10221";
-    var fieldServidor = process.env.JIRA_FIELD_SERVIDOR || "customfield_10222";
+    Promise.all([
+        escopoUsuario.buscarContextoUsuarioPorId(fkUsuario),
+        servidorModel.buscarPorId(fkServidor)
+    ])
+        .then(function (resultadosPermissao) {
+            var ctxUsuario = resultadosPermissao[0];
+            var servidoresEncontrados = resultadosPermissao[1];
 
-    var fields = {
-        project: { key: projectKey },
-        summary: String(resumo).trim(),
-        description: descricao && String(descricao).trim() ? String(descricao).trim() : "Sem descrição fornecida.",
-        issuetype: { id: issueTypeId }
-    };
-
-    // customfield_10221 (Motivo da Solicitação - Select Option)
-    fields[fieldMotivo] = { value: motivo };
-
-    // customfield_10222 (Servidor Afetado - Text Field)
-    fields[fieldServidor] = String(servidor).trim();
-
-    var payload = { fields: fields };
-
-    enviarRequisicaoJira("/rest/api/2/issue", "POST", payload, function (err, statusCode, data) {
-        if (err) {
-            console.error("Erro na comunicação com o Jira:", err);
-            return res.status(500).json({
-                mensagem: "Erro ao comunicar com a API do Jira.",
-                erro: err.message
-            });
-        }
-
-        if (statusCode >= 200 && statusCode < 300 && data && data.key) {
-            var rawDomain = process.env.JIRA_DOMAIN || "https://sptech-team-ogkh9vns.atlassian.net";
-            var cleanDomain = rawDomain.replace(/\/+$/, "");
-            var linkJira = cleanDomain + "/browse/" + data.key;
-
-            // Prepara a descrição completa para a coluna TEXT do banco de dados
-            var textoDescricaoBanco = resumo 
-                ? ("[" + String(resumo).trim() + "] " + (descricao ? String(descricao).trim() : "")).trim()
-                : (descricao ? String(descricao).trim() : "Sem descrição.");
-
-            chamadoModel.cadastrar(data.key, motivo, textoDescricaoBanco, fkUsuario, fkServidor)
-                .then(function (resultadoBanco) {
-                    console.log("Chamado " + data.key + " persistido com sucesso no banco de dados! ID:", resultadoBanco.insertId);
-                    return res.status(201).json({
-                        sucesso: true,
-                        mensagem: "Chamado aberto com sucesso no Jira e registrado no banco de dados!",
-                        chave: data.key,
-                        idJira: data.id,
-                        idChamadoBanco: resultadoBanco.insertId,
-                        link: linkJira
-                    });
-                })
-                .catch(function (erroBanco) {
-                    console.error("Aviso: chamado criado no Jira (" + data.key + "), mas erro ao persistir no banco:", erroBanco);
-                    return res.status(201).json({
-                        sucesso: true,
-                        aviso: "Chamado aberto no Jira, mas houve erro ao salvar no banco local.",
-                        chave: data.key,
-                        idJira: data.id,
-                        link: linkJira,
-                        erroBanco: erroBanco.sqlMessage || erroBanco.message
-                    });
+            if (!ctxUsuario) {
+                return res.status(401).json({
+                    mensagem: "Usuário não autenticado ou não encontrado."
                 });
-            return;
-        }
+            }
 
-        console.error("Jira retornou erro:", statusCode, data);
-        return res.status(statusCode).json({
-            mensagem: "Não foi possível criar o chamado no Jira.",
-            detalhes: data
+            if (!servidoresEncontrados || servidoresEncontrados.length === 0) {
+                return res.status(404).json({
+                    mensagem: "Servidor afetado não encontrado no banco de dados."
+                });
+            }
+
+            var srv = servidoresEncontrados[0];
+            var concAlvo = { id: srv.fk_concessionaria, fk_empresa: srv.fk_empresa };
+            if (!escopoUsuario.concessionariaNoEscopo(ctxUsuario, concAlvo)) {
+                return res.status(403).json({
+                    mensagem: "Você não tem permissão para abrir chamado para este servidor."
+                });
+            }
+
+            var projectKey = process.env.JIRA_PROJECT_KEY || "CS";
+            var issueTypeId = process.env.JIRA_ISSUE_TYPE_ID || "10048";
+            var fieldMotivo = process.env.JIRA_FIELD_MOTIVO || "customfield_10221";
+            var fieldServidor = process.env.JIRA_FIELD_SERVIDOR || "customfield_10222";
+
+            var fields = {
+                project: { key: projectKey },
+                summary: String(resumo).trim(),
+                description: descricao && String(descricao).trim() ? String(descricao).trim() : "Sem descrição fornecida.",
+                issuetype: { id: issueTypeId }
+            };
+
+            // customfield_10221 (Motivo da Solicitação - Select Option)
+            fields[fieldMotivo] = { value: motivo };
+
+            // customfield_10222 (Servidor Afetado - Text Field)
+            fields[fieldServidor] = String(servidor).trim();
+
+            var payload = { fields: fields };
+
+            enviarRequisicaoJira("/rest/api/2/issue", "POST", payload, function (err, statusCode, data) {
+                if (err) {
+                    console.error("Erro na comunicação com o Jira:", err);
+                    return res.status(500).json({
+                        mensagem: "Erro ao comunicar com a API do Jira.",
+                        erro: err.message
+                    });
+                }
+
+                if (statusCode >= 200 && statusCode < 300 && data && data.key) {
+                    var rawDomain = process.env.JIRA_DOMAIN || "https://sptech-team-ogkh9vns.atlassian.net";
+                    var cleanDomain = rawDomain.replace(/\/+$/, "");
+                    var linkJira = cleanDomain + "/browse/" + data.key;
+
+                    var textoDescricaoBanco = resumo
+                        ? ("[" + String(resumo).trim() + "] " + (descricao ? String(descricao).trim() : "")).trim()
+                        : (descricao ? String(descricao).trim() : "Sem descrição.");
+
+                    chamadoModel.cadastrar(data.key, motivo, textoDescricaoBanco, fkUsuario, fkServidor)
+                        .then(function (resultadoBanco) {
+                            console.log("Chamado " + data.key + " persistido com sucesso no banco de dados! ID:", resultadoBanco.insertId);
+                            return res.status(201).json({
+                                sucesso: true,
+                                mensagem: "Chamado aberto com sucesso no Jira e registrado no banco de dados!",
+                                chave: data.key,
+                                idJira: data.id,
+                                idChamadoBanco: resultadoBanco.insertId,
+                                link: linkJira
+                            });
+                        })
+                        .catch(function (erroBanco) {
+                            console.error("Aviso: chamado criado no Jira (" + data.key + "), mas erro ao persistir no banco:", erroBanco);
+                            return res.status(201).json({
+                                sucesso: true,
+                                aviso: "Chamado aberto no Jira, mas houve erro ao salvar no banco local.",
+                                chave: data.key,
+                                idJira: data.id,
+                                link: linkJira,
+                                erroBanco: erroBanco.sqlMessage || erroBanco.message
+                            });
+                        });
+                    return;
+                }
+
+                console.error("Jira retornou erro:", statusCode, data);
+                return res.status(statusCode).json({
+                    mensagem: "Não foi possível criar o chamado no Jira.",
+                    detalhes: data
+                });
+            });
+        })
+        .catch(function (erro) {
+            console.error("Erro ao validar permissão para abrir chamado:", erro);
+            if (!res.headersSent) {
+                return res.status(500).json({
+                    mensagem: "Erro ao validar permissão para abrir chamado."
+                });
+            }
         });
-    });
 }
 
 function listar(req, res) {

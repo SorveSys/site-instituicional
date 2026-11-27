@@ -4,7 +4,7 @@ var router = express.Router();
 var concessionariaController = require("../controllers/concessionariaController");
 var escopoUsuario = require("../utils/escopoUsuario");
 
-router.get("/listar", escopoUsuario.exigirUsuarioAutenticado, function (req, res) {
+router.get("/listar", escopoUsuario.exigirUsuarioAutenticado, escopoUsuario.exigirGestor, function (req, res) {
     concessionariaController.listar(req, res);
 });
 

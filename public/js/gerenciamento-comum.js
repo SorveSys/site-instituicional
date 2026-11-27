@@ -56,6 +56,31 @@ function obterSessaoGerenciamento() {
     };
 }
 
+function exigirSessaoGestor() {
+    var sessao = obterSessaoGerenciamento();
+    if (!sessao) return null;
+
+    if (!sessao.ehGestor) {
+        window.location.replace("overview.html");
+        return null;
+    }
+
+    return sessao;
+}
+
+function sairSistema() {
+    try {
+        sessionStorage.clear();
+    } catch (e) { }
+    window.location.replace("login.html");
+}
+
+function avisarOverviewEmDesenvolvimento(event) {
+    if (event) event.preventDefault();
+    alert("A tela de Overview do Gestor ainda está em desenvolvimento.");
+    return false;
+}
+
 function apiGerenciamento(caminho, opcoes) {
     var idUsuario = sessionStorage.getItem("ID_USUARIO");
     var cfg = Object.assign({}, opcoes || {});

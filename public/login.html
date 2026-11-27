@@ -201,8 +201,9 @@
                             cardErro.style.display = "block";
                             mensagem_erro.innerHTML = "Login realizado com sucesso!";
 
+                            var ehGestor = String(json.perfil || "").toLowerCase() === "gestor" || Number(json.fk_tipo_usuario) === 1;
                             setTimeout(() => {
-                                window.location = "overview.html";
+                                window.location = ehGestor ? "concessionarias.html" : "overview.html";
                             }, 1500);
 
                         });

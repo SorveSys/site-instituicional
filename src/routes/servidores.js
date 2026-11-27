@@ -12,7 +12,7 @@ router.get("/buscar-por-ip", function (req, res) {
     servidorController.buscarPorIp(req, res);
 });
 
-router.get("/listar", escopoUsuario.exigirUsuarioAutenticado, function (req, res) {
+router.get("/listar", escopoUsuario.exigirUsuarioAutenticado, escopoUsuario.exigirGestor, function (req, res) {
     servidorController.listar(req, res);
 });
 

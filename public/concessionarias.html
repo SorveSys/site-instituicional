@@ -23,13 +23,13 @@
     <!-- ==================== HEADER / NAVBAR ==================== -->
     <header class="topbar">
         <div class="topbar-brand">
-            <a href="overview.html" title="SorveSys - Overview">
+            <a href="concessionarias.html" title="SorveSys - Gestão Empresarial">
                 <img src="./assets/icons/home/LOGO.svg" alt="SorveSys – Monitoramento de Sistemas Rodoviários">
             </a>
         </div>
 
         <nav class="topbar-nav" aria-label="Navegação Principal">
-            <a href="overview.html" class="nav-link">OverView</a>
+            <a href="#" class="nav-link em-desenvolvimento" onclick="return avisarOverviewEmDesenvolvimento(event)" title="Overview do Gestor em desenvolvimento">OverView <span class="nav-dev-tag">Em dev</span></a>
             <a href="concessionarias.html" class="nav-link ativo" aria-current="page">Concessionarias</a>
             <a href="usuarios.html" class="nav-link">Usuários</a>
             <a href="servidores.html" class="nav-link">Servidores</a>
@@ -44,6 +44,7 @@
                     </svg>
                 </div>
             </div>
+            <button type="button" class="btn-logout-topbar" onclick="sairSistema()" title="Sair da conta">Sair</button>
         </div>
     </header>
 
@@ -260,13 +261,8 @@
         var paginaAtual = 1;
 
         document.addEventListener("DOMContentLoaded", function () {
-            sessaoAtual = obterSessaoGerenciamento();
+            sessaoAtual = exigirSessaoGestor();
             if (!sessaoAtual) return;
-
-            if (!sessaoAtual.ehGestor) {
-                var btnNova = document.getElementById("btn_nova_concessionaria");
-                if (btnNova) btnNova.style.display = "none";
-            }
 
             carregarConcessionarias();
         });

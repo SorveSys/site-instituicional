@@ -684,6 +684,18 @@ function sair() {
 }
 
 // ===== INÍCIO =====
-preencherDadosOperador();
-carregarDashboard(true);
-setInterval(function () { carregarDashboard(false); }, 15000);
+(function inicializarDashboard() {
+    var idUsuario = null;
+    try {
+        idUsuario = sessionStorage.getItem("ID_USUARIO") || sessionStorage.ID_USUARIO;
+    } catch (e) { }
+
+    if (!idUsuario) {
+        window.location.replace("/login");
+        return;
+    }
+
+    preencherDadosOperador();
+    carregarDashboard(true);
+    setInterval(function () { carregarDashboard(false); }, 15000);
+})();
